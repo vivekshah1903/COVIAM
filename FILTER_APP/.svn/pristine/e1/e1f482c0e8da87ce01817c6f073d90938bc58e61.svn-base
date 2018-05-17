@@ -1,0 +1,24 @@
+(function() {
+    'use strict';
+
+    angular.module('app.common').controller('UploadDataCtrl', uploadDataCtrl);
+
+    uploadDataCtrl.$inject = ['$scope','$uibModal', '$uibModalInstance'];
+
+    //Controller implementation
+    function uploadDataCtrl($scope, $uibModal, $uibModalInstance) {
+        var vm = this;
+        
+        vm.uploadFile=uploadFile;    
+        vm.cancel=cancel;
+         
+        function uploadFile(data){
+        		$uibModalInstance.close(data);
+        }
+
+        function cancel(){
+            $uibModalInstance.dismiss();
+        }     
+    }
+    
+})();

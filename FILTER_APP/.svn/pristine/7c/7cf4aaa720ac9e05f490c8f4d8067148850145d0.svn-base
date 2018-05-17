@@ -1,0 +1,281 @@
+(function() {
+    'use strict';
+
+    angular.module('app.employees').controller('EmployeeDataCtrl', employeeDataCtrl);
+
+    employeeDataCtrl.$inject = ['$scope', '$uibModal', 'EmployeeDataService','sessionService','$timeout', 'CONFIG'];
+
+    //Controller implementation
+    function employeeDataCtrl($scope, $uibModal, EmployeeDataService, sessionService, $timeout, CONFIG) {
+        var vm = this;
+        vm.getEmployeeSummary = getEmployeeSummary;
+        vm.uploadFile = uploadFile;
+        vm.getUploadStatusData =getUploadStatusData;
+        vm.canceluploadedFile = canceluploadedFile;
+         vm.userdata = sessionService.getUserDetails('USER');
+        vm.apisAlert = {
+            toggle: false,
+            message: "",
+            type: "ERROR"
+        }
+        getEmployeeSummary();
+        getUploadStatusData();
+
+        function getEmployeeSummary() {
+            return EmployeeDataService.getEmpSummaryData().then(function(summarydata) {
+                 if (summarydata.message == "No Record Found") {
+                    vm.employeeDashboard.options.data = [];
+                } else {
+                vm.lastUpdate = summarydata.employees;
+                vm.noemp = summarydata.employees.length;
+                vm.employeeDashboard.options.data = summarydata.employees;
+            }
+            }).finally(function() {
+
+            });
+        }
+         function getUploadStatusData() {
+            return EmployeeDataService.getUploadStatus().then(function(statusdata) {
+              if (statusdata.message == "No Record Found") {
+                    vm.statusDashboard.options.data = [];
+                } else {
+                vm.statusDashboard.options.data = statusdata.transportRosterSummary;
+            }
+            }).finally(function() {
+
+            });
+        }
+
+        function uploadFile(fileData) {
+
+            var obj = {
+                "fileName": fileData
+            }
+              var acfObj = {
+                                acf2Id: vm.userdata.acf2Id
+                            }
+            return EmployeeDataService.uploadDataFile(acfObj,obj).then(function(data) {
+
+                if (data.data.result == "SUCCESS") {
+                    console.log("SUCCESS");
+                    canceluploadedFile();
+                    //getEmployeeSummary();
+                    vm.apisAlert = {
+                        toggle: true,
+                        message: data.data.message || 'Internal Server Error',
+                        type: "SUCCESS"
+                    };
+                    $timeout(function() {
+                        vm.apisAlert.toggle = false;
+                    }, 5000);
+                }
+            });
+
+        }
+
+        function canceluploadedFile() {
+            $scope.filename = false;
+            vm.checkName = false;
+        }
+
+        vm.employeeDashboard = {
+            options: {
+                cache: false,
+                //height: 600,
+                striped: true,               
+                pagination: true,
+                pageSize: 10,
+                pageList: [5, 10, 25, 50, 100, 200],
+                paginationPreText:"Previous",
+                paginationNextText:"NEXT",                
+                search: true,
+                showColumns: false,
+                showRefresh: false,
+                showExport: false,
+                minimumCountColumns: 2,
+                clickToSelect: false,
+                showToggle: false,
+                toolbar: "#toolbar",
+                maintainSelected: true,
+                columns: [{
+                        title: 'ACF2',
+                        field: 'acf2Id',
+                        width: '150',
+                        width: '150',
+
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true
+
+
+                    }, {
+                        title: 'Emp ID',
+                        field: 'code',
+                        width: '150',
+
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true
+
+                    }, {
+                        title: 'Name',
+                        field: 'name',
+                        width: '200',
+
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true,
+                        "formatter": empWrapFormatter
+
+
+                    }, {
+                        title: 'Designation',
+                        field: 'businessTitle',
+                        width: '400',
+
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true
+
+                    }, {
+                        title: 'BU Dept',
+                        field: 'dept',
+                        width: '200',
+
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true
+
+                    }, {
+                        title: 'Emp Status',
+                        field: 'status',
+                        width: '200',
+
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true
+
+                    }
+
+
+                ]
+
+            }
+        };
+          vm.statusDashboard = {
+            options: {
+                cache: false,
+                //height: 600,
+                striped: true,               
+                pagination: true,
+                pageSize: 10,
+                pageList: [5, 10, 25, 50, 100, 200],
+                paginationPreText:"Previous",
+                paginationNextText:"NEXT",                
+                search: true,
+                showColumns: false,
+                showRefresh: false,
+                showExport: false,
+                minimumCountColumns: 2,
+                clickToSelect: false,
+                showToggle: false,
+                toolbar: "#toolbar",
+                maintainSelected: true,
+                columns: [{
+                        title: 'File Name',
+                        field: 'fileName',
+                         width: '200',
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true
+
+                    }, {
+                        title: 'Uploaded By',
+                        field: 'uploadedBy',
+                        width: '200',
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true,
+                       
+
+
+                    },
+                    {
+                        title: 'Date',
+                        field: 'uploadedDateTime',
+                        width: '200',
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true
+
+
+                    }, {
+                        title: 'Status',
+                        field: 'status',
+                         width: '200',
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true,
+                        "formatter": statusFormatter
+
+                    }
+
+
+                ]
+
+            }
+        };
+
+         function statusFormatter(value, row, index) {
+
+            if (row.status == CONFIG.EMPLOYEE_FILE_STATUS.FAIL) {
+                return [
+                    '<a class="like pst-rel" href="javascript:void(0)">',
+                    '<i   class="glyphicon glyphicon-remove"></i>',
+                    '<span class="tooltiptext">Failed</span>',
+                    '</a> '
+
+                ].join('');
+            } else if (row.status == CONFIG.EMPLOYEE_FILE_STATUS.SUCCESS) {
+                return [
+                    '<a class="like pst-rel" href="javascript:void(0)" >',
+                    '<i   class="glyphicon glyphicon-ok"></i>',
+                    '<span class="tooltiptext">Success</span>',
+                    '</a> '
+
+                ].join('');
+            } else if (row.status == CONFIG.EMPLOYEE_FILE_STATUS.INPROGRESS) {
+                return [
+                    '<a class="like pst-rel" href="javascript:void(0)">',
+                    '<i   class="glyphicon glyphicon-hourglass"></i>',
+                    '<span class="tooltiptext">In progress</span>',
+                    '</a> '
+
+                ].join('');
+            }
+        }
+
+        function empWrapFormatter(value, row, index) {
+            var ac2fid=(row.acf2Id)?row.acf2Id:'';
+            var businessTitle=(row.businessTitle)?row.businessTitle:'';
+            var dept=(row.dept)?row.dept:'';
+            var team=(row.acf2Id)?row.team:'';
+            var lobEngagement=(row.lobEngagement)?row.lobEngagement:'';
+            var firstLineManager=(row.firstLineManager)?row.firstLineManager:'';
+            var workdayManager=(row.workdayManager)?row.workdayManager:'';
+            var type=(row.type)?row.type:'';
+            var status=(row.status)?row.status:'';
+            var code=(row.code)?row.code:'';
+            var gender=(row.gender)?row.gender:'';
+            var dob=(row.dob)?row.dob:'';
+            var bloodGroup=(row.bloodGroup)?row.bloodGroup:'';
+            var groups=(row.groups)?row.groups:'';
+            var businessUnit=(row.businessUnit)?row.businessUnit:'';
+            return '<a class="pst-rel empdes link-txt">' + value +
+
+                '<span class="tooltiptext">' + '<div class="half-part">' + '<span class="tooltip-txt">' + 'ACF2ID:' + '</span>' + ac2fid + '</div>' + '<div class="half-part">' + '<span class="tooltip-txt">' + 'Designation:' + '</span>' + businessTitle + '</div>' + '<div class="half-part">' + '<span class="tooltip-txt">' + 'BU Dept:' + '</span>' + dept + '</div>' + '<div class="half-part">' + '<span class="tooltip-txt">' + 'Team:' + '</span>' + team + '</div>' + '<div class="half-part">' + '<span class="tooltip-txt">' + 'LOB Engagement:' + '</span>' + lobEngagement + '</div>' + '<div class="half-part">' + '<span class="tooltip-txt">' + 'FLM Name:' + '</span>' + firstLineManager + '</div>' + '<div class="half-part">' + '<span class="tooltip-txt">' + 'Workday Manager:' + '</span>' + workdayManager + '</div>' + '<div class="half-part">' + '<span class="tooltip-txt">' + 'Employee Type:' + '</span>' + type + '</div>' + '<div class="half-part">' + '<span class="tooltip-txt">' + 'Employee Status:' + '</span>' + status + '</div>' + '<div class="half-part">' + '<span class="tooltip-txt">' + 'Employee Code:' + '</span>' + code + '</div>' + '<div class="half-part">' + '<span class="tooltip-txt">' + 'Gender:' + '</span>' + gender + '</div>' + '<div class="half-part">' + '<span class="tooltip-txt">' + 'DOB:' + '</span>' + dob + '</div>' + '<div class="half-part">' + '<span class="tooltip-txt">' + 'Groups:' + '</span>' + groups + '</div>' + '<div class="half-part">' + '<span class="tooltip-txt">' + 'Blood Group:' + '</span>' + bloodGroup + '</div>' + '<div class="half-part">' + '<span class="tooltip-txt">' + 'Unit:' + '</span>' + businessUnit + '</div>' + '</span>' + '</a>';
+        }
+
+    }
+
+})();

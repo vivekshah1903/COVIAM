@@ -1,0 +1,68 @@
+/*****************
+@Author:GuruPrasad
+******************/
+(function() {
+    'use strict';
+    //vendor Service
+    angular.module('app.employees').factory('EmployeeDataService', employeeDataService);
+
+    //Service injection
+    employeeDataService.$inject = ['$http', 'APIS', 'dataManagerService', '$window'];
+
+    //Service implementation
+    function employeeDataService($http, APIS, dataManagerService, $window) {
+
+        return {
+            
+            getEmpSummaryData: getEmpSummaryData,
+            uploadDataFile: uploadDataFile,
+            getUploadStatus:getUploadStatus,
+            downLoadFile:downLoadFile
+            
+            
+        };
+
+        function getEmpSummaryData() {
+           /* var pageNo=0;
+            APIS.GET_EMPLOYEE_SUMMARY_DATA.URL = APIS.GET_EMPLOYEE_SUMMARY_DATA.TEMPURL;
+            APIS.GET_EMPLOYEE_SUMMARY_DATA.URL = APIS.GET_EMPLOYEE_SUMMARY_DATA.URL+ "?pageno="+pageNo*/
+
+            return dataManagerService.sendRequest(null, APIS.GET_EMPLOYEE_DETAILS_DATA).then(function(data) {
+              // console.log(data);
+                return data;
+            });
+        }
+         function getUploadStatus() {
+            return dataManagerService.sendRequest(null, APIS.GET_UPLOAD_STATUS).then(function(data) {  
+            console.log(data);          
+                return data;
+            });
+        }
+
+       function downLoadFile(data) {
+            APIS.DOWNLOAD_FILE.URL = APIS.DOWNLOAD_FILE.TEMPURL;
+            APIS.DOWNLOAD_FILE.URL = APIS.DOWNLOAD_FILE.URL + '/' + data;
+            return dataManagerService.sendRequest(null, APIS.DOWNLOAD_FILE).then(function(data) {
+                return data;
+            })
+
+        }
+        function uploadDataFile(dataObj,fileObj) {
+           // console.log(fileObj);
+            var requestObj = {
+
+                "file": null
+            };
+            requestObj.file = fileObj['fileName'];
+             requestObj.obj = dataObj;
+            APIS.UPLOAD_EMPLOYEEDATA_FILE.data = requestObj;
+            return dataManagerService.sendRequestWithImage('', APIS.UPLOAD_EMPLOYEEDATA_FILE).then(function(data) {
+                console.log(data);
+                return data;
+            });
+        }
+
+      
+    }
+
+})();

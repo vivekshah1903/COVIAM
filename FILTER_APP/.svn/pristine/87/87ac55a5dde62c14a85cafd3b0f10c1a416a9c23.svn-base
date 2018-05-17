@@ -1,0 +1,14 @@
+(function() {
+    'use strict';
+
+    angular.module('app.common').controller('EmployeeDataCtrl', employeeDataCtrl);
+
+    employeeDataCtrl.$inject = [];
+
+    //Controller implementation
+    function employeeDataCtrl() {
+        var vm = this;         
+    }
+  
+
+})();

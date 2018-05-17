@@ -1,0 +1,32 @@
+<app-header></app-header>
+<div class="row">
+    <div class="col-md-12 top-heading">
+        <h1>Album</h1>
+    </div>
+</div>
+<div class="common-container">
+<div class="alert m-t-15" ng-class="{'alert-danger':albums.apisAlert.type=='ERROR','alert-success':albums.apisAlert.type=='SUCCESS'}" ng-show="albums.apisAlert.toggle">
+        <a href="javascript:void(0)" ng-click="albums.apisAlert.toggle=false;" class="close" aria-label="close" title="close"><i class="fa fa-times-circle" aria-hidden="true"></i></a>
+        <strong>{{albums.apisAlert.message}}</strong>
+</div>
+
+<div class=" col-md-12 m-t-15">
+    <div class="pageLine">
+        <h3 class="">Showing 10 albums(s) <small>Last updated {{albums.lastupdated}}</small>
+        <button type="button" class="btn btn-default pull-right mdlBtndark btm-space" ui-sref=".albumCreatePage">+Create new album</button>
+        </h3>
+        
+    </div>
+
+
+</div>
+ <div>
+        <button class="btn btn-link" ng-click="albums.deleteAlbumRow()">
+            <i class="glyphicon glyphicon-trash"></i> Delete Selected
+        </button>
+    </div>
+<div class="col-md-12 ">
+    <table id="table1" class="credit-table" bs-table-control="albums.albumSummary"></table>
+</div>
+
+</div>

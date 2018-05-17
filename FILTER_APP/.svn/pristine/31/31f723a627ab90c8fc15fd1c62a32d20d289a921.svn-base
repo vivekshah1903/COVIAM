@@ -1,0 +1,13 @@
+(function() {
+    'use strict';
+    angular.module('app.transportData').config(function config($stateProvider) {
+        $stateProvider.state('transportdata', {
+            url: '/transportdata',
+             controller: 'TransportDataCtrl as transportData',
+            templateUrl: 'UX/app/transportData/partials/transportData.html'
+
+
+
+        });
+    });
+})();

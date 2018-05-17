@@ -1,0 +1,183 @@
+(function() {
+    'use strict';
+
+    angular.module('app.notify').controller('NotificationCtrl', notificationCtrl);
+
+    notificationCtrl.$inject = ['notificationService'];
+
+    //Controller implementation
+    function notificationCtrl(notificationService) {
+        var vm = this;
+        vm.dashDatePicker = dashDatePicker;
+        vm.validFromCheck=validFromCheck;
+        vm.getNotificationDetails = getNotificationDetails;
+
+        function dashDatePicker(opened, value) {
+            var am = this;
+            if (value == 'to') {
+                am.to = !(am.opened);
+            }
+            if (value == 'from') {
+                am.from = !(am.opened);
+            }
+        }
+
+        function validFromCheck(valueA, valueB) {
+            vm.dateError = false;
+            if (!valueA || !valueB) {
+                vm.dateError = false;
+                return;
+            }
+            (valueA > valueB) ? vm.dateError = true: vm.dateError = false;
+
+
+        }
+        vm.notificationSummary = {
+            options: {
+                cache: false,
+                striped: true,
+                pagination: true,
+                pageSize: 10,
+                pageList: [5, 10, 25, 50, 100, 200],
+                search: true,
+                showColumns: false,
+                showRefresh: false,
+                showExport: false,
+                minimumCountColumns: 2,
+                clickToSelect: false,
+                showToggle: false,
+                toolbar: "#toolbar",
+                maintainSelected: true,
+                columns: [{
+                        field: 'state',
+                        checkbox: true,
+                        align: 'center',
+                        valign: 'middle'
+                    }, {
+                        title: 'Category',
+                        field: 'notificationCategory',
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true
+
+
+                    }, {
+                        title: 'Priority',
+                        field: 'notificationPriority',
+
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true
+
+                    }, {
+                        title: 'Notification',
+                        field: 'notificationTxt',
+
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true
+
+                    }, {
+                        title: 'Start Date',
+                        field: 'notificationStartDt',
+
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true
+
+                    }, {
+                        title: 'Expiry Date',
+                        field: 'notificationExpiryDt',
+
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true
+
+                    }, {
+                        title: 'Publish Date',
+                        field: 'notificationPublishDt',
+
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true
+
+                    }, {
+                        title: 'Created by',
+                        field: 'createdBy',
+
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true
+
+                    }, {
+                        title: 'Created date',
+                        field: 'cretedDate',
+
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true
+
+                    }
+
+
+                ]
+
+            }
+        };
+
+        function getNotificationDetails() {
+          
+            vm.validfromdate = utils.getinDateFormat(vm.data.validFrom, CONFIG.SYSTEM_DATE_FORMAT.DATE_YEAR_FORMAT);
+            vm.validtodate = utils.getinDateFormat(vm.data.validTo, CONFIG.SYSTEM_DATE_FORMAT.DATE_YEAR_FORMAT);
+            var obj = {
+                "notificationsDateType": vm.data.datetype,
+                "fromDate": vm.validfromdate,
+                "pageno": 0,
+                "toDate": vm.validtodate
+            }
+
+            return notificationService.getNotificationSummaryData(obj).then(function(notificationData) {
+                if (notificationData.message == "No Record Found") {
+                    return;
+                } else {
+                    vm.notificationSummary.options.data = notificationData.events;
+                }
+
+            });
+        }
+
+        vm.deleteNotification=function(){
+            var $table = $('#table');
+
+            if ($table.bootstrapTable('getSelections').length > 0) {
+                var ids = $table.bootstrapTable('getAllSelections')
+                var notificationIdValue = [];
+                angular.forEach(ids, function(value, key) {
+                    var obj = {
+                        "notificationId": value.eventId
+                    }
+                    notificationIdValue.push(obj);
+
+
+                });
+                var noyifyObj = {
+                    "listId": notificationIdValue
+                }
+                
+                return notificationService.deleteNotifications(noyifyObj).then(function(eventData) {
+                   getNotificationDetails();
+
+                });
+
+
+
+
+
+            }
+        }
+    }
+
+
+})();
+
+// nottificationtable controller

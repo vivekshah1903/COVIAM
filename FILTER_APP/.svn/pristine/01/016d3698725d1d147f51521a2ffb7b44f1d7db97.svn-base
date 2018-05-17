@@ -1,0 +1,16 @@
+(function() {
+    'use strict';
+
+    angular.module('app.common').controller('GalleryCtrl', galleryCtrl);
+
+    galleryCtrl.$inject = ['sessionService'];
+
+    //Controller implementation
+    function galleryCtrl(sessionService) {
+        var vm = this;
+         
+         
+    }
+  
+
+})();

@@ -1,0 +1,14 @@
+<app-header></app-header>
+<div class="row">
+    <div class="col-md-12 top-heading">
+        <h1>Album</h1>
+    </div>
+</div>
+
+<div class=" col-md-12 m-t-15">
+    <h4 class="pageLine">Showing {{employeeData.noemp}} albums(s) <small>Last updated 12-04-2017</small> <button type="button" class="btn btn-default pull-right mdlBtndark btm-space"
+            ui-sref=".albumCreatePage">+Create new album</button></h4>
+
+            <table id="table " class="credit-table " bs-table-control="albums.albumSummary"></table>
+</div>
+

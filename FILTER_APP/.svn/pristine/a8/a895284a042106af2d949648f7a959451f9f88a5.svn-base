@@ -1,0 +1,43 @@
+(function() {
+    'use strict';
+
+    angular.module('app.login').controller('LoginCtrl', loginCtrl);
+
+    loginCtrl.$inject = ['$scope', 'LoginService', '$location', '$state', '$uibModal', 'sessionService'];
+
+    //Controller implementation
+    function loginCtrl($scope, LoginService, $location, $state, $uibModal, sessionService) {
+        var vm = this;
+        vm.addUser = addUser;
+
+        // vm.loginUser=sessionService.getUserDetails('USER');
+
+
+        function addUser() {
+            var name = vm.userName;
+            var password = vm.password;
+            var obj = {
+                username: name,
+                password: password
+            }
+
+            LoginService.LoginUser(obj).then(function(data) {
+             
+                if (data.result == 'SUCCESS') {
+                    if (sessionService.setUserDetails(data)) {
+                        $location.path('/transportdata');
+                    }
+                }
+            });
+
+
+
+        }
+
+
+
+
+
+
+    }
+})();

@@ -1,0 +1,118 @@
+/*****************
+@Author:GuruPrasad
+******************/
+(function() {
+    'use strict';
+    //vendor Service
+    angular.module('app.common').factory('TransportDataService', transportDataService);
+
+    //Service injection
+    transportDataService.$inject = ['$http', 'APIS', 'dataManagerService', '$window', '$q'];
+
+    //Service implementation
+    function transportDataService($http, APIS, dataManagerService, $window, $q) {
+
+        return {
+            //transportData:transportData,
+            getReportData: getReportData,
+            sendFileForValidate: sendFileForValidate,
+            getRosterSummaryData: getRosterSummaryData,
+            uploadDataFile: uploadDataFile,
+            tableToExcel: tableToExcel,
+            getEmployeeSummaryData: getEmployeeSummaryData,
+            downLoadFile: downLoadFile,
+            deleteRosterFile:deleteRosterFile
+        };
+
+
+        function deleteRosterFile(obj){
+         APIS.DELETE_ROSTER.data = obj;
+            return dataManagerService.sendRequest(null, APIS.DELETE_ROSTER).then(function(data) {
+                return data;
+            });
+        }
+
+
+
+        function getReportData(data) {
+
+            APIS.GENERATE_REPORT_DATA.data = data;
+            return dataManagerService.sendRequest(null, APIS.GENERATE_REPORT_DATA).then(function(data) {
+
+                return data;
+
+            })
+        }
+
+        function downLoadFile(data) {
+            APIS.DOWNLOAD_FILE.URL = APIS.DOWNLOAD_FILE.TEMPURL;
+            APIS.DOWNLOAD_FILE.URL = APIS.DOWNLOAD_FILE.URL + '/' + data;
+            return dataManagerService.sendRequest(null, APIS.DOWNLOAD_FILE).then(function(data) {
+                return data;
+            })
+
+        }
+
+        function sendFileForValidate(fileObj) {
+            var requestObj = {
+
+                "file": null
+            };
+            requestObj.file = fileObj['fileName'];
+            APIS.FILE_VALIDATE_API.data = requestObj;
+            return dataManagerService.sendRequestWithImage('', APIS.FILE_VALIDATE_API).then(function(data) {
+                return data;
+            });
+        }
+
+        function getRosterSummaryData() {
+            var pageNo = 0;
+            APIS.GET_ROSTER_SUMMARY_DATA.URL = APIS.GET_ROSTER_SUMMARY_DATA.TEMPURL;
+            APIS.GET_ROSTER_SUMMARY_DATA.URL = APIS.GET_ROSTER_SUMMARY_DATA.URL + "?pageno=" + pageNo
+
+            return dataManagerService.sendRequest(null, APIS.GET_ROSTER_SUMMARY_DATA).then(function(data) {
+
+                return data;
+            });
+        }
+
+        function getEmployeeSummaryData() {
+
+            APIS.GET_EMPLOYEE_SUMMARY_DATA.URL = APIS.GET_EMPLOYEE_SUMMARY_DATA.TEMPURL;
+            APIS.GET_EMPLOYEE_SUMMARY_DATA.URL = APIS.GET_EMPLOYEE_SUMMARY_DATA.URL;
+
+            return dataManagerService.sendRequest(null, APIS.GET_EMPLOYEE_SUMMARY_DATA).then(function(data) {
+
+                return data;
+            });
+        }
+
+        function uploadDataFile(dataObj, fileObj) {
+            var requestObj = {
+
+                "obj": null,
+                "file": null
+            };
+            requestObj.file = fileObj['fileName'];
+            requestObj.obj = dataObj;
+            APIS.UPLOAD_VALIDATED_FILE.data = requestObj;
+            return dataManagerService.sendRequestWithImage('', APIS.UPLOAD_VALIDATED_FILE).then(function(data) {
+                return data;
+            });
+        }
+
+
+    
+            function tableToExcel(data) {
+            APIS.DOWNLOAD_REPORT.data = data;
+            return dataManagerService.sendRequest(null, APIS.DOWNLOAD_REPORT).then(function(data) {
+                return data;
+
+            });
+
+        }
+    
+        
+    }
+
+})();

@@ -1,0 +1,39 @@
+<!--<div class="row custHead">
+
+ <div class="col-lg-6"><img class="sunLogo" src="UX/image/sun-life-financial1.jpg"></div>
+<div class="col-lg-6">
+   
+   <div> 
+    
+    <ul class="horizontal" id="nav">
+	<li><a href="#">Notifications</a></li>
+	<li><a href="#">Events</a></li>
+	<li><a href="#" >Home</a></li>
+</ul>
+
+
+
+   </div>
+
+</div>
+
+
+</div>-->
+<div class="row custHead">
+    <div class="col-lg-6"> <img class="sunLogo" src="UX/image/sun-life-financial1.jpg"></div>
+    <div class="col-lg-6">
+        <span style="float:right; font-size:16px;">Hi User! <i class="fa fa-cog  fa-lg" style="background: #ffb100;
+    padding: 10px 5px;
+    cursor: pointer;"  aria-hidden="true"></i></span>
+        <div>
+            <ul class="horizontal" id="nav">
+                <li><a href="#">Notifications</a></li>
+                <li><a href="#">Events</a></li>
+                <li><a href="#">Home</a></li>
+            </ul>
+
+        </div>
+    </div>
+
+
+</div>

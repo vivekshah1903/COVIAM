@@ -1,0 +1,24 @@
+/*****************
+@Author:GuruPrasad
+******************/
+(function() {
+    'use strict';
+    //vendor Service
+    angular.module('app.common').factory('TransportDataService', transportDataService);
+
+    //Service injection
+    transportDataService.$inject = ['$http'];
+
+    //Service implementation
+    function transportDataService($http) {
+        return {
+         transportData:transportData
+        };
+
+        function transportData(data) {
+                
+            return data;
+        }
+    }
+
+})();

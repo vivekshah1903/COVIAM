@@ -1,0 +1,328 @@
+(function() {
+    'use strict';
+
+    angular.module('app.notify').controller('NotificationCtrl', notificationCtrl);
+
+    notificationCtrl.$inject = ['notificationService','$scope', 'ModalService','utils', '$timeout', 'CONFIG','sessionService', '$state','APIS'];
+
+    //Controller implementation
+    function notificationCtrl(notificationService, $scope, ModalService,utils,$timeout,CONFIG,sessionService, $state, APIS) {
+        var vm = this;
+        vm.dashDatePicker = dashDatePicker;
+        vm.validFromCheck = validFromCheck;
+        vm.deleteNotification =deleteNotification
+        vm.getNotificationDetails = getNotificationDetails;
+        vm.userdata = sessionService.getUserDetails('USER');
+        vm.apisAlert = {
+            toggle: false,
+            message: "",
+            type: "ERROR"
+        }
+
+        function dashDatePicker(opened, value) {
+            var am = this;
+            if (value == 'to') {
+                am.to = !(am.opened);
+            }
+            if (value == 'from') {
+                am.from = !(am.opened);
+            }
+        }
+
+        function validFromCheck(valueA, valueB) {
+            vm.dateError = false;
+            if (!valueA || !valueB) {
+                vm.dateError = false;
+                return;
+            }
+            (valueA > valueB) ? vm.dateError = true: vm.dateError = false;
+
+
+        }
+         function getNotificationDetails() {
+            var s_token = sessionService.getRegisterDetails('REGISTER').access_token;
+            var bearer = sessionService.getRegisterDetails('REGISTER').token_type;
+            vm.validfromdate = utils.getinDateFormat(vm.data.validFrom, CONFIG.SYSTEM_DATE_FORMAT.DATE_YEAR_FORMAT);
+            vm.validtodate = utils.getinDateFormat(vm.data.validTo, CONFIG.SYSTEM_DATE_FORMAT.DATE_YEAR_FORMAT);
+            var obj = {
+                 acf2Id: vm.userdata.acf2Id,
+                "notificationDateType": vm.data.datetype,
+                "fromDate": vm.validfromdate,
+                "pageno": 0,
+                "toDate": vm.validtodate
+            }
+             vm.notificationSummary.options.sidePagination = "server",
+            vm.notificationSummary.options.url = CONFIG.BASE_URL[CONFIG.BASE_URL_MODE] + APIS.GET_NOTIFICATION_LIST.URL;
+            vm.notificationSummary.options.method = "post";
+            vm.notificationSummary.options.ajaxOptions = {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'Authorization': bearer + s_token
+                    }
+                }
+                 vm.notificationSummary.options.queryParams = postQueryParams;
+
+            function postQueryParams(params) {
+                params.acf2Id=obj.acf2Id;
+                params.notificationDateType=obj.notificationDateType;
+                params.fromDate=obj.fromDate;
+                params.toDate=obj.toDate;
+                return params; // body data
+            }
+            vm.notificationSummary.options.responseHandler = function(res) {
+                //To do on server side set events to rows.
+                res.rows = res.notificationList;
+                res.total=res.totalRecord;
+                return res;
+            };
+
+         
+        }
+        vm.notificationSummary = {
+            options: {
+                cache: false,
+                striped: true,
+                pagination: true,
+                pageSize: 10,
+                pageList: [5, 10, 25, 50, 100, 200],
+                paginationPreText:"PREVIOUS",
+                paginationNextText:"NEXT", 
+                filterControl: true, 
+                search: true,
+                showColumns: false,
+                showRefresh: false,
+                showExport: false,
+                minimumCountColumns: 2,
+                clickToSelect: false,
+                showToggle: false,
+                toolbar: "#toolbar",
+                maintainSelected: true,
+                columns: [{
+                        field: 'state',
+                        checkbox: true,
+                        align: 'center',
+                        valign: 'middle'
+                    }, {
+                        title: 'Category',
+                        field: 'notificationCategory.notificationCategoryName',
+                        width: '150',
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true
+
+
+                    }, {
+                        title: 'Priority',
+                        field: 'notificationPriority.notificationPriorityName',
+                        width: '150',
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true,
+                        "formatter": priorityFormatter
+
+                    }, {
+                        title: 'Notification',
+                        field: 'notificationTxt',
+                        width: '300',
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true
+
+                    }, {
+                        title: 'Start Date',
+                        field: 'notificationStartDt',
+                        width: '150',
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true,
+                        "formatter": startDateFormatter
+
+                    }, {
+                        title: 'Expiry Date',
+                        field: 'notificationExpiryDt',
+                        width: '150',
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true,
+                        "formatter": endDateFormatter
+
+                    }, /*{
+                        title: 'Publish Date',
+                        field: 'notificationPublishDt',
+
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true
+
+                    },*/ {
+                        title: 'Created by',
+                        field: 'createdBy',
+                        width: '200',
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true
+
+                    }, {
+                        title: 'Created date',
+                        field: 'createdDate',
+                        width: '200',
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true,
+                        "formatter": createDateFormatter
+
+                    },  {
+                        title: 'Action',
+                        //field: 'cretedDate',
+                        width: '100',
+                        "formatter": actionFormatter,
+                        align: 'center',
+                        valign: 'middle',
+                        events: window.operateNotify = {
+                            'click .notifyEdit': function(e, value, row, index) {}
+                        },
+                        sortable: true
+
+                    }
+
+
+                ]
+
+            }
+        };
+
+       
+
+         function deleteNotification(){
+            
+            var $notifyDelete= $('#table3');
+
+            if ($notifyDelete.bootstrapTable('getSelections').length > 0) {
+                vm.apisAlert.toggle = false;
+                var ids = $notifyDelete.bootstrapTable('getAllSelections')
+                var notificationIdValue = [];
+                angular.forEach(ids, function(value, key) {
+                    var obj = {
+                        acf2Id:vm.userdata.acf2Id,
+                        "notificationId": value.notificationId
+                    }
+                    notificationIdValue.push(obj);
+
+
+                });
+
+                var message = "Are you sure you want to delete the selected notification ?"
+
+                ModalService.openAlert('confirm', 'Delete Notification', message, $scope, 'reset');
+                $scope.$on('resetOk', function() {
+                    var noyifyObj = {
+                        "listId": notificationIdValue
+                    }
+                    return notificationService.deleteNotifications(noyifyObj).then(function(eventData) {
+                        if (eventData.result == "SUCCESS") {
+                         vm.apisAlert = {
+                            toggle: true,
+                            message: eventData.message || 'Internal Server Error',
+                            type: "SUCCESS"
+                        };
+                        $timeout(function() {
+                            vm.apisAlert.toggle = false;
+                        }, 5000);
+                        getNotificationDetails();
+                    } else{
+
+                    }
+                       
+                    });
+
+                });
+
+
+                $scope.$on('resetCancel', function() {
+
+                });
+
+            }
+
+                else if($notifyDelete.bootstrapTable('getSelections').length <= 0){
+                        vm.message = "Please select atleast one notification";
+                        vm.apisAlert = {
+                                toggle: true,
+                                message: vm.message,
+                                type: "ERROR"
+                        };
+                        $timeout(function() {
+                            vm.apisAlert.toggle = false;
+                        }, 5000);
+
+                 }
+        }
+
+         window.operateNotify['click .notifyEdit'] = (function(e, value, row, index) {
+            //alert();
+            sessionService.setEditNotificationList(row);
+            $state.go('.notificationEditPage');
+        });
+         function actionFormatter(value, row, index) {
+            return [
+                '<a class="notifyEdit" href="javascript:void(0)">',
+                '<i class="glyphicon glyphicon-pencil"></i>',
+                '</a>'
+            ].join('');
+        }
+        function endDateFormatter(value, row, index) {
+
+            vm.date = utils.getinDateFormat(row.notificationExpiryDt, CONFIG.SYSTEM_DATE_FORMAT.DATE_FORMAT);
+            return vm.date;
+        }
+        function startDateFormatter(value, row, index) {
+
+            vm.date = utils.getinDateFormat(row.notificationStartDt, CONFIG.SYSTEM_DATE_FORMAT.DATE_FORMAT);
+            return vm.date;
+        }
+        function createDateFormatter(value, row, index) {
+
+            vm.date = utils.getinDateFormat(row.createdDate, CONFIG.SYSTEM_DATE_FORMAT.DATE_FORMAT);
+            return vm.date;
+        }
+
+
+         function priorityFormatter(value, row, index) {
+                if (row.notificationPriority.notificationPriorityName == CONFIG.NOTIFICATION_PRIORITY.High) {
+                    return [
+                       /* '<span class="priority priority-high">',
+                        '</span>'*/
+                         '<a class="like pst-rel" href="javascript:void(0)">',
+                        '<i class="priority priority-high"></i>',
+                        '<span class="tooltiptext">High</span>',
+                        '</a> '
+
+                    ].join('');
+                } else if (row.notificationPriority.notificationPriorityName == CONFIG.NOTIFICATION_PRIORITY.Medium) {
+                    return [
+                         '<a class="like pst-rel" href="javascript:void(0)">',
+                        '<i class="priority priority-medium"></i>',
+                        '<span class="tooltiptext">Medium</span>',
+                        '</a> '
+
+                    ].join('');
+                } else if (row.notificationPriority.notificationPriorityName == CONFIG.NOTIFICATION_PRIORITY.Low) {
+                    return [
+                         '<a class="like pst-rel" href="javascript:void(0)">',
+                        '<i class="priority priority-low"></i>',
+                        '<span class="tooltiptext">Low</span>',
+                        '</a> '
+
+
+                    ].join('');
+                }
+            }
+
+
+    }
+
+
+})();
+
+// nottificationtable controller

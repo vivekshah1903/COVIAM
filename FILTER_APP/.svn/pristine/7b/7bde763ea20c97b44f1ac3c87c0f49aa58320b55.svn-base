@@ -1,0 +1,8 @@
+<footer class="footer navbar-fixed-bottom hidden-xs ng-scope">
+    <div class="row" >
+        
+            <div class="col-md-12 col-sm-12 col-xs-12 text-center">Copyright © 2017 SunLife</div>
+        
+    </div>
+</footer>
+

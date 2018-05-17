@@ -1,0 +1,26 @@
+(function() {
+    'use strict';
+    angular.module('app.employees').config(function config($stateProvider) {
+        $stateProvider.state('employeedata', {
+            url: '/employeedata',
+            controller: 'EmployeeDataCtrl as employeeData',
+            templateUrl: 'UX/app/employeeData/partials/employeeData.html'
+        }).state('employeedata.uploadStatusPage', {
+            url: '/uploadStatusPage',
+            //parent: 'eventPage',
+            /**/
+            views: {
+                "@": {
+                    controller: 'UploadStatusCtrl as uploadData',
+                    templateUrl: 'UX/app/employeeData/partials/uploadStatus.html'
+                },
+                "uploadStatusPage@employeedata.uploadStatusPage": {
+                   controller: 'UploadStatusCtrl as uploadData',
+                    templateUrl: 'UX/app/employeeData/partials/uploadStatus.html'
+                }
+            }
+            /**/
+
+        })
+    });
+})();

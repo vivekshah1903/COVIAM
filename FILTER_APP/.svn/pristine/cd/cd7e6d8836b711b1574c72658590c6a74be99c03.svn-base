@@ -1,0 +1,6 @@
+
+ <div>
+  <h5>Manage Gallery</h5>
+  <p>{{gallery.loginUser}}</p>
+  </div>
+  

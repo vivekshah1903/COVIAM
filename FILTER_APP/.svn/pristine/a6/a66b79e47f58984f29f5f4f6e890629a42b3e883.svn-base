@@ -1,0 +1,13 @@
+(function() {
+    'use strict';
+    angular.module('app.login').config(function config($stateProvider) {
+        $stateProvider.state('login', {
+            url: '/login',
+            controller: 'LoginCtrl as login',
+            templateUrl: 'UX/app/login/partials/login.html'
+
+
+
+        });
+    });
+})();

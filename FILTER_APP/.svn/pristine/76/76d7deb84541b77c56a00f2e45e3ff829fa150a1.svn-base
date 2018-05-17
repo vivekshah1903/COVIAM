@@ -1,0 +1,38 @@
+(function() {
+    'use strict';
+
+    angular.module('app.common').factory('AlbumService', albumService);
+
+    //Service injection
+    albumService.$inject = ['$http', 'APIS', 'dataManagerService'];
+
+    //Service implementation
+    function albumService($http, APIS, dataManagerService) {
+      return {
+                
+             createAlbum:createAlbum
+
+            };
+
+      
+function createAlbum(albumObj,fileObj){
+    var requestObj = {
+                "obj": null,
+                "file": null
+            };
+
+            requestObj.file = fileObj['file'];
+            requestObj.obj = albumObj;
+
+           console.log(requestObj);
+
+            //Send Request Data
+             APIS.CREATE_ALBUM.data = requestObj;
+             return dataManagerService.sendRequestWithImage('', APIS.CREATE_ALBUM).then(function(data) {
+                return data;
+            });
+}
+      
+    }
+
+})();

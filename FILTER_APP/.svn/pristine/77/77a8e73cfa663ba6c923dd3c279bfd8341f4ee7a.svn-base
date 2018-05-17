@@ -1,0 +1,17 @@
+<app-header></app-header>
+<div class="row">
+    <div class="col-md-12 top-heading">
+        <h1>Employee Data</h1></div>
+</div>
+<div class="common-container">
+   <!--  <div class="alert m-t-15" ng-class="{'alert-danger':employeeData.apisAlert.type=='ERROR','alert-success':employeeData.apisAlert.type=='SUCCESS'}" ng-show="employeeData.apisAlert.toggle">
+        <a href="javascript:void(0)" ng-click="employeeData.apisAlert.toggle=false;" class="close" aria-label="close" title="close"><i class="fa fa-times-circle" aria-hidden="true"></i></a>
+        <strong>{{employeeData.apisAlert.message}}</strong>
+    </div> -->
+   
+    <div class="row container-fluid">
+        <h4 class="pageLine">Showing Upload Status Screen </h4>
+    </div>
+   
+    <table id="table" class="credit-table" bs-table-control="employeeData.statusDashboard"></table>
+</div>

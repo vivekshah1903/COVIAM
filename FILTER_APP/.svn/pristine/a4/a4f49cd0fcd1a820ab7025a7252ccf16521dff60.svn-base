@@ -1,0 +1,42 @@
+<nav class="navbar navbar-default navbar-fixed-top navbar-inverse">
+    <div class="">
+        <div class="col-md-8">
+            <div class="navbar-header">
+                <button class="navbar-toggle" data-toggle="collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <!--  <a class="navbar-brand">Brand</a> -->
+            </div>
+            <div class="collapse navbar-collapse">
+                
+                <ul class="nav navbar-nav">
+                    <li><a href="#home">Admin Console</a></li>
+                    <li><a href="#transportdata">Upload Transport Roster Data</a></li>
+                    <li><a href="#employeedata" tooltip-placement="bottom" uib-tooltip="This is ">Upload Employee Master Data</a></li>
+                    <li><a href="#events">Manage Calendar Events</a></li>
+                    <li><a href="#gallery">Manage Gallery Photos</a></li>
+                    <li class="drop">
+                        <a href="#notifications">
+                           Manage Notifications
+                            
+                </a>
+                </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-4" >
+            <form name="lgn" class="navbar-form navbar-right">
+                <div class="form-group has-feedback">
+                    <input type="text" class="form-control" placeholder="search">
+                    <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                </div>
+                <button class="btn btn-default">Search</button>
+                <div ng-if="header.userdata" class="form-group login-name">Login {{header.userdata.name}}
+                </div>
+                <a class="btn" ng-click="header.logoutUser()"> <span class="glyphicon glyphicon-log-out"></span></a>
+            </form>
+        </div>
+    </div>
+</nav>

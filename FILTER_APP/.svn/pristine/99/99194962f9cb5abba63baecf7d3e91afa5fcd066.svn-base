@@ -1,0 +1,13 @@
+(function() {
+    'use strict';
+    angular.module('app.resetpassword').config(function config($stateProvider) {
+        $stateProvider.state('resetpassword', {
+            url: '/resetpassword',
+            controller: 'ResetpasswordCtrl as resetpassword',
+            templateUrl: 'UX/app/resetpassword/partials/resetpassword.html'
+
+
+
+        });
+    });
+})();

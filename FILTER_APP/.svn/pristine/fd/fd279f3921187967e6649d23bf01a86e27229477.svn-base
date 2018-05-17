@@ -1,0 +1,200 @@
+<app-header></app-header>
+<div class="row">
+    <div class="col-md-12 top-heading">
+        <h1>Notifications</h1>
+    </div>
+</div>
+<div class="common-container">
+<div class="alert m-t-15" ng-class="{'alert-danger':editnotification.apisAlert.type=='ERROR','alert-success':editnotification.apisAlert.type=='SUCCESS'}" ng-show="editnotification.apisAlert.toggle">
+        <a href="javascript:void(0)" ng-click="editnotification.apisAlert.toggle=false;" class="close" aria-label="close" title="close"><i class="fa fa-times-circle" aria-hidden="true"></i></a>
+        <strong>{{editnotification.apisAlert.message}}</strong>
+    </div>
+<div class="row">
+    <div class="col-lg-12">
+        <h3 class="loginHead">Edit notifications
+      <a class="pull-right in-block" ui-sref="^">
+        < Back </a>
+    </h3>
+    </div>
+</div>
+<form name="notificationForm" novalidate>
+    <div class="row">
+        <div class=" col-md-8 col-sm-8 col-xs-12 ">
+
+            <div class="col-md-6 col-sm-6 col-xs-6 p-l-0" >
+            <label class="drk-green small-heading"> Select Category </label>
+                <select class="form-control" required ng-model="editnotification.data.notificationCategory.notificationCategoryCd" name="category" ng-options="editnotification.notificationCategoryCd as editnotification.notificationCategoryName for editnotification in editnotification.CategoryData">
+                    <option value="">Select category</option>
+                   
+                </select>
+                 <div ng-if="notificationForm.category.$invalid" class="has-error">
+                        <span class="help-block" ng-show="notificationForm.category.$touched && notificationForm.category.$error.required">Select category is Required</span>
+                 </div>
+            </div>
+            
+            <div class="col-md-6 col-sm-6 col-xs-6 p-r-0" >
+            <label class="drk-green small-heading"> Select Priority </label>
+                <select class="form-control" required ng-model="editnotification.data.notificationPriority.notificationPriorityCd" name="priority" ng-options="editnotification.notificationPriorityCd as editnotification.notificationPriorityName for editnotification in editnotification.PriorityData">
+                    <option value="">Select priority</option>
+                
+                </select>
+                 <div ng-if="notificationForm.priority.$invalid" class="has-error">
+                        <span class="help-block" ng-show="notificationForm.priority.$touched && notificationForm.priority.$error.required">Select Priority is Required</span>
+                 </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-sm-4"></div>
+    </div>
+    <div class="row m-t-15">
+        <div class="col-md-8 col-sm-8">
+            <div class="form-group">
+            <label class="drk-green small-heading"> Notification Description </label>
+                <textarea class="form-control" name="notification_description" ng-model="editnotification.data.notificationTxt" rows="5" id="comment" placeholder="Enter Notification Description" required=""></textarea>
+                 <div ng-if="notificationForm.notification_description.$invalid" class="has-error">
+                        <span class="help-block" ng-show="notificationForm.notification_description.$touched && notificationForm.notification_description.$error.required">Notification Description is Required</span>
+              </div>
+
+            </div>
+             
+        </div>
+        <div class="col-md-4 col-sm-4"></div>
+    </div>
+    <div class="col-lg-12">
+       
+        <span class="drk-green small-heading"> Specify notification start date and expiry date   </span>
+    </div>
+    <div class="row">
+
+
+        <div class="col-md-2">
+            <div class="space-20 pst-rel date-pick-box">
+                <input placeholder="Start Date" type="text" class="date-input m-t-15" required ng-model="editnotification.data.notificationStartDt" name="validFrom" is-open="editnotification.from" uib-datepicker-popup="dd-MM-yyyy" datepicker-options="editnotification.options" onkeydown="return false"  ng-change="editnotification.validFromCheck(editnotification.data.notificationStartDt,editnotification.data.notificationExpiryDt)">
+                <span class="input-group-btn">
+
+            <button type="button" class="btn btn-default calendr-btn" ng-click="editnotification.dashDatePicker(editnotification.from,'from')">
+                                                            <i class="glyphicon glyphicon-calendar"></i>
+                                                        </button>
+            </span>
+                  <div ng-if="notificationForm.validFrom.$invalid" class="has-error">
+                                <span class="help-block" ng-show="notificationForm.validFrom.$touched && notificationForm.validFrom.$error.required">Start Date Required</span>
+                            </div>
+            </div>
+        </div>
+    
+
+         <div class="col-lg-2">
+                        <div uib-timepicker ng-model="editnotification.data.startTime" name="starttime" ng-required="true"></div>
+                        <div ng-if="notificationForm.starttime.$invalid" class="has-error">
+                            <span class="help-block" ng-show="notificationForm.starttime.$touched && notificationForm.starttime.$error.required">Start Time is Required</span>
+                        </div>
+        </div>
+
+        <div>
+            <label class="col-lg-1 m-t-25"> to </label>
+        </div>
+        <div class="col-md-2">
+            <div class="space-20 pst-rel date-pick-box">
+                <input type="text" placeholder="Expiry Date" class="date-input m-t-15" onkeydown="return false" required ng-model="editnotification.data.notificationExpiryDt" name="validTo" is-open="editnotification.to" uib-datepicker-popup="dd-MM-yyyy" datepicker-options="editnotification.options" onkeydown="return false"  ng-change="editnotification.validFromCheck(editnotification.data.notificationStartDt,editnotification.data.notificationExpiryDt);editnotification.publishDateValidate()">
+                <span class="input-group-btn">
+
+            <button type="button" class="btn btn-default calendr-btn" ng-click="editnotification.dashDatePicker(editnotification.to,'to')">
+                                                            <i class="glyphicon glyphicon-calendar"></i>
+                                                        </button>
+            </span>
+                <div ng-if="notificationForm.validTo.$invalid" class="has-error">
+                                <span class="help-block" ng-show="notificationForm.validTo.$touched && notificationForm.validTo.$error.required">End Date Required</span>
+                </div>
+                <div class="has-error"><span class="help-block" ng-show="editnotification.dateError">To date cannot be older than From date</span></div>
+              
+            </div>
+        </div>
+       <div class="col-lg-2">
+                        <div uib-timepicker ng-model="editnotification.data.endTime" name="endtime" ng-required="true"></div>
+                        <div ng-if="notificationForm.endtime.$invalid" class="has-error">
+                            <span class="help-block" ng-show="notificationForm.endtime.$touched && notificationForm.endtime.$error.required">End Time is Required</span>
+                        </div>
+
+        </div>
+
+
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+         <label class="drk-green small-heading"> Publish Date </label>
+            <div class="Billing pst-rel date-pick-box">
+                <input type="text" placeholder="Publish Date" class="date-input m-t-15" onkeydown="return false" required ng-model="editnotification.data.notificationPublishDt" name="publishDate" is-open="editnotification.from1" uib-datepicker-popup="dd-MM-yyyy" datepicker-options="editnotification.publishoptions" onkeydown="return false">
+                <span class="input-group-btn">
+
+            <button type="button" class="btn btn-default calendr-btn" ng-click="editnotification.openDashDatePicker(editnotification.from1,'from1')">
+                                                            <i class="glyphicon glyphicon-calendar"></i>
+                                                        </button>
+            </span>
+               <div ng-if="notificationForm.publishDate.$invalid" class="has-error">
+                                <span class="help-block" ng-show="notificationForm.publishDate.$touched && notificationForm.publishDate.$error.required">Publish Date Required</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+ 
+                <div class="col-lg-5 m-t-15">
+                    <label class="drk-green small-heading"> Business location</label>
+                   <select multi class="form-control" required  multiple="multiple" ng-model="editnotification.data.location" name="business" ng-options="editnotification.businessLocationId as editnotification.locationName for editnotification in editnotification.LocationData">
+                        </select>
+                      <div ng-if="notificationForm.business.$invalid" class="has-error">
+                        <span class="help-block" ng-show="notificationForm.business.$touched && notificationForm.business.$error.required">Select Business Location is Required</span>
+                 </div>   
+                </div>
+                <div>
+                  <label class="drk-green small-heading"> Previous Upload Image</label>
+                    <!--  <img src="http://172.27.10.46:8081/files{{editnotification.data.notificationImgUrl}}" class="thumb-image"> -->
+                      <img ng-if="!editnotification.data.notificationImgUrl" src="UX/image/NoImage.jpg" class="thumb-image">
+                      <img ng-if="editnotification.data.notificationImgUrl" src="{{editnotification.data.notificationImgUrl}}" class="thumb-image">
+                    
+                </div>
+            
+                    <div class="col-sm-3 col-md-6">
+                        <div class="file-upload">
+                            <label for="upload" class="file-upload__labelGrey pad-30 pad-create f-s-large">
+                                <p class="centerTxt"><i class="fa fa-plus fa-1x" aria-hidden="true"></i></p>
+                                <p class="centerTxt">Upload Icon</p>
+                                <p class="centerTxt">Max Size 50 KB</p>
+                            </label>
+                            <input id="upload" class="file-upload__input" type="file" ngf-select ng-model="editnotification.data.filename" name="file" ngf-pattern="'.jpeg,.png,.gif'" accept=".jpeg,.png,.gif" ngf-max-size="50KB">
+
+                           <!--  <div ngf-thumbnail="notificationCreate.data.filename"></div>wqerwfdf -->
+                        </div>
+                        {{editnotification.data.filename.name}}
+
+                        <div ng-if="notificationForm.file.$invalid" class="has-error"><span class="help-block" ng-show="notificationForm.file.$error.maxSize">File too large(max-size 50KB)</span>
+                                        <span class="help-block" ng-show="notificationForm.file.$error.pattern">Valid file format are jpeg, png, gif.</span>
+                        </div>
+
+                     </div>
+                
+                <!--  <div class="col-lg-4 m-t-15" >
+                   
+            </div> -->
+            </div>
+
+
+</form>
+<div class="row p-t-35" >
+    <div class="col-md-6 row">
+        <div class="col-md-8 row">
+            <div class="col-md-6">
+                <button type="button" class="btn btn-default  btn-block darkBtnlrg " value="Form state" ng-click="!editnotification.dateError && validateForm([notificationForm]) && editnotification.editNotification(editnotification.data)"><span>Save Changes</span></button>
+            </div>
+           <!--  <div class="col-md-6">
+                <button type="button" class="btn btn-default pull-right  btn-block lgtBtnlrg"><span>Cancel </span></button>
+            </div> -->
+             <div class="col-md-6">
+                    <button type="button" class="btn btn-default pull-right  btn-block lgtBtnlrg" ng-click="editnotification.cancelNotification()"><span>Cancel</span></button>
+                </div>
+        </div>
+      
+    </div>
+   
+</div>
+</div>

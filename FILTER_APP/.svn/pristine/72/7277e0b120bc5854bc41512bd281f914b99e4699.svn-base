@@ -1,0 +1,89 @@
+(function () {
+    'use strict';
+
+    angular.module('app.common').factory('AlbumService', albumService);
+
+    //Service injection
+    albumService.$inject = ['$http', 'APIS', 'dataManagerService'];
+
+    //Service implementation
+    function albumService($http, APIS, dataManagerService) {
+        return {
+            getAlbumSummaryData: getAlbumSummaryData,
+            createAlbum: createAlbum,
+            deleteAlbums: deleteAlbums,
+            getDataForAlbum: getDataForAlbum,
+            saveEditAlbumDetail:saveEditAlbumDetail,
+            getLocationData:getLocationData
+        };
+
+
+        function createAlbum(albumObj, fileObj) {
+            var requestObj = {
+                "obj": null,
+                "file": null
+            };
+
+            requestObj.file = fileObj['file'];
+            requestObj.obj = albumObj;
+
+            console.log(requestObj);
+
+            //Send Request Data
+            APIS.CREATE_ALBUM.data = requestObj;
+            return dataManagerService.sendRequestWithImage('', APIS.CREATE_ALBUM).then(function (data) {
+                return data;
+            });
+        }
+        function getLocationData(){
+            return dataManagerService.sendRequest(null, APIS.GET_LOCATION).then(function (data) {
+                return data;
+            });
+        }
+
+        function deleteAlbums(obj) {
+            APIS.DELETE_ALBUM.data = obj;
+            return dataManagerService.sendRequest(null, APIS.DELETE_ALBUM).then(function (data) {
+                return data;
+            });
+        }
+
+        function getAlbumSummaryData(obj) {
+            APIS.GET_ALBUM_LIST.data = obj;
+            var token = "";
+            return dataManagerService.sendRequest(null, APIS.GET_ALBUM_LIST, token).then(function (data) {
+                return data;
+            });
+        }
+
+        function getDataForAlbum(data) {
+            APIS.GET_CREATED_DATA_FOR_EDIT.URL = APIS.GET_CREATED_DATA_FOR_EDIT.TEMPURL;
+            APIS.GET_CREATED_DATA_FOR_EDIT.URL = APIS.GET_CREATED_DATA_FOR_EDIT.URL + "/" + data
+
+            return dataManagerService.sendRequest(null, APIS.GET_CREATED_DATA_FOR_EDIT).then(function (data) {
+
+                return data;
+            });
+        }
+
+        function saveEditAlbumDetail(albumObj, fileObj){
+             var requestObj = {
+                "obj": null,
+                "file": null
+            };
+
+            requestObj.file = fileObj['file'];
+            requestObj.obj = albumObj;
+
+          
+
+            //Send Request Data
+            APIS.EDIT_ALBUM.data = requestObj;
+            return dataManagerService.sendRequestWithImage('', APIS.EDIT_ALBUM).then(function (data) {
+                return data;
+            });
+        }
+
+    }
+
+})();

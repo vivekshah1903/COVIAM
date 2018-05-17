@@ -1,0 +1,193 @@
+<app-header></app-header>
+<div class="row">
+    <div class="col-md-12 top-heading">
+        <h1>Notifications</h1>
+    </div>
+</div>
+<div class="common-container">
+<div class="row">
+    <div class="col-lg-12">
+        <h3 class="loginHead">Create notifications
+      <a class="pull-right in-block" ui-sref="^">
+        < Back </a>
+    </h3>
+    </div>
+</div>
+<form name="notificationForm" novalidate>
+    <div class="row">
+        <div class=" col-md-8 col-sm-8 col-xs-12 ">
+            <div class="col-md-6 col-sm-6 col-xs-6" style="padding-left: 0px;">
+                <select class="form-control" required ng-model="notificationCreate.data.category" name="category">
+                    <option value="">Select category</option>
+                    <option value="Announcements">Announcements</option>
+                    <option value="Upcoming Events">Upcoming Events</option>
+                    <option value="Policy Changes">Policy Changes</option>
+                    <option value="Key Timelines">Key Timelines</option>
+                </select>
+                 <div ng-if="notificationForm.category.$invalid" class="has-error">
+                        <span class="help-block" ng-show="notificationForm.category.$touched && notificationForm.category.$error.required">Select category is Required</span>
+                 </div>
+            </div>
+            
+            <div class="col-md-6 col-sm-6 col-xs-6" style="padding-right:0px;">
+                <select class="form-control" required ng-model="notificationCreate.data.priority" name="priority">
+                    <option value="">Select priority</option>
+                    <option value="High">High</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Low">Low</option>
+                </select>
+                 <div ng-if="notificationForm.priority.$invalid" class="has-error">
+                        <span class="help-block" ng-show="notificationForm.priority.$touched && notificationForm.priority.$error.required">Select category is Required</span>
+                 </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-sm-4"></div>
+    </div>
+    <div class="row m-t-15">
+        <div class="col-md-8 col-sm-8">
+            <div class="form-group">
+                <textarea class="form-control" name="notification_description" ng-model="notificationCreate.data.description" rows="5" id="comment" placeholder="Enter Notification Description" required=""></textarea>
+                 <div ng-if="notificationForm.notification_description.$invalid" class="has-error">
+                        <span class="help-block" ng-show="notificationForm.notification_description.$touched && notificationForm.notification_description.$error.required">Notification Description is Required</span>
+              </div>
+
+            </div>
+             
+        </div>
+        <div class="col-md-4 col-sm-4"></div>
+    </div>
+    <div class="col-lg-12">
+       
+        <span class="text-color startHead"> Specify notification start date,expiry date and publish date  </span>
+    </div>
+    <div class="row">
+
+
+        <div class="col-md-2">
+            <div class="space-20 pst-rel date-pick-box">
+                <input placeholder="Start Date" type="text" class="date-input m-t-15" required ng-model="notificationCreate.data.validFrom" name="validFrom" is-open="notificationCreate.from" uib-datepicker-popup="dd-MM-yyyy" datepicker-options="notificationCreate.options" onkeydown="return false" ng-model-options="{timezone: 'UTC'}" ng-change="notificationCreate.validFromCheck(notificationCreate.data.validFrom,notificationCreate.data.validTo)">
+                <span class="input-group-btn">
+
+            <button type="button" class="btn btn-default calendr-btn" ng-click="notificationCreate.dashDatePicker(notificationCreate.from,'from')">
+                                                            <i class="glyphicon glyphicon-calendar"></i>
+                                                        </button>
+            </span>
+                  <div ng-if="notificationForm.validFrom.$invalid" class="has-error">
+                                <span class="help-block" ng-show="notificationForm.validFrom.$touched && notificationForm.validFrom.$error.required">Start Date Required</span>
+                            </div>
+            </div>
+        </div>
+      <!--   <div class="col-lg-2" uib-timepicker ng-model="notificationCreate.data.startTime"  ng-required="true">
+          
+        </div> -->
+
+         <div class="col-lg-2">
+                        <div uib-timepicker ng-model="notification.data.startTime" name="starttime" ng-required="true"></div>
+                        <div ng-if="notificationForm.starttime.$invalid" class="has-error">
+                            <span class="help-block" ng-show="notificationForm.starttime.$touched && notificationForm.starttime.$error.required">Start Time is Required</span>
+                        </div>
+        </div>
+
+        <div>
+            <label class="col-lg-1 m-t-25"> to </label>
+        </div>
+        <div class="col-md-2">
+            <div class="space-20 pst-rel date-pick-box">
+                <input type="text" placeholder="Expiry Date" class="date-input m-t-15" onkeydown="return false" required ng-model="notificationCreate.data.validTo" name="validTo" is-open="notificationCreate.to" uib-datepicker-popup="dd-MM-yyyy" datepicker-options="notificationCreate.options" onkeydown="return false" ng-model-options="{timezone: 'UTC'}" ng-change="notificationCreate.validFromCheck(notificationCreate.data.validFrom,notificationCreate.data.validTo);notificationCreate.publishDateValidate()">
+                <span class="input-group-btn">
+
+            <button type="button" class="btn btn-default calendr-btn" ng-click="notificationCreate.dashDatePicker(notificationCreate.to,'to')">
+                                                            <i class="glyphicon glyphicon-calendar"></i>
+                                                        </button>
+            </span>
+                <div ng-if="notificationForm.validTo.$invalid" class="has-error">
+                                <span class="help-block" ng-show="notificationForm.validTo.$touched && notificationForm.validTo.$error.required">End Date Required</span>
+                </div>
+              
+            </div>
+        </div>
+       <div class="col-lg-2">
+                        <div uib-timepicker ng-model="notification.data.startTime" name="endtime" ng-required="true"></div>
+                        <div ng-if="notificationForm.endtime.$invalid" class="has-error">
+                            <span class="help-block" ng-show="notificationForm.endtime.$touched && notificationForm.endtime.$error.required">Start Time is Required</span>
+                        </div>
+        </div>
+
+
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+         <label class="drk-green small-heading"> Publish Date </label>
+            <div class="Billing pst-rel date-pick-box">
+                <input type="text" placeholder="Publish Date" class="date-input m-t-15" onkeydown="return false" required ng-model="notificationCreate.data.publishValidFrom" name="publishDate" is-open="notificationCreate.from1" uib-datepicker-popup="dd-MM-yyyy" datepicker-options="notificationCreate.publishoptions" onkeydown="return false" ng-model-options="{timezone: 'UTC'}">
+                <span class="input-group-btn">
+
+            <button type="button" class="btn btn-default calendr-btn" ng-click="notificationCreate.openDashDatePicker(notificationCreate.from1,'from1')">
+                                                            <i class="glyphicon glyphicon-calendar"></i>
+                                                        </button>
+            </span>
+               <div ng-if="notificationForm.publishDate.$invalid" class="has-error">
+                                <span class="help-block" ng-show="notificationForm.publishDate.$touched && notificationForm.publishDate.$error.required">End Date Required</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+                <div class="col-lg-5 m-t-15">
+                    <label class="drk-green small-heading"> Business location</label>
+                    <div class="col-lg-8 location pad-0">
+                        <div class="radio-primary m-r-50">
+                            <input type="radio" name="busiradio" ng-model="notificationCreate.data.businessLocation" value="All" required>
+                            <span>ALL</span>
+                        </div>
+                        <div class="radio-primary  m-r-50">
+                            <input type="radio" name="busiradio" ng-model="notificationCreate.data.businessLocation" value="ASCI" required><span>ASCI</span>
+                        </div>
+                        <div class="radio-primary  m-r-50">
+                            <input type="radio" name="busiradio" ng-model="notificationCreate.data.businessLocation" value="ASCP" required><span>ASCP</span>
+                        </div>
+                        <div ng-if="notificationForm.busiradio.$invalid" class="has-error">
+                            <span class="help-block" ng-show="notificationForm.busiradio.$touched && notificationForm.busiradio.$error.required">Business Location is Required</span>
+                        </div>
+                    </div>
+                </div>
+            
+                    <div class="col-sm-3 col-md-6">
+                        <div class="file-upload">
+                            <label for="upload" class="file-upload__labelGrey pad-30 pad-create f-s-large">
+                                <p class="centerTxt"><i class="fa fa-plus fa-1x" aria-hidden="true"></i></p>
+                                <p class="centerTxt">Upload Icon</p>
+                                <p class="centerTxt">Max Size 50 KB</p>
+                            </label>
+                            <input id="upload" class="file-upload__input" type="file" ngf-select ng-model="notificationCreate.data.filename" name="file" ngf-pattern="'.jpeg,.png,.gif'" accept=".jpeg,.png,.gif"  required="">
+                           <!--  <div ngf-thumbnail="notificationCreate.data.filename"></div>wqerwfdf -->
+                        </div>
+                        {{notificationCreate.data.filename.name}}
+                     </div>
+                
+                <!--  <div class="col-lg-4 m-t-15" >
+                   
+            </div> -->
+            </div>
+
+
+</form>
+<div class="row" style="padding-top:35px;">
+    <div class="col-md-6 row">
+        <div class="col-md-8 row">
+            <div class="col-md-6">
+                <button type="button" class="btn btn-default  btn-block darkBtnlrg " value="Form state" ng-click="validateForm([notificationForm]) && notificationCreate.createNotification(event.data)"><span>Create notification</span></button>
+            </div>
+           <!--  <div class="col-md-6">
+                <button type="button" class="btn btn-default pull-right  btn-block lgtBtnlrg"><span>Cancel </span></button>
+            </div> -->
+             <div class="col-md-6">
+                    <button type="button" class="btn btn-default pull-right  btn-block lgtBtnlrg" ng-click="notificationCreate.cancelNotification()"><span>Cancel</span></button>
+                </div>
+        </div>
+        
+    </div>
+
+</div>
+</div>

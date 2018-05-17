@@ -1,0 +1,207 @@
+(function() {
+    'use strict';
+
+    angular.module('app.events').controller('EventEditCtrl', eventeditCtrl);
+
+    eventeditCtrl.$inject = ['eventService', '$scope', 'dataManagerService', '$timeout', 'APIS', '$location', 'sessionService', 'utils', 'CONFIG', 'ModalService', '$state', '$stateParams'];
+
+    //Controller implementation
+    function eventeditCtrl(eventService, $scope, dataManagerService, $timeout, APIS, $location, sessionService, utils, CONFIG, ModalService, $state, $stateParams) {
+        var vm = this;
+
+
+        vm.edit = sessionService.getEditEventList();
+       
+       
+
+        vm.dashDatePicker = dashDatePicker;
+        vm.validFromCheck = validFromCheck;
+        vm.userdata = sessionService.getUserDetails('USER');
+        vm.openDatePicker = openDatePicker;
+        vm.publishDateValidate = publishDateValidate;
+        vm.editEvent = editEvent;
+        vm.cancelEvent = cancelEvent;
+        vm.apisAlert = {
+            toggle: false,
+            message: "",
+            type: "ERROR"
+        }
+
+
+
+        var d = new Date(); // today!
+        onloadData();
+
+        function onloadData() {
+
+
+            var a = utils.getinDateFormat(vm.edit.eventEndDate, CONFIG.SYSTEM_DATE_FORMAT.PAGE_DATE);
+            var b = utils.getinDateFormat(vm.edit.eventStartDate, CONFIG.SYSTEM_DATE_FORMAT.PAGE_DATE);
+            var c = utils.getinDateFormat(vm.edit.publishDate, CONFIG.SYSTEM_DATE_FORMAT.PAGE_DATE);
+            var startTime = vm.edit.eventStartTime;
+            var endTime = vm.edit.eventEndTime;
+
+
+            vm.edit.eventEndDate = new Date(a);
+            vm.edit.eventStartDate = new Date(b);
+            vm.edit.publishDate = new Date(c);
+
+            var g = new Date();
+            var res = startTime.substr(0, 2);
+            var des = startTime.substr(3, 2);
+            g.setHours(res);
+            g.setMinutes(des);
+            vm.edit.eventStartTime = g;
+
+            var k = new Date();
+            var kes = endTime.substr(0, 2);
+            var ked = endTime.substr(3, 2);
+            k.setHours(kes);
+            k.setMinutes(ked);
+            vm.edit.eventEndTime = k;
+
+
+        }
+
+
+
+
+
+        vm.options = {
+            minDate: d
+        }
+
+           publishDateValidate();
+        function publishDateValidate() {
+            vm.publishoptions = {
+                maxDate: vm.edit.eventEndDate,
+                minDate: d
+            }
+        }
+
+        function dashDatePicker(opened, value) {
+            var am = this;
+            if (value == 'to') {
+                am.to = !(am.opened);
+            }
+            if (value == 'from') {
+                am.from = !(am.opened);
+            }
+        }
+
+        function openDatePicker(opened, value) {
+            var am = this;
+            if (value == 'to') {
+                am.to = !(am.opened);
+            }
+            if (value == 'from1') {
+                am.from1 = !(am.opened);
+            }
+        }
+
+
+
+        function validFromCheck(valueA, valueB) {
+            vm.dateError = false;
+            if (!valueA || !valueB) {
+                vm.dateError = false;
+                return;
+            }
+            (valueA > valueB) ? vm.dateError = true: vm.dateError = false;
+
+
+        }
+
+        function preloadComboValues() {
+            var token = "";
+            dataManagerService.sendRequest(null, APIS.GET_EVENT_TYPE, token).then(function(data) {
+                vm.eventDrp = data.eventTypeList;
+            });
+            dataManagerService.sendRequest(null, APIS.GET_ORGANIZED_BY, token).then(function(data) {
+                vm.organizedDrp = data.groupList;
+            });
+             dataManagerService.sendRequest(null, APIS.GET_ALBUM_LIST, token).then(function(data) {
+                vm.albumDrp = data.dataBean.rows;
+            });
+
+        }
+        preloadComboValues();
+
+        function editEvent(edit) {
+            console.log(edit)
+          
+
+            var eventStartTime = utils.getinDateFormat(edit.eventStartTime, CONFIG.SYSTEM_DATE_FORMAT.TIME_FORMAT);
+            var eventEndTime = utils.getinDateFormat(edit.eventEndTime, CONFIG.SYSTEM_DATE_FORMAT.TIME_FORMAT);
+            var publishDate = utils.getinDateFormat(edit.publishDate, CONFIG.SYSTEM_DATE_FORMAT.DATE_YEAR_FORMAT);
+            var eventEndDate = utils.getinDateFormat(edit.eventEndDate, CONFIG.SYSTEM_DATE_FORMAT.DATE_YEAR_FORMAT);
+            var eventStartDate = utils.getinDateFormat(edit.eventStartDate, CONFIG.SYSTEM_DATE_FORMAT.DATE_YEAR_FORMAT);
+            var obj = {
+                acf2Id:vm.userdata.acf2Id,
+                audience: edit.audience,
+                businessLocation: edit.businessLocation,
+                eventId: vm.edit.eventId,
+                eventDesc: edit.eventDesc,
+                eventEndDate: eventEndDate,
+                eventEndTime: eventEndTime,
+                eventImgUrl:edit.albumSummary,
+                eventExternalLocation: edit.eventExternalLocation,
+                eventName: edit.eventName,
+                eventStartDate: eventStartDate,
+                eventStartTime: eventStartTime,
+                eventType: edit.eventType,
+                organizedBy: edit.organizedBy,
+                publishDate: publishDate,
+                venue: edit.venue
+            }
+            var message = "Do you want to save the changes?’"
+           
+            ModalService.openAlert('confirm', 'Edit Event', message, $scope, 'reset');
+            $scope.$on('resetOk', function() {
+                return eventService.createEventData(obj).then(function(eventData) {
+                    if (eventData.result == "SUCCESS") {
+                        vm.apisAlert = {
+                            toggle: true,
+                            message: eventData.message || 'Internal Server Error',
+                            type: "SUCCESS"
+                        };
+                        $timeout(function() {
+                            vm.apisAlert.toggle = false;
+                              $location.path("/event");
+                        }, 5000);
+                        return;
+                    } else {
+
+                    }
+
+                });
+
+            });
+            $scope.$on('resetCancel', function() {
+
+            });
+
+        }
+
+        function cancelEvent() {
+            var message = "Do you want to cancel the changes made to the Event ?"
+
+            ModalService.openAlert('confirm', 'Cancel Event', message, $scope, 'reset');
+            $scope.$on('resetOk', function() {
+                $location.path("/event");
+
+            });
+
+
+            $scope.$on('resetCancel', function() {
+
+            });
+        }
+
+
+
+
+
+
+    } //EOF CategoryCtrl
+})();

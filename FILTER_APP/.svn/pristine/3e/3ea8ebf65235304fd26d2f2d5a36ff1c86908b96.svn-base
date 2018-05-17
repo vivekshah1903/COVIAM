@@ -1,0 +1,19 @@
+(function() {
+    'use strict';
+    angular.module('app.events').config(function config($stateProvider) {
+        $stateProvider.state('eventPage', {
+            url: '/eventPage',
+            controller: 'EventCtrl as event',
+            templateUrl: 'UX/app/events/partials/event_table.html'
+        }).state('eventPage.eventCreatePage', {
+            url: '/eventCreatePage',
+            //parent: 'eventPage',
+            controller: 'EventCtrl as event',
+            templateUrl: 'UX/app/events/partials/event.html'
+
+
+
+
+        });
+    });
+})();

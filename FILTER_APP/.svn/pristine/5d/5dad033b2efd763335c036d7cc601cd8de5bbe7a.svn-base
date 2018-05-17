@@ -1,0 +1,206 @@
+<app-header>
+</app-header>
+</div>
+<div class="row">
+    <div class="col-md-12 top-heading">
+        <h1>Events</h1></div>
+</div>
+<div class="common-container event">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="alert m-t-15" ng-class="{'alert-danger':editevent.apisAlert.type=='ERROR','alert-success':editevent.apisAlert.type=='SUCCESS'}" ng-show="editevent.apisAlert.toggle">
+                <a href="javascript:void(0)" ng-click="editevent.apisAlert.toggle=false;" class="close" aria-label="close" title="close"><i class="fa fa-times-circle" aria-hidden="true"></i></a>
+                <strong>{{editevent.apisAlert.message}}</strong>
+            </div>
+            <h3 class="loginHead">Edit Event
+            <a class="pull-right in-block backbtn"  ui-sref="^"> < Back </a>
+            </h3>
+        </div>
+    </div>
+    <form name="eventForm">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="m-t-15">
+                <!--  {{editevent.edit}} -->
+                <input class="bottomLine air-input input-plchodr" type="text" ng-model="editevent.edit.eventName" placeholder="Enter event name" name="eventName" required>
+                <div ng-if="eventForm.eventName.$invalid" class="has-error">
+                    <span class="help-block" ng-show="eventForm.eventName.$touched && eventForm.eventName.$error.required">Event Name Required</span>
+                </div>
+            </div>
+            <!--  {{editevent}} -->
+            <div class="m-t-15">
+                <textarea rows="4" cols="50" class="input-plchodr" placeholder="Enter event description" name="eventDescription" ng-model="editevent.edit.eventDesc" required=""></textarea>
+                <div ng-if="eventForm.eventDescription.$invalid" class="has-error">
+                    <span class="help-block" ng-show="eventForm.eventDescription.$touched && eventForm.eventDescription.$error.required">Event Description Required</span>
+                </div>
+            </div>
+            <div class="m-t-15">
+                <div>
+                    <label class="drk-green"> Event date and time</label>
+                </div>
+                <div class="row">
+                    <div class="col-lg-2">
+                        <div class="space-20 pst-rel date-pick-box">
+                            <input type="text" class="date-input m-t-15" required ng-model="editevent.edit.eventStartDate" name="validFrom" is-open="editevent.from" uib-datepicker-popup="dd-MM-yyyy" datepicker-options="editevent.options" onkeydown="return false" ng-model-options="{timezone: 'UTC'}" ng-change="editevent.validFromCheck(editevent.eventStartDate,editevent.eventEndDate)" /><span class="input-group-btn">
+
+                                                        <button type="button" class="btn btn-default calendr-btn" ng-click="editevent.dashDatePicker(editevent.from,'from')">
+                                                            <i class="glyphicon glyphicon-calendar"></i>
+                                                        </button>
+                                                        </span>
+                            <div ng-if="eventForm.validFrom.$invalid" class="has-error">
+                                <span class="help-block" ng-show="eventForm.validFrom.$touched && eventForm.validFrom.$error.required">Event From Date Required</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!--  {{editevent.edit.eventStartTime}} -->
+                    <div class="col-lg-2">
+                        <div uib-timepicker ng-model="editevent.edit.eventStartTime" ng-required="true" name="starttime"></div>
+                        <div ng-if="eventForm.starttime.$invalid" class="has-error">
+                            <span class="help-block" ng-show="eventForm.starttime.$touched && eventForm.starttime.$error.required">Start Time is Required</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="col-lg-1 m-t-25 f-s-18"> to </label>
+                    </div>
+                    <div class="col-lg-2" ng-class="{'has-error':eventForm.validTo.$touched && eventForm.validTo.$invalid}">
+                        <div class="space-20 pst-rel date-pick-box">
+                            <input type="text" required class="date-input m-t-15" ng-model="editevent.edit.eventEndDate" name="validTo" is-open="editevent.to" uib-datepicker-popup="dd-MM-yyyy" onkeydown="return false" datepicker-options="editevent.options" ng-model-options="{timezone: 'UTC'}" ng-change="editevent.validFromCheck(editevent.edit.eventStartDate,editevent.edit.eventEndDate);editevent.publishDateValidate()"><span class="input-group-btn">
+                        <button type="button" class="btn btn-default calendr-btn" ng-click="editevent.dashDatePicker(editevent.to,'to')">
+                        <i class="glyphicon glyphicon-calendar"></i>
+                        </button>
+                         </span>
+                            <div ng-if="eventForm.validTo.$invalid" class="has-error">
+                                <span class="help-block" ng-show="eventForm.validTo.$touched && eventForm.validTo.$error.required">Event To Date Required</span>
+                            </div>
+                            <div class="has-error"><span class="help-block" ng-show="editevent.dateError">To date cannot be older than From date</span></div>
+                        </div>
+                    </div>
+                    <!--   {{event.data.timeTo}}<br>
+                        {{event.data.timeTo | date:'shortTime' }} -->
+                    <div class="col-lg-2">
+                        <div uib-timepicker ng-model="editevent.edit.eventEndTime" ng-required="true" name="endtime"></div>
+                        <div ng-if="eventForm.endtime.$invalid" class="has-error">
+                            <span class="help-block" ng-show="eventForm.endtime.$touched && eventForm.endtime.$error.required">End Time is Required</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 m-t-15">
+                    <label class="drk-green small-heading"> Business location</label>
+                    <div class="col-lg-8 location pad-0">
+                   <!--  {{editevent.edit.businessLocation}} -->
+                        <div class="radio-primary m-r-50">
+                            <input type="radio" name="busiradio" ng-model="editevent.edit.businessLocation" value="Toronto, Canada" required>
+                            <span>ALL</span>
+                        </div>
+                        <div class="radio-primary  m-r-50">
+                            <input type="radio" name="busiradio" ng-model="editevent.edit.businessLocation" value="ASC, India" required><span>ASCI</span>
+                        </div>
+                        <div class="radio-primary  m-r-50">
+                            <input type="radio" name="busiradio" ng-model="editevent.edit.businessLocation" value="ASC, Philippines" required><span>ASCP</span>
+                        </div>
+                        <div ng-if="eventForm.busiradio.$invalid" class="has-error">
+                            <span class="help-block" ng-show="eventForm.busiradio.$touched && eventForm.busiradio.$error.required">Business Location is Required</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 m-t-15">
+                    <label class="drk-green small-heading"> Venue</label>
+                    <div class="radio-primary m-r-50">
+                        <input type="radio" name="optradio" ng-model="editevent.edit.venue" value="Internal" required>
+                        <span>Internal</span>
+                    </div>
+                    <div class="radio-primary  m-r-50">
+                        <input type="radio" name="optradio" ng-model="editevent.edit.venue" value="External" required><span>External</span>
+                    </div>
+                    <!-- <div class="radio-primary m-r-50">
+                    <label data-ng-repeat="choice in question.choices">
+                      <input type="radio" name="response" ng-model="event.data.choice.text"  data-ng-value="true" />
+                      {{choice.text}}
+                    </label>
+                    </div> -->
+                    <div class="radio-primary" ng-show="editevent.edit.venue =='External'">
+                        <input class="bottomLine air-input input-plchodr" type="text" ng-model="editevent.edit.eventExternalLocation" placeholder="Enter venue name">
+                    </div>
+                    <div ng-if="eventForm.optradio.$invalid" class="has-error">
+                        <span class="help-block" ng-show="eventForm.optradio.$touched && eventForm.optradio.$error.required">Venue is Required</span>
+                    </div>
+                </div>
+                <!--  <div class="col-lg-4 m-t-15" >
+                   
+            </div> -->
+            </div>
+            <div class="row">
+                <div class="col-lg-2">
+                    <label class="drk-green" for="sel1"> Organized by</label>
+                    <select class="form-control" id="sel1" ng-model="editevent.edit.organizedBy" name="eventOrganised" ng-options="editevent.groupName as editevent.groupName for editevent in editevent.organizedDrp" required="">
+                        <option>Select Organizer</option>
+                        <!-- <option>4</option> -->
+                    </select>
+                    <div ng-if="eventForm.eventOrganised.$invalid" class="has-error">
+                        <span class="help-block" ng-show="eventForm.eventOrganised.$touched && eventForm.eventOrganised.$error.required">Organized By is Required</span>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <!--  {{editevent.eventDrp}} -->
+                </div>
+                <div class="col-lg-2">
+                    <label class="drk-green" for="sel1"> Associated Album</label>
+                    <select class="form-control" id="sel1" ng-model="event.data.associated" name="eventAssociated">
+                        <option value="">Select Album</option>
+                        <option>Album1</option>
+                        <option>Album2</option>
+                    </select>
+                </div>
+            </div>
+            <div class="m-t-15 row">
+                <div class="col-lg-2">
+                    <label class="drk-green"> Publish date</label>
+                    <div class="pst-rel date-pick-box">
+                        <input type="text" class="date-input m-t-15" required ng-model="editevent.edit.publishDate" name="publishDate" is-open="editevent.from1" uib-datepicker-popup="dd-MM-yyyy" datepicker-options="event.publishoptions" onkeydown="return false" ng-model-options="{timezone: 'UTC'}"><span class="input-group-btn">
+
+                    <button type="button" class="btn btn-default calendr-btn" ng-click="editevent.openDatePicker(editevent.from1,'from1')">
+                    <i class="glyphicon glyphicon-calendar"></i>
+                                                        </button></span>
+                        <div ng-if="eventForm.publishDate.$invalid" class="has-error">
+                            <span class="help-block" ng-show="eventForm.publishDate.$touched && eventForm.publishDate.$error.required">Event Publish Date Required</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2"></div>
+                <div class="col-lg-2">
+                    <label class="drk-green"> Audience</label>
+                    <input class="bottomLine air-input m-t-15" type="text" ng-model="editevent.edit.audience" placeholder="All Staff" name="audience" required>
+                    <!--  {{event.event_audience}} -->
+                    <div ng-if="eventForm.audience.$invalid" class="has-error">
+                        <span class="help-block" ng-show="eventForm.audience.$touched && eventForm.audience.$error.required">Event Audience Required</span>
+                    </div>
+                </div>
+            </div>
+            <div class="m-t-15 row">
+                <div class="col-lg-2">
+                    <label class="drk-green" for="sel1"> Event Type</label>
+                    <!--   {{editevent.edit.eventType}} -->
+                    <select class="form-control" id="sel1" ng-model="editevent.edit.eventType" name="eventtype" required="" ng-options="editevent.eventType as editevent.eventType for editevent in editevent.eventDrp">
+                        <option value="">Select Event Type</option>
+                    </select>
+                    <div ng-if="eventForm.eventtype.$invalid" class="has-error">
+                        <span class="help-block" ng-show="eventForm.eventtype.$touched && eventForm.eventtype.$error.required">Event Type is Required</span>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <br>
+            <div class="row pad-5 m-t-15">
+                <div class="col-lg-2 col-md-6">
+                    <button type="button" class="btn btn-default btn-block darkBtnlrg" ng-click="validateForm([eventForm]) && editevent.editEvent(editevent.edit)"><span>Save Changes</span></button>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <button type="button" class="btn btn-default pull-right  btn-block lgtBtnlrg" ng-click="editevent.cancelEvent()"><span>Cancel</span></button>
+                </div>
+            </div>
+        </div>
+    </div>    
+    </form>
+</div>

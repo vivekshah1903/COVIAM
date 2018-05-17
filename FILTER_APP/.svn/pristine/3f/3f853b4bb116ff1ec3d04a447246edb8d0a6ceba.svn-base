@@ -1,0 +1,17 @@
+(function() {
+    'use strict';
+    angular.module('app.common').config(function config($stateProvider) {
+        $stateProvider.state('home', {
+            url: '/home',
+            controller: 'HomeCtrl as home',
+            templateUrl: 'UX/app/common/partials/home.html'
+
+        }).state('gallery', {
+            url: '/gallery',
+            controller: 'GalleryCtrl as gallery',
+            templateUrl: 'UX/app/gallery/partials/gallery.html'
+        })
+
+
+    });
+})();

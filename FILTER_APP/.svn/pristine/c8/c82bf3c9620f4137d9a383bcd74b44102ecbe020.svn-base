@@ -1,0 +1,49 @@
+
+<div class="modal-header cusMdlbott">
+    <!--<button type="button" class="close" data-dismiss="modal">&times;</button>-->
+    <h4 class="modal-title udrTit font-24">Publish To Employee App</h4>
+    <p class="font-20">Please Confirm below validation summary</p>
+    <p class="font-20">File Name:{{uploadData.fileName}}</p>
+</div>
+<div class="modal-body">
+    <table class="table table-bordered tabCustom table-responsive">
+        <thead class="theadCustom">
+            <tr>
+                <td></td>
+                <td class="tdTxtCentre">Total</td>
+                <td class="tdTxtCentre">Success</td>
+                <td class="tdTxtCentre">Failed</td>
+                <td class="tdTxtCentre">New</td>
+                <td class="tdTxtCentre">Update</td>
+                <td class="tdTxtCentre">Delete</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="x in uploadData.ExcelData " class="oddRow">
+                <td>Roster Count</td>
+                <td class="tdTxtCentre">{{x.rosterCount.total}}</td>
+                <td class="tdTxtCentre">{{x.rosterCount.success}}</td>
+                <td class="tdTxtCentre" ng-class="{'red-text':x.rosterCount.failed > 0}">{{x.rosterCount.failed}}</td>
+                <td class="tdTxtCentre">{{x.rosterCount.newRecord}}</td>
+                <td class="tdTxtCentre">{{x.rosterCount.updateRecord}}</td>
+                <td class="tdTxtCentre">{{x.rosterCount.deleteRecord}}</td>
+            </tr>
+            <tr ng-repeat="x in uploadData.ExcelData ">
+                <td class="oddRowBakClr">Employee Count</td>
+                <td class="tdTxtCentre oddRowBakClr">{{x.employeeCount.total}}</td>
+                <td class="tdTxtCentre oddRowBakClr">{{x.employeeCount.success}}</td>
+                <td class="tdTxtCentre oddRowBakClr" ng-class="{'red-text':x.employeeCount.failed > 0}">{{x.employeeCount.failed}}</td>
+                <td class="tdTxtCentre oddRowBakClr">{{x.employeeCount.newRecord}}</td>
+                <td class="tdTxtCentre oddRowBakClr">{{x.employeeCount.updateRecord}}</td>
+                <td class="tdTxtCentre oddRowBakClr">{{x.employeeCount.deleteRecord}}</td>
+            </tr>
+         
+        </tbody>
+    </table>
+</div>
+<div class="modal-footer cusMdltop m-b-30">
+    <div class="pull-left" ng-repeat="x in uploadData.ExcelData ">
+        <button type="button" ng-disabled="x.employeeCount.failed !== 0 || x.rosterCount.failed !== 0" ng-click="uploadData.uploadFile()" class="btn btn-default popUpBtndark"><span class="btnText">Publish<span></button>
+          <button type="button" class="btn btn-default popUpLightbtn" ng-click="uploadData.closePopup()"><span class="btnText">Cancel</span></button>
+    </div>
+</div>

@@ -1,0 +1,52 @@
+(function() {
+    'use strict';
+
+    angular.module('app.login').controller('LoginCtrl', loginCtrl);
+
+    loginCtrl.$inject = ['LoginService', '$location', '$uibModal', 'sessionService', 'ModalService'];
+
+    //Controller implementation
+    function loginCtrl(LoginService, $location, $uibModal, sessionService, ModalService) {
+        var vm = this;
+        vm.addUser = addUser;
+        sessionService.clearSession();
+
+        function addUser() {
+            var name = vm.userName;
+            var password = vm.password;
+            var obj = {
+                username: name,
+                password: password
+            }
+
+            LoginService.LoginUser(obj).then(function(data) {
+                if (data.result == 'SUCCESS') {
+                    if (sessionService.setUserDetails(data)) {
+                        var obj = {
+                            "acf2Id": data.acf2Id,
+                            "deviceId": data.acf2Id,
+                            "passcode": data.acf2Id,
+                            "timezone": "IND"
+                        }
+
+                        LoginService.getTokenForAuthentication(obj).then(function(data) {
+                            if (data) {
+                                $location.path('/transportdata');
+                            }
+                        });
+
+                    }
+                } else if (data.result == 'FAILURE') {
+                    ModalService.openAlert('alert', 'Invalid Credentials', data.message, '', 'alert');
+
+                }
+            });
+        }
+
+
+
+
+
+
+    }
+})();

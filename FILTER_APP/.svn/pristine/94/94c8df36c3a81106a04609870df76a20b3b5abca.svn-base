@@ -1,0 +1,40 @@
+(function() {
+    'use strict';
+
+    angular.module('app.transportData').controller('TransportDataCtrl', transportDataCtrl);
+
+    transportDataCtrl.$inject = ['$scope','$uibModal', 'TransportDataService'];
+
+    //Controller implementation
+    function transportDataCtrl($scope, $uibModal, TransportDataService) {
+        var vm = this;
+        vm.Upload= Upload;
+      
+         Upload();
+           function Upload() {
+
+            var UserCreateModalInstance = $uibModal.open({
+                animation: true,
+                templateUrl: 'UX/app/transportData/partials/uploadData.html',
+                controller: 'UploadDataCtrl as uploadData',
+                backdrop: 'static',
+                resolve: {
+                    items: function() {
+                        return;
+                    }
+                }
+            });
+
+            UserCreateModalInstance.result.then(function(fileObject) {
+                  console.log("fileObject",fileObject);
+                 TransportDataService.transportData(fileObject);
+                  
+            }, function() {
+
+            });        
+        }
+          //Upload();
+         
+    }
+    
+})();

@@ -1,0 +1,14 @@
+(function() {
+    'use strict';
+
+    angular.module('app.common').controller('TransportDataCtrl', transportDataCtrl);
+
+    transportDataCtrl.$inject = [];
+
+    //Controller implementation
+    function transportDataCtrl() {
+        var vm = this;         
+    }
+  
+
+})();

@@ -1,0 +1,141 @@
+/*****************
+@Author:GuruPrasad
+******************/
+(function() {
+    'use strict';
+    //vendor Service
+    angular.module('app.common').factory('TransportDataService', transportDataService);
+
+    //Service injection
+    transportDataService.$inject = ['$http', 'APIS', 'dataManagerService', '$window', '$q'];
+
+    //Service implementation
+    function transportDataService($http, APIS, dataManagerService, $window, $q) {
+
+        return {
+            //transportData:transportData,
+            getReportData: getReportData,
+            sendFileForValidate: sendFileForValidate,
+            getRosterSummaryData: getRosterSummaryData,
+            uploadDataFile: uploadDataFile,
+            tableToExcel: tableToExcel,
+            getEmployeeSummaryData: getEmployeeSummaryData,
+            downLoadFile: downLoadFile
+        };
+
+        /*function transportData(data) {
+                
+            return data;
+        }*/
+
+        function getReportData(data) {
+
+            APIS.GENERATE_REPORT_DATA.data = data;
+            return dataManagerService.sendRequest(null, APIS.GENERATE_REPORT_DATA).then(function(data) {
+                return data;
+
+            })
+        }
+
+        function downLoadFile(data) {
+            var deferred = $q.defer();
+            var requestHeaders = {
+                'Content-Type': 'arraybuffer',
+                'Accept': 'arraybuffer'
+            };
+
+            APIS.DOWNLOAD_FILE.URL = APIS.DOWNLOAD_FILE.TEMPURL;
+            APIS.DOWNLOAD_FILE.URL = APIS.DOWNLOAD_FILE.URL + '/' + data;
+            return dataManagerService.sendRequest(requestHeaders, APIS.DOWNLOAD_FILE).then(function(data) {
+
+                var defaultFileName = "navneet.xlsx"
+                var blob = new Blob([data], { type: 'application/vnd.ms-excel' });
+                saveAs(blob, defaultFileName);
+                deferred.resolve(defaultFileName);
+
+            })
+            return deferred.promise;
+        }
+
+        function sendFileForValidate(fileObj) {
+            var requestObj = {
+
+                "file": null
+            };
+            requestObj.file = fileObj['fileName'];
+            APIS.FILE_VALIDATE_API.data = requestObj;
+            return dataManagerService.sendRequestWithImage('', APIS.FILE_VALIDATE_API).then(function(data) {
+                return data;
+            });
+        }
+
+        function getRosterSummaryData() {
+            var pageNo = 0;
+            APIS.GET_ROSTER_SUMMARY_DATA.URL = APIS.GET_ROSTER_SUMMARY_DATA.TEMPURL;
+            APIS.GET_ROSTER_SUMMARY_DATA.URL = APIS.GET_ROSTER_SUMMARY_DATA.URL + "?pageno=" + pageNo
+
+            return dataManagerService.sendRequest(null, APIS.GET_ROSTER_SUMMARY_DATA).then(function(data) {
+
+                return data;
+            });
+        }
+
+        function getEmployeeSummaryData() {
+
+            APIS.GET_EMPLOYEE_SUMMARY_DATA.URL = APIS.GET_EMPLOYEE_SUMMARY_DATA.TEMPURL;
+            APIS.GET_EMPLOYEE_SUMMARY_DATA.URL = APIS.GET_EMPLOYEE_SUMMARY_DATA.URL;
+
+            return dataManagerService.sendRequest(null, APIS.GET_EMPLOYEE_SUMMARY_DATA).then(function(data) {
+
+                return data;
+            });
+        }
+
+        function uploadDataFile(fileObj) {
+            var requestObj = {
+
+                "file": null
+            };
+            requestObj.file = fileObj['fileName'];
+            APIS.UPLOAD_VALIDATED_FILE.data = requestObj;
+            return dataManagerService.sendRequestWithImage('', APIS.UPLOAD_VALIDATED_FILE).then(function(data) {
+                return data;
+            });
+        }
+
+        function tableToExcel(tableId, worksheetName) {
+            var uri = 'data:application/vnd.ms-excel;base64,',
+                template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>',
+                base64 = function(s) {
+                    return $window.btoa(unescape(encodeURIComponent(s)));
+                },
+                format = function(s, c) {
+                    return s.replace(/{(\w+)}/g, function(m, p) {
+                        return c[p];
+                    })
+                };
+            /* var table = $(tableId),
+                 ctx = { worksheet: worksheetName, table: table.html() },
+                 */
+            var table = $(tableId);
+            var ctx = {
+                worksheet: worksheetName,
+                table: table.html()
+            };
+            // if browser is IE then save the file as blob, tested on IE10 and IE11
+            var browser = window.navigator.appVersion;
+            if ((browser.indexOf('Trident') !== -1 && browser.indexOf('rv:11') !== -1) ||
+                (browser.indexOf('MSIE 10') !== -1)) {
+                var builder = new MSBlobBuilder();
+                builder.append(uri + base64(format(template, ctx)));
+                var blob = builder.getBlob('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                window.navigator.msSaveBlob(blob, worksheetName + '.xlsx');
+            } else {
+                var href = uri + base64(format(template, ctx));
+                return href;
+
+            }
+        }
+    }
+
+})();

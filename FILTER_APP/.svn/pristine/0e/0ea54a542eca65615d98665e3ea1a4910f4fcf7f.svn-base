@@ -1,0 +1,73 @@
+(function() {
+    'use strict';
+
+    angular.module('app.notify').controller('NotificationCreateCtrl', notificationCreateCtrl);
+
+    notificationCreateCtrl.$inject = [];
+
+    //Controller implementation
+    function notificationCreateCtrl() {
+        var vm = this;
+        vm.dashDatePicker = dashDatePicker;
+        vm.validFromCheck=validFromCheck;
+        vm.openDashDatePicker=openDashDatePicker;
+        vm.publishDateValidate=publishDateValidate;
+        var currentDate=new Date();
+
+        vm.options = {
+            minDate: currentDate
+        }
+        vm.publishoptions = {
+            minDate: currentDate
+        }
+
+        vm.data = {
+            validFrom: currentDate,
+            validTo: currentDate,
+            publishValidFrom: currentDate,
+           
+        }
+        function dashDatePicker(opened, value) {
+            var am = this;
+            if (value == 'to') {
+                am.to = !(am.opened);
+            }
+            if (value == 'from') {
+                am.from = !(am.opened);
+            }
+        }
+
+         function publishDateValidate() {
+            vm.publishoptions = {
+                maxDate: vm.data.validTo,
+                minDate:currentDate
+            }
+        }
+
+        function validFromCheck(valueA, valueB) {
+            vm.dateError = false;
+            if (!valueA || !valueB) {
+                vm.dateError = false;
+                return;
+            }
+            (valueA > valueB) ? vm.dateError = true: vm.dateError = false;
+
+
+        }
+
+        function openDashDatePicker(opened, value){
+            var am = this;
+            if (value == 'to') {
+                am.to = !(am.opened);
+            }
+            if (value == 'from1') {
+                am.from1 = !(am.opened);
+            }
+        }
+       
+    }
+
+
+})();
+
+// nottificationtable controller

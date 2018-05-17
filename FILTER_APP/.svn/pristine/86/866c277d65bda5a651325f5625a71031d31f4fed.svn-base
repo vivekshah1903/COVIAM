@@ -1,0 +1,979 @@
+angular.module('app').constant('APIS', {
+    LOGIN: {
+        URL: 'login',
+        METHOD: "POST"
+    },
+    LOGOUT: {
+        URL: 'logout',
+        METHOD: "GET"
+    },
+    LOOKUP_GET_COUNTRY_LIST: {
+        URL: 'search/country',
+        METHOD: "GET"
+    },
+    GET_ALL_COURIER_TYPE: {
+        URL: 'search/parentLookupCode',
+        METHOD: "GET",
+        TEMPURL: 'search/parentLookupCode'
+    },
+
+    GET_ALL_COURIER_STATUS: {
+        URL: 'search/parentLookupCode',
+        METHOD: "GET",
+        TEMPURL: 'search/parentLookupCode'
+    },
+
+    GET_ALL_VEHICLE_TYPE: {
+        URL: 'search/parentLookupCode',
+        METHOD: "GET",
+        TEMPURL: 'search/parentLookupCode'
+    },
+    GET_ALL_VEHICLE_TYPE_CAR: {
+        URL: 'serach/lookupCode',
+        METHOD: "GET",
+        TEMPURL: 'serach/lookupCode'
+    },
+    ITEM_TO_WH_STATUS: {
+        URL: 'search/parentLookupCode',
+        METHOD: 'GET',
+        TEMPURL: 'search/parentLookupCode'
+    },
+    GET_TRANSACTION_TYPE: {
+        URL: 'search/parentLookupCode',
+        METHOD: 'GET',
+        TEMPURL: 'search/parentLookupCode'
+    },
+    GET_ISPOS_ITEM: {
+        URL: 'search/parentLookupCode',
+        METHOD: 'GET',
+        TEMPURL: 'search/parentLookupCode'
+    },
+    GET_ALL_MAPPING_TYPE: {
+        URL: 'search/parentLookupCode',
+        METHOD: 'GET',
+        TEMPURL: 'search/parentLookupCode'
+    },
+
+    GET_VENDOR_STATUS: {
+        URL: 'search/parentLookupCode',
+        METHOD: 'GET',
+        TEMPURL: 'search/parentLookupCode'
+    },
+    GET_USER_STATUS: {
+        URL: 'search/parentLookupCode',
+        METHOD: 'GET',
+        TEMPURL: 'search/parentLookupCode'
+    },
+    GET_DEPARTMENT_GROUP: {
+        URL: 'search/parentLookupCode',
+        METHOD: 'GET',
+        TEMPURL: 'search/parentLookupCode'
+    },
+    GET_DEPARTMENT_CATEGORY: {
+        URL: 'search/parentLookupCode',
+        METHOD: 'GET',
+        TEMPURL: 'search/parentLookupCode'
+    },
+    GET_DEPARTMENT_STATUS: {
+        URL: 'search/parentLookupCode',
+        METHOD: 'GET',
+        TEMPURL: 'search/parentLookupCode'
+    },
+    GET_ALL_VEHICLE_TYPE_BIKE: {
+        URL: 'serach/lookupCode',
+        METHOD: "GET",
+        TEMPURL: 'serach/lookupCode'
+    },
+    GET_PROVINCE_LIST: {
+        URL: 'search/province/country',
+        METHOD: 'GET',
+        TEMPURL: 'search/province/country'
+    },
+    GET_CITY_LIST: {
+        URL: 'search/city/province',
+        METHOD: 'GET',
+        TEMPURL: 'search/city/province'
+    },
+    GET_CITIES_BY_USER: {
+        URL: 'admin/user/search/city',
+        METHOD: 'GET',
+        TEMPURL: 'admin/user/search/city'
+    },
+    GET_DISTRICT_LIST: {
+        URL: 'search/district/city',
+        METHOD: 'GET',
+        TEMPURL: 'search/district/city'
+    },
+    GET_SUB_DISTRICT_LIST: {
+        URL: 'search/subdistrict/district',
+        METHOD: 'GET',
+        TEMPURL: 'search/subdistrict/district'
+    },
+    GET_ALL_CITIES: {
+        URL: 'search/city',
+        METHOD: "GET"
+    },
+    GET_ALL_DISTRICT: {
+        URL: 'search/district',
+        METHOD: "GET"
+    },
+    CHECK_CODE_AVAILABILITY: {
+        URL: 'admin/department/deptcode/',
+        METHOD: 'GET',
+        TEMPURL: 'admin/department/deptcode/'
+    },
+    CHECK_NAME_AVAILABILITY: {
+        URL: 'admin/department/deptname/',
+        METHOD: 'GET',
+        TEMPURL: 'admin/department/deptname/'
+    },
+    CHECK_IS_DEFAULT: {
+        URL: 'admin/department/isDefault/city/',
+        METHOD: 'GET',
+        TEMPURL: 'admin/department/isDefault/city/'
+    },
+    CHECK_DEFAULT_CITY: {
+        URL: 'admin/department/type/',
+        METHOD: 'GET',
+        TEMPURL: 'admin/department/type/'
+    },
+    CHECK_STATUS_CAN_DISABLE: {
+        URL: 'admin/department/deptid/',
+        METHOD: 'GET',
+        TEMPURL: 'admin/department/deptid/'
+    },
+    GET_ALL_ITEMS_DATA: {
+        URL: 'inventory/items/search/item',
+        METHOD: 'POST'
+    },
+    REGISTER: {
+        URL: '',
+        METHOD: "POST"
+    },
+    ADD_ITEM: {
+        URL: 'inventory/items/item',
+        METHOD: 'POST'
+    },
+    UPDATE_ITEM: {
+        URL: 'inventory/item',
+        METHOD: 'POST'
+    },
+    GET_ITEM_UNIQUE_CODE: {
+        URL: 'inventory/items/search/item/itemcode',
+        METHOD: "GET",
+        TEMPURL: 'inventory/items/search/item/itemcode'
+    },
+    GET_ALL_CATEGORIES_LIST: {
+        URL: 'inventory/categories/categories',
+        METHOD: "GET"
+    },
+    GET_ACTIVE_CATEGORIES_LIST: {
+        URL: 'inventory/catalogue/without_items',
+        METHOD: "GET"
+    },
+    GET_PARENT_CATEGORY: {
+        URL: 'inventory/getParentCategories',
+        METHOD: "GET"
+    },
+    ADD_CATEGORIES: {
+        URL: 'inventory/categories/category',
+        METHOD: "POST"
+    },
+    EDIT_CATEGORIES: {
+        URL: 'inventory/updateCategory',
+        METHOD: "POST"
+    },
+    GET_ALL_REPAIR_LIST: {
+        URL: 'inventory/addCategory',
+        METHOD: "POST"
+    },
+    GET_ALL_COURIER_LIST: {
+        URL: 'shipping/courier/search',
+        METHOD: "POST"
+    },
+
+    COURIER_CODE_EXIST: {
+        URL: 'shipping/courier/couriercode',
+        METHOD: "GET",
+        TEMPURL: 'shipping/courier/couriercode'
+    },
+    COURIER_NAME_EXIST: {
+        URL: 'shipping/courier',
+        METHOD: "GET",
+        TEMPURL: 'shipping/courier'
+    },
+    ADD_UPDATE_COURIER: {
+        URL: 'shipping/courier',
+        METHOD: "POST"
+    },
+    IS_INTERNAL_COURIER_EXISTS: {
+        URL: 'shipping/courierExist',
+        METHOD: "GET",
+        TEMPURL: 'shipping/courierExist'
+    },
+    GET_ALL_DRIVER_LIST: {
+        URL: 'shipping/findAllDriver',
+        METHOD: "POST"
+    },
+    GET_ALL_DRIVER_SEARCH_LIST: {
+        URL: 'shipping/driver/search',
+        METHOD: "POST"
+    },
+    DRIVER_EMPID_EXIST: {
+        URL: 'shipping/driver/checkemployeeid/employeeid',
+        METHOD: "GET",
+        TEMPURL: 'shipping/driver/checkemployeeid/employeeid'
+    },
+    DRIVER_LDAPID_EXIST: {
+        URL: 'shipping/driver/checkldapid/ldapid',
+        METHOD: "GET",
+        TEMPURL: 'shipping/driver/checkldapid/ldapid'
+    },
+    ADD_DRIVER: {
+        URL: 'shipping/driver',
+        METHOD: "POST"
+    },
+    EDIT_DRIVER: {
+        URL: 'shipping/driver',
+        METHOD: "POST"
+    },
+    GET_ALL_VENDORS_DATA: {
+        URL: 'inventory/findAllVendor',
+        METHOD: "POST"
+    },
+    GET_ALL_VENDORS_DATA_SEARCH: {
+        URL: 'inventory/vendors/vendor/search',
+        METHOD: 'POST',
+        TEMPURL: 'inventory/vendors/vendor/search',
+    },
+    ADD_VENDOR: {
+        URL: 'inventory/vendors/vendor',
+        METHOD: 'POST'
+    },
+
+    GET_ALL_UPDATE_ITEM_TO_WAREHOUSE_DATA: {
+        URL: 'inventory/updateWarehouseToItemsMapping',
+        METHOD: 'POST'
+    },
+    GET_ALL_DEPARTMENT_DATA: {
+        URL: 'admin/department/search',
+        METHOD: 'POST'
+    },
+    ADD_DEPARTMENT: {
+        URL: 'admin/department',
+        METHOD: 'POST'
+    },
+    UPDATE_DEPARTMENT: {
+        URL: 'department/updateDepartment',
+        METHOD: 'POST'
+    },
+
+    GET_DEPARTMENT_TYPE: {
+        URL: 'search/parentLookupCode',
+        METHOD: 'GET',
+        TEMPURL: 'search/parentLookupCode'
+    },
+    GET_ALL_USER_LIST: {
+        URL: 'admin/users/search/',
+        METHOD: 'GET'
+    },
+    SERACH_CATEGARIES: {
+        URL: 'inventory/categories/search/category',
+        METHOD: 'POST'
+    },
+    ADD_USER: {
+        URL: 'admin/user',
+        METHOD: 'POST'
+    },
+    EDIT_USER: {
+        URL: 'admin/user',
+        METHOD: 'POST'
+    },
+    GET_ALL_MAP_USER_LIST: {
+        URL: 'user',
+        METHOD: 'POST'
+    },
+    SEARCH_USER: {
+        URL: 'admin/user/search',
+        METHOD: 'POST'
+            //TEMPURL:'User/Search/{employeeId}/{userId}/Userdetails'
+    },
+    GET_ALL_WAREHOUSE: {
+        URL: 'admin/department/search',
+        METHOD: 'POST',
+        TEMPURL: 'admin/department/search'
+    },
+    GET_ALL_UNMAPPOS_DATA_SEARCH: {
+        URL: 'admin/department/search/pos/unMapped',
+        METHOD: 'POST',
+        TEMPURL: 'admin/department/search/pos/unMapped'
+    },
+    GET_ALL_CITIES: {
+        URL: 'search/city',
+        METHOD: 'GET',
+        TEMPURL: 'search/city'
+    },
+    GET_ALL_DISTRIC: {
+        URL: 'search/district',
+        METHOD: 'GET',
+        TEMPURL: 'search/district'
+    },
+    GET_ALL_SUBDISTRIC: {
+        URL: 'search/subdistrict/district',
+        METHOD: 'GET',
+        TEMPURL: 'search/subdistrict/district'
+    },
+    GET_ALL_MAPPOS: {
+        URL: 'admin/department/search/pos/unMapped',
+        METHOD: 'POST',
+        TEMPURL: 'admin/department/search/pos/unMapped'
+    },
+    MAP_POS_TO_WAREHOUSE: {
+        URL: 'admin/department/pos/mapping',
+        METHOD: 'POST',
+        TEMPURL: 'admin/department/pos/mapping'
+    },
+    UNMAP_POS_TO_WAREHOUSE: {
+        URL: 'admin/department/pos/unmapped',
+        METHOD: 'POST',
+        TEMPURL: 'admin/department/pos/unmapped'
+    },
+    GET_MAP_POS_BY_SEARCH: {
+        URL: 'admin/department/search/pos/mapped',
+        METHOD: 'POST',
+        TEMPURL: 'admin/department/search/pos/mapped'
+    },
+    CHECK_NAME: {
+        URL: 'admin/user/validateusername',
+        METHOD: 'GET',
+        TEMPURL: 'admin/user/validateusername'
+    },
+    GET_ALL_ROLES: {
+        URL: 'admin/acl/role',
+        METHOD: 'GET'
+    },
+    GET_ALL_FEATURE_LIST: {
+        URL: 'admin/acl/role/',
+        METHOD: 'GET',
+        TEMPURL: 'admin/acl/role/'
+    },
+    ADD_ALL_FEATURE_LIST: {
+        URL: 'admin/acl/role/feature',
+        METHOD: 'POST'
+    },
+
+    CHECK_EMPLOYEE_ID: {
+        URL: 'admin/user/validateemployeeid',
+        METHOD: 'GET',
+        TEMPURL: 'admin/user/validateemployeeid'
+    },
+    CHECK_USER_ID: {
+        URL: 'admin/user/validateldapuserid',
+        METHOD: 'GET',
+        TEMPURL: 'admin/user/validateldapuserid'
+    },
+    GET_ORDER_TYPE: {
+        URL: 'order/orderTypes',
+        METHOD: 'GET'
+    },
+    GET_STATUS_LIST: {
+        URL: 'order/admin/orderSLA',
+        METHOD: 'GET',
+        TEMPURL: 'order/admin/orderSLA'
+    },
+    ADD_ROLES_TO_STATUS: {
+        URL: 'order/admin/orderSLA',
+        METHOD: 'POST'
+    },
+    MAP_POS_LIST: {
+        URL: 'shipping/driver/pos/map',
+        METHOD: 'POST'
+    },
+    GET_ALL_POS: {
+        URL: 'pos/',
+        METHOD: 'GET'
+    },
+    GET_ALL_DRIVERS: {
+        URL: 'shipping/driver/search',
+        METHOD: 'POST'
+    },
+
+    CHECK_VENDOR_CODE_AVAILABILITY: {
+        URL: 'inventory/vendors/vendor/vendorcode/',
+        METHOD: 'GET',
+        TEMPURL: 'inventory/vendors/vendor/vendorcode/'
+    },
+    GET_DATA_OF_MAP_POS_TO_DRIVER: {
+        URL: 'shipping/driver/pos/search',
+        METHOD: 'POST'
+    },
+    UNMAP_POS: {
+        URL: 'shipping/driver/pos/unmapped',
+        METHOD: 'POST'
+    },
+    GET_ALL_SEARCHED_DATA: {
+        URL: 'pos/searchPosData',
+        METHOD: 'POST'
+    },
+
+    GET_ISUOM_ITEM: {
+        URL: 'inventory/items/search/uom',
+        METHOD: 'GET'
+    },
+    GET_Category_ITEM: {
+        URL: 'inventory/categories/categories',
+        METHOD: 'GET'
+    },
+    GET_ITEM_CATEGORY: {
+        URL: 'inventory/categories/search/category',
+        METHOD: 'POST'
+    },
+    GET_CITY_BY_ROLE: {
+        URL: 'search/usermapcities',
+        METHOD: 'GET'
+    },
+    GET_OUTBOUNDREPORT_LIST: {
+        URL: 'inventory/report/search/outbound/',
+        METHOD: 'POST'
+    },
+    GET_ALL_ITEM_TO_WAREHOUSE_DATA: {
+        URL: 'inventory/items/unMappeditems',
+        METHOD: 'POST'
+    },
+    MAP_ITEM_TO_WH: {
+        URL: 'inventory/items/warehouse/item/mapping',
+        METHOD: 'POST'
+    },
+    GET_ALL_MAPPED_ITEM: {
+        URL: 'inventory/items/mappeditems',
+        METHOD: 'POST'
+    },
+    UPDATE_ITEM_TO_WH: {
+        URL: 'inventory/items/warehouse/item/update',
+        METHOD: 'POST'
+    },
+
+    GET_POS_LIST: {
+        URL: 'pos/city',
+        METHOD: 'GET',
+        TEMPURL: 'pos/city'
+    },
+    GET_CATLOGUE_ITEM: {
+        URL: 'inventory/catalogue/warehousemappeditems',
+        METHOD: 'GET',
+        TEMPURL: 'inventory/catalogue/warehousemappeditems'
+    },
+    GET_ALL_BUNDLE_LIST: {
+        URL: 'inventory/bundles/search/unconfigured/bundles',
+        METHOD: 'GET'
+    },
+    GET_ALL_INBOUNS_DATA: {
+        URL: 'inventory/inbound/search',
+        METHOD: 'GET'
+    },
+    GET_ALL_INBOUNS_ITEM_LIST: {
+        URL: 'inventory/inbound/search/inboundId',
+        METHOD: 'GET',
+        TEMPURL: 'inventory/inbound/search/inboundId'
+    },
+
+    GET_ALL_RECEIVEDFROM: {
+        URL_TT: 'admin/department/search',
+        URL_VE: 'inventory/vendors/vendor/search',
+        URL_WH: 'admin/department/search',
+        URL_PR: 'admin/department/search/pos/mapped',
+        URL_PW: 'admin/department/search/pos/mapped',
+        URL_IB: 'admin/department/search',
+        METHOD: 'POST',
+    },
+    ADD_INBOUND: {
+        URL: 'inventory/inbound',
+        METHOD: 'POST',
+    },
+    GET_WAREHOUSE_NAME: {
+        URL: 'admin/department/search/deptcode/DT_WH/user',
+        METHOD: 'POST',
+    },
+    GET_REPORT_DATA: {
+        URL: 'admin/department/reports',
+        METHOD: 'POST'
+    },
+    GET_USERREPORT_DATA: {
+        URL: 'admin/user/reports',
+        METHOD: 'POST'
+    },
+    GET_SSS_REPORT_DATA: {
+        URL: 'admin/department/pos/reports',
+        METHOD: 'POST'
+    },
+    GET_SSS_TABLE_DATA: {
+        URL: 'admin/department/pos/default/reports',
+        METHOD: 'GET'
+    },
+    GET_AVAILABLE_CITIES: {
+        URL: 'admin/users/search/user',
+        METHOD: 'GET',
+        TEMPURL: 'admin/users/search/user'
+    },
+    GET_ALL_REPORT_UNMAP_POS_TO_DRIVER: {
+        URL: 'shipping/pos/unmapped/reports',
+        METHOD: 'GET'
+    },
+    GET_ALL_REPORT_DRIVER: {
+        URL: 'shipping/driver/reports',
+        METHOD: 'POST'
+    },
+    GET_ALL_REPORT_COURIER: {
+        URL: 'shipping/courier/reports',
+        METHOD: 'POST'
+    },
+    GET_ALL_REPORT_ITEM: {
+        URL: 'inventory/categories/reports/itemByCategory',
+        METHOD: 'POST'
+    },
+    GET_ALL_REPORT_OUTBD: {
+        URL: 'inventory/reports/outbound',
+        METHOD: 'POST'
+    },
+    GET_ALL_REPORT_ITEMBYWH: {
+        URL: 'inventory/items/reports/warehouse/item/groupby',
+        METHOD: 'POST'
+    },
+    SAVE_ORDER: {
+        URL: 'order/orderWithImage',
+        METHOD: 'POST'
+    },
+    SEARCH_ORDER: {
+        URL: 'order/searchOrders',
+        METHOD: 'POST'
+    },
+    GET_CATLOGUE: {
+        URL: 'inventory/catalogue',
+        METHOD: 'GET'
+    },
+    GET_CATEGORY_ITEMS: {
+        URL: 'inventory/bundles/search/items',
+        METHOD: 'GET'
+    },
+    GET_SAVE_BUNDLED_ITEMS: {
+        URL: 'inventory/bundles/bundle/configure',
+        METHOD: 'POST'
+
+    },
+    GET_ITEMS_BY_CATEGORY: {
+        URL: 'inventory/items/search/item/warehouse/',
+        METHOD: 'GET',
+        TEMPURl: 'inventory/items/search/item/warehouse/'
+    },
+
+    APPROVE_ORDER: {
+        URL: 'order/updateOrders',
+        METHOD: 'POST'
+    },
+    GET_STATUS: {
+        URL: 'order/orderStatus',
+        METHOD: 'POST'
+    },
+    GET_USERS_POS_LIST: {
+        URL: 'pos/getLoggedInUserPOSCityWHByCity',
+        METHOD: 'POST'
+
+    },
+    GET_ALL_REPORT_UNMAP_DRIVER: {
+        URL: 'shipping/pos/unmapped/city/reports',
+        METHOD: 'POST'
+    },
+    GET_BUTTON_VALUE: {
+        URL: 'order/ordersWorkFlowAction',
+        METHOD: 'POST'
+    },
+    GET_REPORT_TABLE_LIST: {
+        URL: 'admin/department/reports/data',
+        METHOD: 'POST'
+    },
+    GET_ITEMWHREPORT_TABLE_LIST: {
+        URL: 'inventory/items/reports/search/warehouse/item',
+        METHOD: 'POST'
+    },
+    GET_INBOUND_REPORT_LIST: {
+        URL: 'inventory/report/search/inbound/',
+        METHOD: 'POST'
+    },
+    GET_ALL_REPORT_INBOUND: {
+        URL: 'inventory/reports/inbound',
+        METHOD: 'POST'
+    },
+    GET_CATEGORY_BY_WAREHOUSE: {
+        URL: 'admin/department/category',
+        METHOD: 'GET',
+        TEMPURL: 'admin/department/category'
+    },
+    GET_HOLD_REASON: {
+        URL: 'order/getAllReasonsByOrderStatus',
+        METHOD: 'GET',
+        TEMPURL: 'order/getAllReasonsByOrderStatus'
+    },
+    SAVE_ORDER_BY_DRIVER: {
+        URL: 'order/updateOrderAndUploadImage',
+        METHOD: 'POST'
+    },
+    GET_ITEM_CURRENT_STOCK: {
+        URL: 'inventory/currentstock/search/item',
+        METHOD: 'GET',
+        TEMPURL: 'inventory/currentstock/search/item'
+    },
+    CURRENT_STOCK: {
+        URL: 'inventory/currentStock',
+        METHOD: 'GET',
+        TEMPURL: 'inventory/currentStock'
+    },
+    VIEW_BUNDLE_DATA: {
+        URL: 'inventory/bundles/search/bundle/items/bundleId',
+        METHOD: 'GET',
+        TEMPURL: 'inventory/bundles/search/bundle/items/bundleId'
+    },
+    GET_SAVE_REPAIR_DATA: {
+        URL: 'inventory/outbound/repair',
+        METHOD: 'POST'
+    },
+    GET_REPAIR_ORDER_DATA: {
+        URL: 'inventory/outbound/order',
+        METHOD: 'POST'
+    },
+
+    GET_WAREHOUSE_CATLOGUE: {
+        URL: 'inventory/catalogue/without_items',
+        METHOD: 'GET'
+    },
+    GET_WAREHOUSE_CATLOGUE_ITEM: {
+        URL: 'inventory/warehousemappeditems',
+        METHOD: 'GET',
+        TEMPURL: 'inventory/warehousemappeditems'
+
+    },
+    VIEW_REPAIR_ITEM_LIST: {
+        URL: 'inventory/outbound/order',
+        METHOD: 'GET',
+        TEMPURL: 'inventory/outbound/order'
+    },
+    GET_INACTIVE_ITEM_BY_CATEGORY: {
+        URL: 'inventory/items/search/inactive/item/warehouse/',
+        METHOD: 'GET',
+        TEMPURl: 'inventory/items/search/inactive/item/warehouse/'
+    },
+    GET_CYCLE_COUNT_STATUS: {
+        URL: 'search/parentLookupCode/67',
+        METHOD: 'GET'
+    },
+    GET_CYCLE_COUNT_DATA: {
+        URL: 'inventory/outbound/order',
+        METHOD: 'POST'
+    },
+    GET_ORDER_TYPE_BY_ROLE: {
+        URL: 'order/getAllOrdersByRole',
+        METHOD: 'GET'
+
+    },
+    ADD_CYCLE_COUNT: {
+        URL: 'inventory/find/itemorder',
+        METHOD: 'GET',
+        TEMPURl: 'inventory/find/itemorder'
+    },
+    GET_ORDER_PRIORITY_LOOKUP: {
+        URL: 'search/parentLookupCode/58',
+        METHOD: 'GET'
+    },
+    GET_SAVE_DISPOSE_DATA: {
+        URL: 'inventory/outbound/dispose',
+        METHOD: 'POST'
+    },
+    GET_UPDATE_ORDER_DATA: {
+        URL: 'inventory/outbound/order/dispose/approval',
+        METHOD: 'POST'
+    },
+    SUBMIT_CYCLE_COUNT_DATA: {
+        URL: 'inventory/outbound/order/created/cycle/count',
+        METHOD: 'POST'
+    },
+    EDIT_CYCLE_COUNT_DATA: {
+        URL: 'inventory/outbound/order/completed/cycle/count',
+        METHOD: 'POST'
+
+    },
+    GET_UPDATE_ORDER_DATA_WHM: {
+        URL: 'inventory/outbound/order/cyclecount/approval',
+        METHOD: 'POST'
+    },
+    GET_ORDER_HISTORY: {
+        URL: 'order/orderByOrderAudTxnId',
+        METHOD: 'GET',
+        TEMPURL: 'order/orderByOrderAudTxnId'
+    },
+    GET_USERS_POS_LIST_BY_ORDER: {
+        URL: 'pos/getLoggedInUserPOSByOrderType',
+        METHOD: 'POST'
+    },
+    GET_ORDER_VIEW: {
+        URL: 'order/orderById',
+        METHOD: 'GET',
+        TEMPURL: 'order/orderById'
+    },
+    CHECK_CATEGORYNAME_AVAILABILITY: {
+        URL: 'inventory/categories/checkcategoryname/',
+        METHOD: 'GET',
+        TEMPURL: 'inventory/categories/checkcategoryname/'
+    },
+    CHECK_ITEMNAME_AVAILABILITY: {
+        URL: 'inventory/items/checkitemname/',
+        METHOD: 'POST'
+    },
+    CHECK_INVENTORY: {
+        URL: 'order/checkInventoryForOrder',
+        METHOD: 'POST'
+    },
+    SPLIT_ORDERS: {
+        URL: 'order/splitOrder',
+        METHOD: 'POST'
+    },
+    CHECK_STATUS_CAN_INACTIVE: {
+        URL: 'inventory/department/item/mapping',
+        METHOD: 'GET',
+        TEMPURL: 'inventory/department/item/mapping'
+    },
+    STATUS_CHECK_DRIVER: {
+
+        URL: 'shipping/driver/checkstatus/driverid/',
+        METHOD: 'GET',
+        TEMPURL: 'shipping/driver/checkstatus/driverid/'
+    },
+    STATUS_CHECK_COURIER: {
+        URL: 'shipping/courier/checkstatus/courierid/',
+        METHOD: 'GET',
+        TEMPURL: 'shipping/courier/checkstatus/courierid/'
+    },
+    DASHBOARD_PIE_DATA: {
+        URL: 'dashboard/saanddsm/piechart',
+        METHOD: 'GET'
+    },
+    SA_DSM_POS_LIST: {
+        URL: 'dashboard/saanddsm/pos',
+        METHOD: 'GET'
+    },
+    SA_DSM_ORDER_TYPE_LIST: {
+        //URL : 'dashboard/dashboard/ssandssm/ordertype',
+        URL: 'dashboard/ordertype',
+        METHOD: 'GET'
+    },
+    DRIVER_DASH_ORDER_LIST: {
+        URL: 'dashboard/driver/orderList',
+        METHOD: 'POST'
+    },
+    SA_DAM_DASH_ORDER_LIST: {
+        URL: 'dashboard/orderList',
+        METHOD: 'POST'
+    },
+    DASH_ON_POS_CHANGE: {
+        URL: 'dashboard/saanddsm/barchart',
+        METHOD: 'POST'
+    },
+    DASH_ON_ORDER_TYPE_CHANGE: {
+        URL: 'dashboard/ssandssm/orderbarchart',
+        METHOD: 'POST'
+    },
+    DASH_SSS_SSM_CITY: {
+        URL: 'dashboard/city',
+        METHOD: 'GET'
+    },
+    DASH_ON_CITY_CHANGE: {
+        URL: 'dashboard/ssandssm/piechart',
+        METHOD: 'POST'
+    },
+    DASH_SSS_SSM_AGING_DATA: {
+        URL: 'dashboard/ageingchart',
+        METHOD: 'GET'
+    },
+    DASH_DRIVER_AGING_DATA: {
+        URL: 'dashboard/driver/ageingchart',
+        METHOD: 'GET'
+    },
+    SEND_HTML_CODE: {
+        URL: 'cms/cmsContent',
+        METHOD: 'POST'
+    },
+    GET_HTML_CODE: {
+        URL: 'cms/cmsContent',
+        METHOD: 'GET',
+        TEMPURL: 'cms/cmsContent'
+    },
+    SSS_SSM_DASH_ORDER_LIST: {
+        URL: 'dashboard/ssm/orderList',
+        METHOD: 'POST'
+    },
+    DASHBOARD_PIE_WHA_DATA: {
+        URL: 'dashboard/wha/pieChart',
+        METHOD: 'POST'
+
+    },
+    DASHBOARD_PIE_TDA_DATA: {
+        URL: 'dashboard/tda/pieChart',
+        METHOD: 'POST'
+
+    },
+    DASHBOARD_PIE_WHA_TABLE_DATA: {
+        URL: 'dashboard/wha/tabularChart',
+        METHOD: 'POST'
+
+    },
+    DASHBOARD_PIE_DRIVER_DATA: {
+        URL: 'dashboard/driver/piechart',
+        METHOD: 'GET'
+    },
+    DASHBOARD_PIE_DRIVER_TEAM_LEAD_DATA: {
+        URL: 'dashboard/teamleaddriver/piechart',
+        METHOD: 'GET'
+    },
+    WHA_WH_LIST: {
+        URL: 'admin/department/user/warehouse',
+        METHOD: 'GET'
+    },
+    DASHBOARD_BAR_WHA_DATA: {
+        URL: 'dashboard/wha/barChart',
+        METHOD: 'POST'
+    },
+
+    DASH_DRIVER_TEAM_LEAD_AGING_DATA: {
+        URL: 'dashboard/teamleaddriver/ageingchart',
+        METHOD: 'GET'
+    },
+    DRIVER_TEAM_LEAD_DASH_ORDER_LIST: {
+        URL: 'dashboard/teamleaddriver/orderList',
+        METHOD: 'POST'
+    },
+    DASH_DRIVER_LIST: {
+        URL: 'dashboard/teamleaddriver/driverlist',
+        METHOD: 'GET'
+    },
+    DASH_ON_DRIVER_CHANGE: {
+        URL: 'dashboard/teamleaddriver/barchart',
+        METHOD: 'POST'
+    },
+    DASHBOARD_TDA_TABLE_DATA: {
+        URL: 'dashboard/tda/tabularChart',
+        METHOD: 'POST'
+    },
+    TD_FO_TABLE_LIST: {
+        URL: 'dashboard/tda/barChart',
+        METHOD: 'POST'
+    },
+    DASH_DRIVER_PIE2: {
+        URL: 'dashboard/driver/piechartbydate',
+        METHOD: 'GET',
+        TEMPURL: 'dashboard/driver/piechartbydate'
+    },
+    GET_TRACK_ORDER_LIST: {
+        URL: 'order/trackOrder',
+        METHOD: 'POST'
+    },
+    GET_ITEM_STATUS_ONSUBMIT: {
+        URL: 'inventory/item/itemid',
+        METHOD: 'GET',
+        TEMPURL: 'inventory/item/itemid'
+    },
+    ORDER_BAR_WHA_DATA: {
+        URL: 'order/reports/wha/barChart',
+        METHOD: 'POST'
+    },
+    DRIVER_ORDER_LIST: {
+        URL: 'order/reports/driver/orderList',
+        METHOD: 'GET'
+    },
+    DASH_SSS_SSM_AGING_CHART_DATA: {
+        URL: 'dashboard/dsm/ageingchart',
+        METHOD: 'GET'
+    },
+    SEND_ENCODE_DATA: {
+        URL: 'encode',
+        METHOD: 'POST'
+    },
+    GET_DECODE_DATA: {
+        URL: 'decode',
+        METHOD: 'POST'
+    },
+    GET_POS_CATLOGUE_ITEM: {
+        URL: 'inventory/catalogue/posmappeditems',
+        METHOD: 'GET',
+        TEMPURL: 'inventory/catalogue/posmappeditems'
+    },
+    GET_POS_COMMODITY_DATA: {
+        URL: 'pos/commodity/pos',
+        METHOD: 'GET',
+        TEMPURL: 'pos/commodity/pos'
+    },
+    GET_CMS_DATA: {
+        URL: 'cms/cmsContent/active',
+        METHOD: 'GET'
+    },
+    GET_CMS_DATA_ADD: {
+        URL: 'cms/cmsContent',
+        METHOD: 'GET'
+    },
+    DELETE_CMS_DATA_ADD: {
+        URL: 'cms/delete',
+        METHOD: 'GET',
+        TEMPURL: 'cms/delete'
+    },
+    CHECK_TITLE: {
+        URL: 'cms/cmsContent/title',
+        METHOD: 'GET',
+        TEMPURL: 'cms/cmsContent/title'
+    },
+    //API url for send sms& email
+    SEND_NOTIFICATION: {
+        URL: 'order/notification',
+        METHOD: 'POST'
+    },
+    CHECK_TEAMLEAD_ID: {
+        URL: 'shipping/driver/tl/checktlldapid/ldapid',
+        METHOD: 'GET',
+        TEMPURL: 'shipping/driver/tl/checktlldapid/ldapid'
+    },
+    GET_POS_COMMODITY_DROPDOWN: {
+        URL: 'pos/search/commodity',
+        METHOD: 'GET'
+    },
+    SEARCH_POS_COMMODITY: {
+        URL: 'pos/getLoggedInUserPOSByOrderType',
+        METHOD: 'POST'
+    },
+    ORDER_SA_DAM_DASH_ORDER_LIST: {
+        URL: 'dashboard/orderList',
+        METHOD: 'POST'
+    },
+    ORDER_SSS_SSM_DASH_ORDER_LIST: {
+        URL: 'dashboard/ssm/orderList',
+        METHOD: 'POST'
+    },
+    ORDER_DASHBOARD_PIE_WHA_TABLE_DATA: {
+        URL: 'dashboard/wha/tabularChart',
+        METHOD: 'POST'
+
+    },
+    ORDER_DASHBOARD_TDA_TABLE_DATA: {
+        URL: 'dashboard/tda/tabularChart',
+        METHOD: 'POST'
+    },
+    ORDER_DRIVER_ORDER_LIST: {
+        URL: 'order/reports/driver/orderList',
+        METHOD: 'POST'
+    },
+    ORDER_DRIVER_TEAM_LEAD_DASH_ORDER_LIST: {
+        URL: 'dashboard/teamleaddriver/orderList',
+        METHOD: 'POST'
+    },
+    GET_ALL_ITEMS_DATA_DASH: {
+        URL: 'dashboard/search/item',
+        METHOD: 'POST'
+    }
+    
+
+});

@@ -1,0 +1,31 @@
+(function() {
+    'use strict';
+
+    angular.module('app.transportData').controller('UploadDataCtrl', uploadDataCtrl);
+
+    uploadDataCtrl.$inject = ['$uibModalInstance', 'tableData', 'dataFile'];
+
+    //Controller implementation
+    function uploadDataCtrl($uibModalInstance, tableData, dataFile) {
+        var vm = this;
+        
+        vm.uploadFile = uploadFile;
+        vm.closePopup = closePopup;
+
+        vm.ExcelData = tableData
+        vm.fileName = tableData[0].fileName
+
+
+
+
+        function uploadFile() {
+            
+            $uibModalInstance.close(dataFile);
+        }
+
+        function closePopup() {
+            $uibModalInstance.dismiss();
+        }
+    }
+
+})();

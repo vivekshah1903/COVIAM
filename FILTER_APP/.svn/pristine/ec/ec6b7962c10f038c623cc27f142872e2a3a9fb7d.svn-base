@@ -1,0 +1,69 @@
+
+<div ui-view></div>
+
+        <app-header></app-header>
+
+    <div class="row">
+        <div class="col-md-12 top-heading">
+            <h1>Events</h1></div>
+    </div>
+   <!--  <div class="row m-t-15">
+        <div class="loginHead col-lg-12 col-sm-12 col-xs-12">
+            <div class="col-lg-6 col-xs-6 f-s-24"><span class=""> Showing 10 Events(s)</span></div>
+            <div class="col-lg-6 col-xs-6"> <button type="button" class="btn btn-default pull-right mdlBtndark" ui-sref=".eventCreatePage">+Create new event</button></div> 
+</div>
+</div> -->
+<div class="container-fluid">
+<div class="row container-fluid m-t-15">
+            <h4 class="pageLine">Showing {{employeeData.noemp}} Events <button type="button" class="btn btn-default pull-right mdlBtndark btm-space" ui-sref=".eventCreatePage">+Create new event</button></h4>
+        </div>
+<div class=" m-t-15">
+    <div class="row">
+    <form name="eventForm">
+        <div>
+            <label class="drk-green col-lg-1">Filter Events</label>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2">
+            <select class="form-element" ng-model="event.data.datetype">
+            <option value="">Select Date Type</option>
+                <option value="STARTDATE" >START DATE</option>
+                <option value="PUBLISHDATE" >PUBLISH DATE</option>
+                <option value="ENDDATE" >END DATE</option>
+                <option value="CREATEDATE" >CREATE DATE</option>
+            </select>
+        </div>
+        <div class="col-md-5" ng-class="{'has-error':eventForm.validFrom.$touched && eventForm.validFrom.$invalid}">
+            <!--   <label style="clear:both;display:block">Report Date</label> -->
+            <div class="pst-rel date-pick-box pull-left">
+                <input type="text" class="date-input m-t-15" onkeydown="return false" required ng-model="event.data.validFrom" name="validFrom" is-open="event.from" uib-datepicker-popup="dd-MM-yyyy" datepicker-options="event.options1" onkeydown="return false" ng-model-options="{timezone: 'UTC'}" ng-change="event.validFromCheck(event.data.validFrom,event.data.validTo)" placeholder="Start Date"><span class="input-group-btn">
+
+                                                        <button type="button" class="btn btn-default calendr-btn" ng-click="event.dashDatePicker(event.from,'from')">
+                                                            <i class="glyphicon glyphicon-calendar"></i>
+                                                        </button>
+                                                        </span>
+            </div>
+            <div>
+                <label class="col-lg-1 m-t-15"> to </label>
+            </div>
+            <div class="pull-left" ng-class="{'has-error':eventForm.validTo.$touched && eventForm.validTo.$invalid}">
+                <div class=" pst-rel date-pick-box">
+                    <input type="text" required class="date-input m-t-15" ng-model="event.data.validTo" name="validTo" is-open="event.to" uib-datepicker-popup="dd-MM-yyyy" onkeydown="return false" datepicker-options="event.options1" ng-model-options="{timezone: 'UTC'}" ng-change="event.validFromCheck(event.data.validFrom,event.data.validTo)" placeholder="End Date"><span class="input-group-btn">
+                                                        <button type="button" class="btn btn-default calendr-btn" ng-click="event.dashDatePicker(event.to,'to')">
+                                                            <i class="glyphicon glyphicon-calendar"></i>
+                                                        </button>
+                                                    </span>
+                                                     <div class="has-error"><span class="help-block" ng-show="event.dateError">To date cannot be older than From date</span></div>
+                </div>
+            </div>
+            <div class="col-md-2 col=sm-12 col-xs-12">
+             <button type="button" class="btn btn-default mdlBtndark m-t-8" ng-disabled="(!event.data.validTo || !event.data.validFrom || !event.data.datetype) || event.dateError" ng-click="event.getEventDetails(event.data)"><span>Go</span></button>
+             </div>
+        </div>
+       <!--  {{!event.dateError}} -->
+       
+    </div>
+    </form>
+</div>
+<h3 class="GreyLine"></h3>
+<table id="table" class="credit-table" bs-table-control="event.eventSummary"></table>
+</div>

@@ -1,0 +1,52 @@
+/*****************
+@Author:GuruPrasad
+******************/
+(function() {
+    'use strict';
+    //vendor Service
+    angular.module('app.employees').factory('EmployeeDataService', employeeDataService);
+
+    //Service injection
+    employeeDataService.$inject = ['$http', 'APIS', 'dataManagerService', '$window'];
+
+    //Service implementation
+    function employeeDataService($http, APIS, dataManagerService, $window) {
+
+        return {
+            
+            getEmpSummaryData: getEmpSummaryData,
+            uploadDataFile: uploadDataFile,
+            
+            
+        };
+
+        function getEmpSummaryData() {
+           /* var pageNo=0;
+            APIS.GET_EMPLOYEE_SUMMARY_DATA.URL = APIS.GET_EMPLOYEE_SUMMARY_DATA.TEMPURL;
+            APIS.GET_EMPLOYEE_SUMMARY_DATA.URL = APIS.GET_EMPLOYEE_SUMMARY_DATA.URL+ "?pageno="+pageNo*/
+
+            return dataManagerService.sendRequest(null, APIS.GET_EMPLOYEE_DETAILS_DATA).then(function(data) {
+              // console.log(data);
+                return data;
+            });
+        }
+
+       
+        function uploadDataFile(fileObj) {
+           // console.log(fileObj);
+            var requestObj = {
+
+                "file": null
+            };
+            requestObj.file = fileObj['fileName'];
+            APIS.UPLOAD_EMPLOYEEDATA_FILE.data = requestObj;
+            return dataManagerService.sendRequestWithImage('', APIS.UPLOAD_EMPLOYEEDATA_FILE).then(function(data) {
+                console.log(data);
+                return data;
+            });
+        }
+
+      
+    }
+
+})();

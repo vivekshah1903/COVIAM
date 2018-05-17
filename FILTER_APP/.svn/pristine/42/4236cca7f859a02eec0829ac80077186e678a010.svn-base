@@ -1,0 +1,197 @@
+<app-header>
+</app-header>
+</div>
+<div class="row">
+    <div class="col-md-12 top-heading">
+        <h1>Events</h1></div>
+</div>
+<div class="common-container event">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="alert m-t-15" ng-class="{'alert-danger':editalbum.apisAlert.type=='ERROR','alert-success':editalbum.apisAlert.type=='SUCCESS'}" ng-show="editalbum.apisAlert.toggle">
+                <a href="javascript:void(0)" ng-click="editalbum.apisAlert.toggle=false;" class="close" aria-label="close" title="close"><i class="fa fa-times-circle" aria-hidden="true"></i></a>
+                <strong>{{editalbum.apisAlert.message}}</strong>
+            </div>
+            <h3 class="loginHead">Event Details
+            <a class="pull-right in-block backbtn"  ui-sref="^"> < Back </a>
+            </h3>
+        </div>
+    </div>
+    <form name="eventForm">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="m-t-15">
+             {{editalbum.viewevent}}
+                <input class="bottomLine air-input input-plchodr" disabled type="text" ng-model="editalbum.viewevent.eventName" placeholder="Enter event name" name="eventName" required>
+                <div ng-if="eventForm.eventName.$invalid" class="has-error">
+                    <span class="help-block" ng-show="eventForm.eventName.$touched && eventForm.eventName.$error.required">Event Name Required</span>
+                </div>
+            </div>
+          
+            <div class="m-t-15">
+                <textarea rows="4" cols="50" disabled class="input-plchodr" placeholder="Enter event description" name="eventDescription" ng-model="editalbum.viewevent.eventDesc" required=""></textarea>
+                <div ng-if="eventForm.eventDescription.$invalid" class="has-error">
+                    <span class="help-block" ng-show="eventForm.eventDescription.$touched && eventForm.eventDescription.$error.required">Event Description Required</span>
+                </div>
+            </div>
+            <div class="m-t-15">
+                <div>
+                    <label class="drk-green"> Event date and time</label>
+                </div>
+                <div class="row">
+                    <div class="col-lg-2">
+                        <div class="space-20 pst-rel date-pick-box">
+                            <input type="text" class="date-input m-t-15" required ng-model="editalbum.viewevent.eventStartDate" name="validFrom" is-open="editalbum.from" uib-datepicker-popup="dd-MM-yyyy" datepicker-options="editalbum.options" onkeydown="return false" ng-change="editalbum.validFromCheck(editalbum.edit.eventStartDate,editalbum.edit.eventEndDate);editalbum.publishDateValidate()" /><span class="input-group-btn">
+
+                                                        <button type="button" class="btn btn-default calendr-btn" ng-click="editalbum.dashDatePicker(editalbum.from,'from')">
+                                                            <i class="glyphicon glyphicon-calendar"></i>
+                                                        </button>
+                                                        </span>
+                            <div ng-if="eventForm.validFrom.$invalid" class="has-error">
+                                <span class="help-block" ng-show="eventForm.validFrom.$touched && eventForm.validFrom.$error.required">Event From Date Required</span>
+                            </div>
+                        </div>
+                    </div>
+                   
+                    <div class="col-lg-2">
+                        <div uib-timepicker ng-model="editalbum.edit.eventStartTime" ng-required="true" name="starttime"></div>
+                        <div ng-if="eventForm.starttime.$invalid" class="has-error">
+                            <span class="help-block" ng-show="eventForm.starttime.$touched && eventForm.starttime.$error.required">Start Time is Required</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="col-lg-1 m-t-25 f-s-18"> to </label>
+                    </div>
+                    <div class="col-lg-2" ng-class="{'has-error':eventForm.validTo.$touched && eventForm.validTo.$invalid}">
+                        <div class="space-20 pst-rel date-pick-box">
+                            <input type="text" required class="date-input m-t-15" ng-model="editalbum.edit.eventEndDate" name="validTo" is-open="editalbum.to" uib-datepicker-popup="dd-MM-yyyy" onkeydown="return false" datepicker-options="editalbum.options" ng-change="editalbum.validFromCheck(editalbum.edit.eventStartDate,editalbum.edit.eventEndDate);editalbum.publishDateValidate()"><span class="input-group-btn">
+                        <button type="button" class="btn btn-default calendr-btn" ng-click="editalbum.dashDatePicker(editalbum.to,'to')">
+                        <i class="glyphicon glyphicon-calendar"></i>
+                        </button>
+                         </span>
+                            <!-- <div ng-if="eventForm.validTo.$invalid" class="has-error">
+                                <span class="help-block" ng-show="eventForm.validTo.$touched && eventForm.validTo.$error.required">Event To Date Required</span>
+                            </div> 
+                            <div class="has-error"><span class="help-block" ng-show="editalbum.dateError">To date cannot be older than From date</span></div>-->
+                        </div>
+                    </div>
+                   
+                    <div class="col-lg-2">
+                        <div uib-timepicker ng-model="editalbum.edit.eventEndTime" ng-required="true" name="endtime"></div>
+                        <div ng-if="eventForm.endtime.$invalid" class="has-error">
+                            <span class="help-block" ng-show="eventForm.endtime.$touched && eventForm.endtime.$error.required">End Time is Required</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 m-t-15">
+                    <label class="drk-green small-heading"> Business location</label>
+                    <div class="col-lg-8 location pad-0">
+                 
+                        <div class="radio-primary m-r-50">
+                            <input type="radio" name="busiradio" ng-model="editalbum.viewevent.businessLocation" value="Toronto, Canada" required>
+                            <span>ALL</span>
+                        </div>
+                        <div class="radio-primary  m-r-50">
+                            <input type="radio" name="busiradio" ng-model="editalbum.viewevent.businessLocation" value="ASC, India" required><span>ASCI</span>
+                        </div>
+                        <div class="radio-primary  m-r-50">
+                            <input type="radio" name="busiradio" ng-model="editalbum.viewevent.businessLocation" value="ASC, Philippines" required><span>ASCP</span>
+                        </div>
+                        <div ng-if="eventForm.busiradio.$invalid" class="has-error">
+                            <span class="help-block" ng-show="eventForm.busiradio.$touched && eventForm.busiradio.$error.required">Business Location is Required</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 m-t-15">
+                    <label class="drk-green small-heading"> Venue</label>
+                    <div class="radio-primary m-r-50">
+                        <input type="radio" name="optradio" ng-model="editalbum.edit.venue" value="Internal" required>
+                        <span>Internal</span>
+                    </div>
+                    <div class="radio-primary  m-r-50">
+                        <input type="radio" name="optradio" ng-model="editalbum.viewevent.venue" value="External" required><span>External</span>
+                    </div>
+                
+                    <div class="radio-primary" ng-show="editalbum.edit.venue =='External'">
+                        <input class="bottomLine air-input input-plchodr" type="text" ng-model="editalbum.edit.eventExternalLocation" placeholder="Enter venue name">
+                    </div>
+                    <div ng-if="eventForm.optradio.$invalid" class="has-error">
+                        <span class="help-block" ng-show="eventForm.optradio.$touched && eventForm.optradio.$error.required">Venue is Required</span>
+                    </div>
+                </div>
+              
+            </div>
+            <div class="row">
+                <div class="col-lg-2">
+                    <label class="drk-green" for="sel1"> Organized by</label>
+                    <select class="form-control" id="sel1" disabled ng-model="editalbum.viewevent.organizedBy" name="eventOrganised" ng-options="editalbum.groupName as editalbum.groupName for editalbum in editalbum.organizedDrp" required="">
+                        <option value="">Select Organizer</option>
+                     
+                    </select>
+                    <div ng-if="eventForm.eventOrganised.$invalid" class="has-error">
+                        <span class="help-block" ng-show="eventForm.eventOrganised.$touched && eventForm.eventOrganised.$error.required">Organized By is Required</span>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                  <!--  {{editalbum.albumDrp}} -->
+                </div>
+                <div class="col-lg-2">
+                    <label class="drk-green" for="sel1"> Associated Album</label>
+                    <select class="form-control" id="sel11" disabled ng-model="editalbum.viewevent.albumSummary" name="eventAssociated" ng-options="editalbum.id as editalbum.albumName for editalbum in editalbum.albumDrp">
+                        <option value="">Select Album</option>
+                        
+                    </select>
+                </div>
+            </div>
+            <div class="m-t-15 row">
+                <div class="col-lg-2">
+                    <label class="drk-green"> Publish date</label>
+                    <div class="pst-rel date-pick-box">
+                        <input type="text" class="date-input m-t-15" disabled required ng-model="editalbum.viewevent.publishDate" name="publishDate" is-open="editalbum.from1" uib-datepicker-popup="dd-MM-yyyy" datepicker-options="editalbum.publishoptions" onkeydown="return false"><span class="input-group-btn">
+
+                    <button type="button" class="btn btn-default calendr-btn" ng-click="editalbum.openDatePicker(editalbum.from1,'from1')">
+                    <i class="glyphicon glyphicon-calendar"></i>
+                                                        </button></span>
+                        <div ng-if="eventForm.publishDate.$invalid" class="has-error">
+                            <span class="help-block" ng-show="eventForm.publishDate.$touched && eventForm.publishDate.$error.required">Event Publish Date Required</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2"></div>
+                <div class="col-lg-2">
+                    <label class="drk-green"> Audience</label>
+                    <input class="bottomLine air-input m-t-15" disabled type="text" ng-model="editalbum.viewevent.audience" placeholder="All Staff" name="audience" required>
+                    
+                    <div ng-if="eventForm.audience.$invalid" class="has-error">
+                        <span class="help-block" ng-show="eventForm.audience.$touched && eventForm.audience.$error.required">Event Audience Required</span>
+                    </div>
+                </div>
+            </div>
+            <div class="m-t-15 row">
+                <div class="col-lg-2">
+                    <label class="drk-green" for="sel1"> Event Type</label>
+                    
+                    <select class="form-control" id="sel1" disabled ng-model="editalbum.viewevent.eventType" name="eventtype" required="" ng-options="editalbum.eventType as editalbum.eventType for editalbum in editalbum.eventDrp">
+                        <option value="">Select Event Type</option>
+                    </select>
+                    <div ng-if="eventForm.eventtype.$invalid" class="has-error">
+                        <span class="help-block" ng-show="eventForm.eventtype.$touched && eventForm.eventtype.$error.required">Event Type is Required</span>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <br>
+           <!--  <div class="row pad-5 m-t-15">
+                <div class="col-lg-2 col-md-6">
+                    <button type="button" class="btn btn-default btn-block darkBtnlrg" ng-click="validateForm([eventForm]) && !editalbum.dateError && editalbum.editalbum(editalbum.edit)"><span>Save Changes</span></button>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <button type="button" class="btn btn-default pull-right  btn-block lgtBtnlrg" ng-click="editalbum.cancelEvent()"><span>Cancel</span></button>
+                </div>
+            </div> -->
+        </div>
+    </div>    
+    </form>
+</div>

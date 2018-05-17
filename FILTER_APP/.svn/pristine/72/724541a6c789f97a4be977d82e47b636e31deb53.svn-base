@@ -1,0 +1,150 @@
+<div class="row">
+    <div class="col-md-12 top-heading">
+        <h1>Notifications</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <h3 class="loginHead">Create notifications
+      <a class="pull-right in-block" ui-sref="^">
+        < Back </a>
+    </h3>
+    </div>
+</div>
+<div class="row">
+    <div class=" col-md-8 col-sm-8 col-xs-12 ">
+        <div class="col-md-6 col-sm-6 col-xs-6" style="padding-left: 0px;">
+            <select required>
+                <option value="" disabled selected>Select category</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+            </select>
+        </div>
+        <div class="col-md-6 col-sm-6 col-xs-6" style="padding-right:0px;">
+            <select required>
+                <option value="" disabled selected>Select priority</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-4"></div>
+</div>
+<div class="row m-t-15">
+    <div class="col-md-8 col-sm-8">
+        <div class="form-group">
+            <textarea class="form-control notificationDescription" rows="5" id="comment" placeholder="Enter Notification Description"></textarea>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-4"></div>
+</div>
+<div class="row top-padding-15{
+">
+    <div class="col-lg-12">
+        <span class="text-color startHead"> Specify notification start date,expiry date and publish date</span>
+    </div>
+    <div class="col-lg-8 row top-padding-15">
+        <div class="col-lg-9 row ">
+            <div class="col-md-3">
+                <div class="Billing pst-rel date-pick-box">
+                    <input placeholder="Start Date" type="text" class="date-input m-t-15" onkeydown="return false" required ng-model="transportData.validFrom" name="validFrom" is-open="transportData.from" uib-datepicker-popup="dd-MM-yyyy" datepicker-options="transportData.options" onkeydown="return false" ng-model-options="{timezone: 'UTC'}" ng-change="transportData.validFromCheckGrid(transportData.validFrom,transportData.validTo)">
+                    <span class="input-group-btn">
+
+            <button type="button" class="btn btn-default calendr-btn" ng-click="transportData.dashDatePicker(transportData.from,'from')">
+                                                            <i class="glyphicon glyphicon-calendar"></i>
+                                                        </button>
+            </span>
+                    <div ng-show="dashForm.validFrom.$touched" class="has-error"> <span class="help-block" ng-show="dashForm.validFrom.$error.required"> Date is required.</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <p style="text-align:center;padding:10px 0px;"><b>to</b></p>
+            </div>
+            <div class="col-md-3">
+                <div class="Billing pst-rel date-pick-box">
+                    <input type="text" placeholder="Expiry Date" class="date-input m-t-15" onkeydown="return false" required ng-model="transportData.validFrom" name="validFrom" is-open="transportData.from" uib-datepicker-popup="dd-MM-yyyy" datepicker-options="transportData.options" onkeydown="return false" ng-model-options="{timezone: 'UTC'}" ng-change="transportData.validFromCheckGrid(transportData.validFrom,transportData.validTo)">
+                    <span class="input-group-btn">
+
+            <button type="button" class="btn btn-default calendr-btn" ng-click="transportData.dashDatePicker(transportData.from,'from')">
+                                                            <i class="glyphicon glyphicon-calendar"></i>
+                                                        </button>
+            </span>
+                    <div ng-show="dashForm.validFrom.$touched" class="has-error"> <span class="help-block" ng-show="dashForm.validFrom.$error.required"> Date is required.</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="Billing pst-rel date-pick-box">
+                    <input type="text" placeholder="Publish Date" class="date-input m-t-15" onkeydown="return false" required ng-model="transportData.validFrom" name="validFrom" is-open="transportData.from" uib-datepicker-popup="dd-MM-yyyy" datepicker-options="transportData.options" onkeydown="return false" ng-model-options="{timezone: 'UTC'}" ng-change="transportData.validFromCheckGrid(transportData.validFrom,transportData.validTo)">
+                    <span class="input-group-btn">
+
+            <button type="button" class="btn btn-default calendr-btn" ng-click="transportData.dashDatePicker(transportData.from,'from')">
+                                                            <i class="glyphicon glyphicon-calendar"></i>
+                                                        </button>
+            </span>
+                    <div ng-show="dashForm.validFrom.$touched" class="has-error"> <span class="help-block" ng-show="dashForm.validFrom.$error.required"> Date is required.</span>
+                    </div>
+                </div>
+            </div>
+            <!--<p style="text-align:center;padding:10px 0px;"><b>to</b></p>-->
+        </div>
+    </div>
+</div>
+<div class="row top-padding-50px">
+    <div class="col-lg-12">
+        <sapn class="text-color startHead">Business location</sapn>
+    </div>
+    <div class="col-lg-5 row top-padding-15">
+        <div class="col-lg-6 col-md-5 col-sm-4">
+            <div class="selectionBoxe multisltbox">
+                <div class="location">
+                    <label class="chkLblClr col-lg-12"> All
+                        <input class="locaCheck pull-right" type="checkbox" />
+                    </label>
+                    <label class="chkLblClr col-lg-12"> ASCI
+                        <input class="locaCheck pull-right" type="checkbox" />
+                    </label>
+                    <label class="chkLblClr col-lg-12"> ASCP
+                        <input class="locaCheck pull-right" type="checkbox" />
+                    </label>
+                    <label class="chkLblClr col-lg-12"> Indore
+                        <input class="locaCheck pull-right" type="checkbox" />
+                    </label>
+                    <label class="chkLblClr col-lg-12"> Bhopal
+                        <input class="locaCheck pull-right" type="checkbox" />
+                    </label>
+                    <label class="chkLblClr col-lg-12"> Dewas
+                        <input class="locaCheck pull-right" type="checkbox" />
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-1"></div>
+        <div class="col-lg-5">
+            <div class="uploadImg">
+                <p class="centerTxt"><i class="fa fa-plus fa-1x" aria-hidden="true"></i></p>
+                <P class="centerTxt">Upload Icon</p>
+                <p class="centerTxt">Max Size 50 KB</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-1"></div>
+    <div class="col-lg-2">
+    </div>
+    <div class="col-lg-6"></div>
+</div>
+<div class="row" style="padding-top:35px;">
+    <div class="col-md-6 row">
+        <div class="col-md-8 row">
+            <div class="col-md-6">
+                <button type="button" class="btn btn-default  btn-block darkBtnlrg "><span>Create notification</span></button>
+            </div>
+            <div class="col-md-6">
+                <button type="button" class="btn btn-default pull-right  btn-block lgtBtnlrg"><span>Cancel</span></button>
+            </div>
+        </div>
+        <div class="col-md-2"> </div>
+    </div>
+    <div class="col-lg-6"></div>
+</div>

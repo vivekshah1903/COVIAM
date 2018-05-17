@@ -1,0 +1,39 @@
+<div class="row">
+    <div class="col-md-12 top-heading">
+        <h1>Filter Data</h1>
+    </div>
+</div>
+<div class="pad-lr m-t-15 tb-lay"> 
+<div class="tab-content common-container">
+    <form name="FILTER">
+        <div class="row m-t-15">
+        <table class="col-lg-12 table-striped">  
+            <thead>  
+              <tr>
+                    <th>Name</th>  
+                    <th>Gender</th>  
+                    <th>Birth Year</th>  
+                    <th>Film Title</th>  
+                  </tr>
+                <tr>  
+
+                    <th><input type="text" ng-model="search.name"></th>  
+                    <th><input type="text" ng-model="search.gender"></th>  
+                    <th><input type="text" ng-model="search.birth_year"></th>  
+                    <th><input type="text" ng-model="search.movie"></th>         
+                </tr>  
+            </thead>  
+            <tbody  class="m-t-15">  
+                <tr ng-repeat="x in data1 | filter:{name: search.name, gender:search.gender, birth_year:search.birth_year}">
+ 
+                    <td>{{x.name}}</td> 
+                    <td>{{x.gender}}</td>  
+                    <td>{{x.birth_year}}</td>
+                    <td ng-repeat="movie in x.list | filter: search.movie">{{movie}}</td>
+                </tr>  
+            </tbody>  
+        </table>  
+        </div>    
+    </form>            
+  </div>
+</div>

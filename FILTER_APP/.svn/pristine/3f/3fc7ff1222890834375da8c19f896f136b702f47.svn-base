@@ -1,0 +1,45 @@
+(function() {
+    'use strict';
+    angular.module('app.notify').config(function config($stateProvider) {
+        $stateProvider.state('notifications', {
+            url: '/notifications',
+            controller: 'NotificationCtrl as notification',
+            templateUrl: 'UX/app/notifications/partials/notificationTable.html'
+        }).state('notifications.notificationCreatePage', {
+            url: '/notificationCreatePage',
+            //parent: 'eventPage',
+            /**/
+            views: {
+                "@": {
+                    controller: 'NotificationCreateCtrl as notificationCreate',
+                    templateUrl: 'UX/app/notifications/partials/notifications.html'
+                },
+                "notificationCreatePage@notifications.notificationCreatePage": {
+                    controller: 'NotificationCreateCtrl as notificationCreate',
+                    templateUrl: 'UX/app/notifications/partials/notifications.html'
+                }
+            }
+            /**/
+
+        }) .state('notifications.notificationEditPage', {
+            url: '/notificationEditPage',
+            params: {
+                obj: null
+            },
+
+            views: {
+                "@": {
+                    controller: 'NotificationEditCtrl as editnotification',
+                    templateUrl: 'UX/app/notifications/partials/edit_notification.html',
+
+                },
+                "notificationEditPage@notifications.notificationEditPage": {
+                    controller: 'NotificationEditCtrl as editnotification',
+                    templateUrl: 'UX/app/notifications/partials/edit_notification.html',
+
+                }
+            }
+
+        });
+    });
+})();

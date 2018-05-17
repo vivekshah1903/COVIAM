@@ -1,0 +1,156 @@
+(function() {
+    'use strict';
+
+    angular.module('app.employees').controller('UploadStatusCtrl', uploadStatusCtrl);
+
+    uploadStatusCtrl.$inject = ['$scope', '$uibModal', 'EmployeeDataService','sessionService','$timeout', 'CONFIG'];
+
+    //Controller implementation
+    function uploadStatusCtrl($scope, $uibModal, EmployeeDataService, sessionService, $timeout, CONFIG) {
+        var vm = this;
+        //vm.getEmployeeSummary = getEmployeeSummary;
+      
+        //vm.uploadFile = uploadFile;
+        vm.getUploadStatusData =getUploadStatusData;
+        vm.canceluploadedFile = canceluploadedFile;
+         vm.userdata = sessionService.getUserDetails('USER');
+        vm.apisAlert = {
+            toggle: false,
+            message: "",
+            type: "ERROR"
+        }
+        //getEmployeeSummary();
+        getUploadStatusData();
+
+    
+         function getUploadStatusData() {
+            return EmployeeDataService.getUploadStatus().then(function(statusdata) {
+              if (statusdata.message == "No Record Found") {
+                    vm.statusDashboard.options.data = [];
+                } else {
+                vm.statusDashboard.options.data = statusdata.transportRosterSummary;
+            }
+            }).finally(function() {
+
+            });
+        }
+
+     
+        function canceluploadedFile() {
+            $scope.filename = false;
+            vm.checkName = false;
+        }
+
+    
+          vm.statusDashboard = {
+            options: {
+                cache: false,
+                //height: 600,
+                striped: true,               
+                pagination: true,
+                pageSize: 10,
+                pageList: [5, 10, 25, 50, 100, 200],
+                paginationPreText:"Previous",
+                paginationNextText:"Next",                
+                search: true,
+                showColumns: false,
+                showRefresh: false,
+                showExport: false,
+                minimumCountColumns: 2,
+                clickToSelect: false,
+                showToggle: false,
+                toolbar: "#toolbar",
+                maintainSelected: true,
+                columns: [{
+                        title: 'File Name',
+                        field: 'fileName',
+                         width: '200',
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true,
+                        events: window.operateEvents = {
+                            'click .fileUpload': function(e, value, row, index) {}
+                        },
+                        formatter: uploadRosterFormatter
+
+                    }, {
+                        title: 'Uploaded By',
+                        field: 'uploadedBy',
+                        width: '200',
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true,
+                       
+
+
+                    },
+                    {
+                        title: 'Date',
+                        field: 'uploadedDateTime',
+                        width: '200',
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true
+
+
+                    }, {
+                        title: 'Status',
+                        field: 'status',
+                         width: '200',
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true,
+                        "formatter": statusFormatter
+
+                    }
+
+
+                ]
+
+            }
+        };
+         window.operateEvents['click .fileUpload'] = (function(e, value, row, index) {
+            //some edit stuff
+            var fileDownloadId = row.fileId;
+            return EmployeeDataService.downLoadFile(fileDownloadId).then(function(data) {
+                window.open(data.dataBean)
+            }).finally(function() {
+
+            });
+        });
+           function uploadRosterFormatter(value, row, index) {
+            return '<a class=" fileUpload pst-rel">' + value + '</a>';
+        }
+         function statusFormatter(value, row, index) {
+
+            if (row.status == CONFIG.EMPLOYEE_FILE_STATUS.FAIL) {
+                return [
+                    '<a class="like pst-rel" href="javascript:void(0)">',
+                    '<i   class="glyphicon glyphicon-remove"></i>',
+                    '<span class="tooltiptext">Failed</span>',
+                    '</a> '
+
+                ].join('');
+            } else if (row.status == CONFIG.EMPLOYEE_FILE_STATUS.SUCCESS) {
+                return [
+                    '<a class="like pst-rel" href="javascript:void(0)" >',
+                    '<i   class="glyphicon glyphicon-ok"></i>',
+                    '<span class="tooltiptext">Success</span>',
+                    '</a> '
+
+                ].join('');
+            } else if (row.status == CONFIG.EMPLOYEE_FILE_STATUS.INPROGRESS) {
+                return [
+                    '<a class="like pst-rel" href="javascript:void(0)">',
+                    '<i   class="glyphicon glyphicon-hourglass"></i>',
+                    '<span class="tooltiptext">In progress</span>',
+                    '</a> '
+
+                ].join('');
+            }
+        }
+
+     
+    }
+
+})();

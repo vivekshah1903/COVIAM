@@ -1,0 +1,70 @@
+/*****************
+@Author:GuruPrasad
+******************/
+(function() {
+    'use strict';
+    //vendor Service
+    angular.module('app.common').factory('TransportDataService', transportDataService);
+
+    //Service injection
+    transportDataService.$inject = ['$http', 'APIS', 'dataManagerService'];
+
+    //Service implementation
+    function transportDataService($http, APIS, dataManagerService) {
+        return {
+            //transportData:transportData,
+            getReportData: getReportData,
+            sendFileForValidate: sendFileForValidate,
+            getRosterSummaryData: getRosterSummaryData,
+            uploadDataFile: uploadDataFile
+        };
+
+        /*function transportData(data) {
+                
+            return data;
+        }*/
+
+        function getReportData(data) {
+            var token = "";
+            APIS.GENERATE_REPORT_DATA.data = data;
+            return dataManagerService.sendRequest(null, APIS.GENERATE_REPORT_DATA, token).then(function(data) {
+                return data.dataBean;
+            })
+        }
+
+        function sendFileForValidate(fileObj) {
+            var requestObj = {
+
+                "file": null
+            };
+            requestObj.file = fileObj['fileName'];
+            APIS.FILE_VALIDATE_API.data = requestObj;
+            return dataManagerService.sendRequestWithImage('', APIS.FILE_VALIDATE_API).then(function(data) {
+                return data;
+            });
+        }
+
+        function getRosterSummaryData() {
+            APIS.GET_ROSTER_SUMMARY_DATA.URL = APIS.GET_ROSTER_SUMMARY_DATA.TEMPURL;
+            APIS.GET_ROSTER_SUMMARY_DATA.URL = APIS.GET_ROSTER_SUMMARY_DATA.URL
+
+            return dataManagerService.sendRequest(null, APIS.GET_ROSTER_SUMMARY_DATA).then(function(data) {
+
+                return data;
+            });
+        }
+
+        function uploadDataFile(fileObj) {
+            var requestObj = {
+
+                "file": null
+            };
+            requestObj.file = fileObj['fileName'];
+            APIS.UPLOAD_VALIDATED_FILE.data = requestObj;
+            return dataManagerService.sendRequestWithImage('', APIS.UPLOAD_VALIDATED_FILE).then(function(data) {
+                return data;
+            });
+        }
+    }
+
+})();

@@ -1,0 +1,118 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en" ng-app="app">
+<!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>SunLife</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="UX/image/sun_life_financial1_svC_icon.ico" />
+    <link rel="stylesheet" href="UX/lib/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="UX/lib/bootstrap-table.css" />
+    <link rel="stylesheet" href="UX/lib/angular-ui-grid/ui-grid.min.css">
+    <link rel="stylesheet" href="UX/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="UX/app/common/css/main.css">
+    <link rel="stylesheet" href="UX/app/common/css/theme.css">
+    
+</head>
+
+<body ng-controller="MainController"  >
+<div>
+
+
+  
+    <!-- Home-Page-Ui-View-->
+    
+    <div class="container-fluid middle-container">
+        <div data-ui-view></div>
+    </div>
+    <!-- Footer -->
+    <div class="container-fluid">
+        <footer-page></footer-page>
+    </div>
+</div>
+    <!--  -->
+    <script src="UX/lib/jquery/jquery.min.js"></script>
+    <script src="UX/lib/jquery-ui/jquery-ui.min.js"></script>
+    <script src="UX/lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="UX/lib/bootstrap-table.js"></script>
+    <script src="UX/lib/bootstrap-table-filter-control.js"></script>
+    <script src="UX/lib/bootstrap-multiselect/js/bootstrap-multiselect.js"></script>
+    <script src="UX/lib/angular/angular.min.js"></script>
+    <script src="UX/lib/angular/angular-ui-router.min.js"></script>
+    <script src="UX/lib/angular/ui-bootstrap-tpls.min.js"></script>
+    <script src="UX/lib/angular/angular-touch.min.js"></script>
+
+    <script src="UX/lib/angular/ui-bootstrap-tpls.min.js"></script>
+
+    
+    
+
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.js"></script> -->
+    <script src="UX/lib/bootstrap-table-angular.js"></script>
+    <script src="UX/lib/bootstrap-table-export.js"></script>
+    
+    <script src="https://rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script>
+    <script src="UX/lib/FileSaver.js"></script> 
+    <!-- <script src="UX/lib/Blob.js"></script>  -->
+
+    <script src="UX/lib/angular-ui-grid/ui-grid.min.js"></script>
+    
+    <script src="UX/lib/CSV-JS/csv.js"></script>
+    <script src="UX/lib/pdfmake/pdfmake.min.js"></script>
+    <script src="UX/lib/pdfmake/vfs_fonts.js"></script>
+    <script src="UX/lib/ng-file-upload/ng-file-upload.min.js"></script>
+    <script src="UX/lib/ng-file-upload/ng-file-upload-shim.min.js"></script>
+
+    <!-- app -->
+    <script src="UX/app/app.js"></script>
+    <!-- Utility Module -->
+    <script src="UX/app/utility/uiConfig.js"></script>
+    <script src="UX/app/utility/apis.js"></script>
+    <!-- Common Module -->
+    <script src="UX/app/common/route/commonRoute.js"></script>
+    <script src="UX/app/common/services/StoreService.js"></script>
+    <script src="UX/app/common/directives/commonDir.js"></script>
+    <script src="UX/app/common/services/DataManagerService.js"></script>
+    <script src="UX/app/common/services/ModalPopup.js"></script>
+    <script src="UX/app/common/services/utils.js"></script>
+    <script src="UX/app/common/controllers/HomeCtrl.js"></script>
+    <!-- Login Modules -->
+    <script src="UX/app/login/login_route.js"></script>
+    <script src="UX/app/login/controllers/LoginCtrl.js"></script>
+    <script src="UX/app/login/services/LoginService.js"></script>
+    <!-- Transport Module -->
+    <script src="UX/app/transportData/transport_route.js"></script>
+    <script src="UX/app/transportData/controllers/TransportDataCtrl.js"></script>
+    <script src="UX/app/transportData/controllers/UploadDataCtrl.js"></script>
+    <script src="UX/app/transportData/services/TransportDataService.js"></script>
+    <!-- Event Module -->
+    <script src="UX/app/events/event_route.js"></script>
+    <script src="UX/app/events/controllers/EventCtrl.js"></script>
+    <script src="UX/app/events/controllers/EditEventCtrl.js"></script>
+    <script src="UX/app/events/services/EventService.js"></script>
+    <!-- Notification Module -->
+    <script src="UX/app/notifications/notification_route.js"></script>
+    <script src="UX/app/notifications/controllers/NotificationCtrl.js"></script>
+    <script src="UX/app/notifications/controllers/CreateNotificationCtrl.js"></script>
+    <script src="UX/app/notifications/controllers/EditNotificationCtrl.js"></script>
+    <script src="UX/app/notifications/services/NotificationService.js"></script>
+    <!-- Album Module -->
+    <script src="UX/app/album/album_route.js"></script>
+    <script src="UX/app/album/controllers/AlbumCtrl.js"></script>
+    <script src="UX/app/album/controllers/EditAlbumCtrl.js"></script>
+    <script src="UX/app/album/services/AlbumService.js"></script>
+    <!-- Employee Data Module -->
+    <script src="UX/app/employeedata/employeeData_route.js"></script>
+    <script src="UX/app/employeedata/controllers/EmployeeDataCtrl.js"></script>
+    <script src="UX/app/employeeData/services/EmployeeDataService.js"></script>
+    <script src="UX/app/gallery/controllers/GalleryCtrl.js"></script>
+</body>
+
+</html>

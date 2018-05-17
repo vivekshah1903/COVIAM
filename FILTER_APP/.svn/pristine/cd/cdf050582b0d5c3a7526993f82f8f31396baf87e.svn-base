@@ -1,0 +1,19 @@
+(function() {
+    'use strict';
+
+    angular.module('app.resetpassword').controller('ResetpasswordCtrl', resetpasswordCtrl);
+
+    resetpasswordCtrl.$inject = [ '$scope', 'dataManagerService', '$location', '$stateParams'];
+
+    //Controller implementation
+    function resetpasswordCtrl( $scope, $location,  sessionService ) {
+        var vm = this;
+      
+
+
+
+
+
+
+    }
+})();

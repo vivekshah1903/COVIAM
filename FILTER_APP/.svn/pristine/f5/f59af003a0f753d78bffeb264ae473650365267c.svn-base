@@ -1,0 +1,131 @@
+(function() {
+    'use strict';
+
+    angular.module('app.notify').controller('NotificationCtrl', notificationCtrl);
+
+    notificationCtrl.$inject = [];
+
+    //Controller implementation
+    function notificationCtrl() {
+        var vm = this;
+        vm.dashDatePicker = dashDatePicker;
+        vm.validFromCheck=validFromCheck;
+
+        function dashDatePicker(opened, value) {
+            var am = this;
+            if (value == 'to') {
+                am.to = !(am.opened);
+            }
+            if (value == 'from') {
+                am.from = !(am.opened);
+            }
+        }
+
+        function validFromCheck(valueA, valueB) {
+            vm.dateError = false;
+            if (!valueA || !valueB) {
+                vm.dateError = false;
+                return;
+            }
+            (valueA > valueB) ? vm.dateError = true: vm.dateError = false;
+
+
+        }
+        vm.notificationSummary = {
+            options: {
+                cache: false,
+                striped: true,
+                pagination: true,
+                pageSize: 10,
+                pageList: [5, 10, 25, 50, 100, 200],
+                search: true,
+                showColumns: false,
+                showRefresh: false,
+                showExport: false,
+                minimumCountColumns: 2,
+                clickToSelect: false,
+                showToggle: false,
+                toolbar: "#toolbar",
+                maintainSelected: true,
+                columns: [{
+                        field: 'state',
+                        checkbox: true,
+                        align: 'center',
+                        valign: 'middle'
+                    }, {
+                        title: 'Category',
+                        field: 'category',
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true
+
+
+                    }, {
+                        title: 'Priority',
+                        field: 'priority',
+
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true
+
+                    }, {
+                        title: 'Notification',
+                        field: 'notification',
+
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true
+
+                    }, {
+                        title: 'Start Date',
+                        field: 'startDate',
+
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true
+
+                    }, {
+                        title: 'Expiry Date',
+                        field: 'expiryDate',
+
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true
+
+                    }, {
+                        title: 'Publish Date',
+                        field: 'publishDate',
+
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true
+
+                    }, {
+                        title: 'Created by',
+                        field: 'createdBy',
+
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true
+
+                    }, {
+                        title: 'Created date',
+                        field: 'cretedDate',
+
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true
+
+                    }
+
+
+                ]
+
+            }
+        };
+    }
+
+
+})();
+
+// nottificationtable controller

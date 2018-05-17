@@ -1,0 +1,41 @@
+/*****************
+@Author:GuruPrasad
+******************/
+(function() {
+    'use strict';
+    //category Service
+    angular.module('app.events').factory('eventService', eventService); //Apis constan file
+
+    //Service injection
+    eventService.$inject = ['dataManagerService', '$log', 'APIS'];
+
+    //Service implementation
+    function eventService(dataManagerService, $log, APIS) {
+        //Binding 	
+        return {
+            getEventSummaryData: getEventSummaryData,
+
+            searchCategroy: searchCategroy
+        };
+
+        /*category function*/
+        function getEventSummaryData(obj) {
+            APIS.GET_EVENT_LIST.data = obj;
+            var token = "";
+            return dataManagerService.sendRequest(null, APIS.GET_EVENT_LIST, token).then(function(data) {
+                return data;
+            });
+        } //EOF Category
+
+        /* Creates category*/
+
+        function searchCategroy(data) {
+            var token = "";
+            APIS.SERACH_CATEGARIES.data = data;
+            return dataManagerService.sendRequest(null, APIS.SERACH_CATEGARIES, token).then(function(data) {
+                return data.dataBean;
+            })
+        }
+
+    } //EOF Service
+})();

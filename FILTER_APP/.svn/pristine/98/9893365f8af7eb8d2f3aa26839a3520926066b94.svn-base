@@ -1,0 +1,19 @@
+(function() {
+    'use strict';
+
+    angular.module('app.resetpassword').controller('ResetpasswordCtrl', resetpasswordCtrl);
+
+    resetpasswordCtrl.$inject = [];
+
+    //Controller implementation
+    function resetpasswordCtrl() {
+        var vm = this;
+      
+
+
+
+
+
+
+    }
+})();

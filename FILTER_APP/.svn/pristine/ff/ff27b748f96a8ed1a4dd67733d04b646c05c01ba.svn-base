@@ -1,0 +1,40 @@
+ <div class="row" style="background-color: #EAAC1F;">
+    <div class="col-md-12">
+        <h2>Employee App Admin Console</h2>
+    </div>
+</div>
+<div class="row">
+    <div class=" col-lg-offset-1 col-lg-10">
+        <h3 class="loginHead">Reset password</h3>
+    </div>
+</div>
+<div class="row lwDiv ">
+    <div class="col-lg-4"></div>
+    <div class="col-lg-4 loignCre">
+        <div class="col-lg-2"></div>
+        <form name="loginForm" role="form" novalidate="">
+            <div class="col-lg-8 meddiv">
+                <div class="form-group">
+                    <label for="usr">User Name</label>
+                    <input type="text" class="form-control" id="usr" ng-model="login.userName" placeholder="Input value" name="userName" required>
+                    <div ng-if="loginForm.userName.$invalid" class="has-error">
+                        <span class="help-block" ng-show="loginForm.userName.$touched && loginForm.userName.$error.required">User Name Required</span>
+
+                    </div>
+                </div>
+                
+                <div>
+                  <p>Please drop an email to <br><b>ASCI_EmployeeAppHelpdesk</b> for any further assistance.</p>
+
+                </div>
+                
+                <br>
+                <div>
+                    <button class=" btn btn-primary lgbtn" ng-click="validateForm([loginForm]) && login.addUser()">Reset password</button>
+                </div>
+            </div>
+        </form>
+        <div class="col-lg-2"></div>
+    </div>
+    <div class="col-lg-4"></div>
+</div>

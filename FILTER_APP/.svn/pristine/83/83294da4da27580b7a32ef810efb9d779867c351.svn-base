@@ -1,0 +1,40 @@
+<div ui-view>
+</div>
+<app-header></app-header>
+<div class="row">
+    <div class="col-md-12 top-heading">
+        <h1>Employee Data</h1></div>
+</div>
+<div class="common-container">
+    <div class="alert m-t-15" ng-class="{'alert-danger':employeeData.apisAlert.type=='ERROR','alert-success':employeeData.apisAlert.type=='SUCCESS'}" ng-show="employeeData.apisAlert.toggle">
+        <a href="javascript:void(0)" ng-click="employeeData.apisAlert.toggle=false;" class="close" aria-label="close" title="close"><i class="fa fa-times-circle" aria-hidden="true"></i></a>
+        <strong>{{employeeData.apisAlert.message}}</strong>
+    </div>
+   
+    <div class="row container-fluid">
+        <h4 class="pageLine">Showing {{employeeData.noemp}} employees <span class="m-l-10 in-block small-fnt"> Last updated {{employeeData.lastupdated}}</span></h4>
+    </div>
+    <div ng-hide="filename" class="col-md-8">
+        <form name="upload">
+            <div class="file-upload">
+                <label for="upload" class="file-upload__label">+ Upload Data</label>
+                <input id="upload" class="file-upload__input" type="file" ngf-select ng-model="filename" name="file" ngf-pattern="'.xls,.xlsx'" accept=".xls,.xlsx" required="">
+            </div>
+            <div ng-if="upload.file.$invalid" class="has-error">
+               
+                <span class="help-block" ng-show="upload.file.$error.pattern">Valid file format are xls, xlsx</span>
+            </div>
+        </form>
+    </div>
+    <div ng-if="filename" class="col-md-8 in-block f-s-18">Selected File:<span class="bold-txt m-l-10">{{filename.name}}</span>
+        <div class="m-l-10 in-block">
+            <button type="submit" class="btn btn-default mdlBtndark" ng-click="employeeData.uploadFile(filename)">Submit</button>
+            <button type="button" class="btn btn-default mdlLightbtn" ng-click="employeeData.canceluploadedFile()">Cancel</button>
+        </div>
+      
+    </div>
+    <div class="col-md-2 m-t-15">
+         <button  type="button " class="btn btn-default pull-right mdlBtndark btm-space " ui-sref=".uploadStatusPage">Upload Status</button>
+    </div>
+    <table id="table" class="credit-table" bs-table-control="employeeData.employeeDashboard"></table>
+</div>

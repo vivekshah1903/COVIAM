@@ -1,0 +1,28 @@
+<div class="row">
+    <div class="col-md-12 top-heading">
+        <h2>Employee Data</h2></div>
+</div>
+<div class="container-fluid">
+            <div class="row"><h4 class="pageLine m-t-25">Showing 1024 employees <span class="m-l-10 in-block small-fnt"> last updated {{employeeData.lastUpdate}}</span></h4>
+             <div ng-hide="filename" class="col-md-3">
+                    <form name="upload">
+                        <div class="file-upload">
+                            <label for="upload" class="file-upload__label">+ Upload Data</label>
+                            <input id="upload" class="file-upload__input" type="file" ngf-select ng-model="filename" name="file" ngf-pattern="'.xls,.xlsx'" accept=".xls,.xlsx" required="">
+                        </div>
+                        <div ng-if="upload.file.$invalid" class="has-error">
+                            <!-- <span class="help-block" ng-show="!upload.file.$error.pattern &&upload.file.$touched && upload.file.$error.required">File Required</span> -->
+                            <span class="help-block" ng-show="upload.file.$error.pattern">Valid file format are xls, xlsx</span>
+                        </div>
+                    </form>
+                </div>
+                <div ng-if="filename" class="col-md-5 in-block">Selected File:<span class="bold-txt m-l-10">{{filename.name}}</span>
+                    <div class="m-l-10 in-block">
+                        <button type="submit" class="btn btn-default mdlBtndark" ng-click="employeeData.uploadFile(filename)">Submit</button>
+                        <button type="button" class="btn btn-default mdlLightbtn" ng-click="employeeData.canceluploadedFile()">Cancel</button>
+                    </div>
+                   <!--  <span class="help-block red-text" ng-show="transportData.checkName">Incorrect File Name</span> -->
+                </div>
+            </div>
+          <table id="table" class="credit-table" bs-table-control="employeeData.employeeDashboard"></table> 
+        </div>

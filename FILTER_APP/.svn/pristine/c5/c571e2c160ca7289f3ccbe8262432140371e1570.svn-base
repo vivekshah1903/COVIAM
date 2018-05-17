@@ -1,0 +1,394 @@
+(function () {
+    'use strict';
+
+    angular.module('app.events').controller('EventCtrl', eventCtrl);
+
+    eventCtrl.$inject = ['eventService', '$scope', 'dataManagerService', 'AlbumService', '$location', '$timeout', 'APIS', 'sessionService', 'utils', 'CONFIG', 'ModalService', '$state'];
+
+    //Controller implementation
+    function eventCtrl(eventService, $scope, dataManagerService, AlbumService, $location, $timeout, APIS, sessionService, utils, CONFIG, ModalService, $state) {
+        var vm = this;
+        vm.dashDatePicker = dashDatePicker;
+        vm.validFromCheck = validFromCheck;
+        vm.getEventDetails = getEventDetails;
+        vm.openDatePicker = openDatePicker;
+      
+        vm.apisAlert = {
+            toggle: false,
+            message: "",
+            type: "ERROR"
+        }
+        getEventRecordDetails();
+        vm.userdata = sessionService.getUserDetails('USER');
+     
+
+        function dashDatePicker(opened, value) {
+            var am = this;
+            if (value == 'to') {
+                am.to = !(am.opened);
+            }
+            if (value == 'from') {
+                am.from = !(am.opened);
+            }
+        }
+
+        function openDatePicker(opened, value) {
+            var am = this;
+            if (value == 'to') {
+                am.to = !(am.opened);
+            }
+            if (value == 'from1') {
+                am.from1 = !(am.opened);
+            }
+        }
+
+
+
+        function validFromCheck(valueA, valueB) {
+            vm.dateError = false;
+            if (!valueA || !valueB) {
+                vm.dateError = false;
+                return;
+            }
+            (valueA > valueB) ? vm.dateError = true : vm.dateError = false;
+
+
+        }
+
+   
+
+        function getEventDetails() {
+
+            vm.validfromdate = utils.getinDateFormat(vm.data.validFrom, CONFIG.SYSTEM_DATE_FORMAT.DATE_YEAR_FORMAT);
+            vm.validtodate = utils.getinDateFormat(vm.data.validTo, CONFIG.SYSTEM_DATE_FORMAT.DATE_YEAR_FORMAT);
+            var obj = {
+                acf2Id: vm.userdata.acf2Id,
+                "eventsDateType": vm.data.datetype,
+                "fromDate": vm.validfromdate,
+                "toDate": vm.validtodate
+            }
+
+            return eventService.getEventSummaryData(obj).then(function (eventData) {
+                if (eventData.message == "No Record Found") {
+                    vm.eventSummary.options.data = [];
+                } else {
+                    vm.eventSummary.options.data = eventData.events;
+
+                }
+            });
+
+        }
+
+
+
+        function getEventRecordDetails() {
+
+
+            return eventService.getEventRecordlist().then(function (eventData) {
+                if (eventData.message == "No Record Found") {
+                    vm.eventSummary.options.data = [];
+                } else {
+                    vm.eventSummary.options.data = eventData.events;
+
+                }
+            });
+
+        }
+
+
+
+        vm.eventSummary = {
+            options: {
+                cache: false,
+                //height: 600,
+                striped: true,
+                pagination: true,
+                pageSize: 10,
+                pageList: [5, 10, 25, 50, 100, 200],
+                paginationPreText: "Previous",
+                paginationNextText: "Next",
+                search: true,
+                showColumns: false,
+                showRefresh: false,
+                showExport: false,
+                filterControl: true,
+                minimumCountColumns: 2,
+                clickToSelect: false,
+                showToggle: false,
+                toolbar: "#toolbar",
+                maintainSelected: true,
+                columns: [{
+                    field: 'state',
+                    checkbox: true,
+                    align: 'center',
+                    valign: 'middle'
+                }, {
+                    title: 'Event Name',
+                    field: 'eventName',
+
+                    align: 'center',
+                    valign: 'middle',
+                    sortable: true,
+                    "formatter": eventNameFormatter
+                }, {
+                    title: 'Business Location',
+                    field: 'businessLocation',
+                    filterControl: 'select',
+                    align: 'center',
+                    valign: 'middle',
+                    sortable: true
+
+                }, {
+                    title: 'Event Location',
+                    field: 'venue',
+                    align: 'center',
+                    valign: 'middle',
+                    sortable: true
+                }, {
+                    title: 'Start Date',
+                    field: 'eventStartDate',
+                    align: 'center',
+                    valign: 'middle',
+                    sortable: true,
+                    "formatter": startDateFormatter
+
+                }, {
+                    title: 'End Date',
+                    field: 'eventEndDate',
+                    align: 'center',
+                    valign: 'middle',
+                    sortable: true,
+                    "formatter": endDateFormatter
+
+                }, {
+                    title: 'Status',
+                    field: 'eventStatus',
+                    align: 'center',
+                    valign: 'middle',
+                    sortable: true,
+                    "formatter": statusFormatter
+
+                }, {
+                    title: 'Event Type',
+                    field: 'eventType',
+                    align: 'center',
+                    valign: 'middle',
+                    sortable: true
+
+                }, {
+                    title: 'Organized by',
+                    field: 'organizedBy',
+                    align: 'center',
+                    valign: 'middle',
+                    sortable: true
+
+                }, {
+                    title: 'Publish Date',
+                    field: 'publishDate',
+                    align: 'center',
+                    valign: 'middle',
+                    sortable: true,
+                    "formatter": publishDateFormatter
+
+                }, {
+                    title: 'Created by',
+                    field: 'createdBy',
+                    align: 'center',
+                    valign: 'middle',
+                    sortable: true
+
+                }, {
+                    title: 'Created date',
+                    field: 'createDate',
+                    align: 'center',
+                    valign: 'middle',
+                    sortable: true,
+                    "formatter": createDateFormatter
+
+                }, {
+                    title: 'Action',
+                    field: 'cretedDate',
+                    "formatter": actionFormatter,
+                    align: 'center',
+                    valign: 'middle',
+                    events: window.operateEvents = {
+                        'click .edit': function (e, value, row, index) { },
+                         'click .like': function (e, value, row, index) { }
+                    },
+                    
+                    sortable: true
+
+                }
+
+
+                ]
+
+            }
+        };
+        window.operateEvents['click .edit'] = (function (e, value, row, index) {
+
+            sessionService.setEditEventList(row);
+            $state.go('.eventEditPage');
+        });
+         window.operateEvents['click .like'] = (function (e, value, row, index) {
+            console.log(row);
+            var eventID = row.eventId;
+            //var eventID =8;
+            return eventService.viewAlbums(eventID).then(function (eventData) {
+                console.log("Data", eventData);
+                //sessionService.setViewEventList(eventData.eventsT);
+                  $state.go('album', { obj: eventData })
+                //$location.path('/album');
+            });
+        });
+
+        function statusFormatter(value, row, index) {
+
+            if (row.eventStatus == CONFIG.EVENT_STATUS.EXPIRED) {
+                return [
+                    '<a class="like pst-rel" href="javascript:void(0)">',
+                    '<i   class="glyphicon glyphicon-remove"></i>',
+                    '<span class="tooltiptext">Expired</span>',
+                    '</a> '
+
+                ].join('');
+            } else if (row.eventStatus == CONFIG.EVENT_STATUS.ACTIVE) {
+                return [
+                    '<a class="like pst-rel" href="javascript:void(0)" class="pst-rel">',
+                    '<i   class="glyphicon glyphicon-ok"></i>',
+                    '<span class="tooltiptext">Active</span>',
+                    '</a> '
+
+                ].join('');
+            } else if (row.eventStatus == CONFIG.EVENT_STATUS.UPCOMING) {
+                return [
+                    '<a class="like pst-rel" href="javascript:void(0)" class="pst-rel">',
+                    '<i   class="glyphicon glyphicon-hourglass"></i>',
+                    '<span class="tooltiptext">In progress</span>',
+                    '</a> '
+
+                ].join('');
+            }
+        }
+
+        function eventNameFormatter(value, row, index) {
+            return '<a class="pst-rel undrline-txt event-des">' + value +
+
+                '<div class="tooltiptext">' + '<h5>' + '<span class="tooltip-txt">' + row.eventDesc + '</h5>' + '</div>' + '</a>';
+        }
+
+        function createDateFormatter(value, row, index) {
+
+            vm.date = utils.getinDateFormat(row.createDate, CONFIG.SYSTEM_DATE_FORMAT.DATE_FORMAT);
+            return vm.date;
+        }
+
+        function publishDateFormatter(value, row, index) {
+
+            vm.date = utils.getinDateFormat(row.publishDate, CONFIG.SYSTEM_DATE_FORMAT.DATE_FORMAT);
+            return vm.date;
+        }
+
+        function startDateFormatter(value, row, index) {
+
+            vm.date = utils.getinDateFormat(row.eventStartDate, CONFIG.SYSTEM_DATE_FORMAT.DATE_FORMAT);
+            return vm.date;
+        }
+
+        function endDateFormatter(value, row, index) {
+
+            vm.date = utils.getinDateFormat(row.eventEndDate, CONFIG.SYSTEM_DATE_FORMAT.DATE_FORMAT);
+            return vm.date;
+        }
+
+
+
+        function actionFormatter(value, row, index) {
+            return [
+                '<a class="like pst-rel" href="javascript:void(0)">',
+                '<i class="glyphicon glyphicon-film"></i>',
+                '<span class="tooltiptext">Associated Album</span>',
+                '</a>  ',
+                '<a class="edit pst-rel" href="javascript:void(0)">',
+                '<i class="glyphicon glyphicon-pencil"></i>',
+                /* '<span class="tooltiptext">Edit Event</span>',*/
+                '</a>'
+            ].join('');
+        }
+
+        vm.deleteRow = function () {
+
+            var $table = $('#table');
+
+            if ($table.bootstrapTable('getSelections').length > 0) {
+                vm.apisAlert.toggle = false;
+                var ids = $table.bootstrapTable('getAllSelections')
+                var eventIdValue = [];
+                angular.forEach(ids, function (value, key) {
+                    var obj = {
+                        "id": value.eventId
+                    }
+                    eventIdValue.push(obj);
+
+
+                });
+
+
+
+                var message = "Are you sure you want to delete the selected event ?"
+
+                ModalService.openAlert('confirm', 'Cancel Event', message, $scope, 'reset');
+                $scope.$on('resetOk', function () {
+                    var eventObj = {
+                        "listId": eventIdValue
+                    }
+                    return eventService.deleteEvents(eventObj).then(function (eventData) {
+                        if (eventData.result == "SUCCESS") {
+                            vm.apisAlert = {
+                                toggle: true,
+                                message: eventData.message || 'Internal Server Error',
+                                type: "SUCCESS"
+                            };
+                            $timeout(function () {
+                                vm.apisAlert.toggle = false;
+                            }, 5000);
+                            // getEventDetails();
+
+                            if (!vm.data) {
+                                 getEventRecordDetails();
+
+                            }
+                            else {
+                                  getEventDetails();
+                            }
+                        } else {
+
+                        }
+
+                    });
+
+                });
+
+
+                $scope.$on('resetCancel', function () {
+
+                });
+            } else if ($table.bootstrapTable('getSelections').length <= 0) {
+                vm.message = "Please select atleast one event";
+                vm.apisAlert = {
+                    toggle: true,
+                    message: vm.message,
+                    type: "ERROR"
+                };
+                $timeout(function () {
+                    vm.apisAlert.toggle = false;
+                }, 5000);
+
+            }
+
+
+        }
+
+
+    } //EOF CategoryCtrl
+})();

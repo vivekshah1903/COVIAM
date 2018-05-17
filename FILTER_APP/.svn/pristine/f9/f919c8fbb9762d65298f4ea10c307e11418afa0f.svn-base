@@ -1,0 +1,162 @@
+(function() {
+    'use strict';
+
+    angular.module('app.notify').controller('NotificationCreateCtrl', notificationCreateCtrl);
+
+    notificationCreateCtrl.$inject = ['$scope', 'notificationService', '$location', 'ModalService'];
+
+    //Controller implementation
+    function notificationCreateCtrl($scope, notificationService, $location, ModalService) {
+        var vm = this;
+        vm.dashDatePicker = dashDatePicker;
+        vm.createNotification = createNotification;
+        vm.validFromCheck = validFromCheck;
+        vm.openDashDatePicker = openDashDatePicker;
+        vm.publishDateValidate = publishDateValidate;
+
+        vm.getCategory=getCategory;
+        vm.getPriority=getPriority;
+
+        vm.cancelNotification= cancelNotification;
+
+
+        var currentDate = new Date();
+
+        vm.options = {
+            minDate: currentDate
+        }
+        vm.publishoptions = {
+            minDate: currentDate
+        }
+
+        vm.data = {
+            validFrom: currentDate,
+            validTo: currentDate,
+            publishValidFrom: currentDate,
+
+        }
+        getCategory();
+        getPriority();
+        function getCategory(){
+            return notificationService.getCategoryList().then(function(data) {
+                 vm.CategoryData=data.dto;
+                 console.log(vm.CategoryData);
+            });
+        }
+
+        function getPriority(){
+            return notificationService.getPriorityList().then(function(data) {
+                vm.PriorityData=data.dto;
+                console.log(vm.PriorityData);
+            });
+        }
+
+        function dashDatePicker(opened, value) {
+            var am = this;
+            if (value == 'to') {
+                am.to = !(am.opened);
+            }
+            if (value == 'from') {
+                am.from = !(am.opened);
+            }
+        }
+
+        function publishDateValidate() {
+            vm.publishoptions = {
+                maxDate: vm.data.validTo,
+                minDate: currentDate
+            }
+        }
+
+        function validFromCheck(valueA, valueB) {
+            vm.dateError = false;
+            if (!valueA || !valueB) {
+                vm.dateError = false;
+                return;
+            }
+            (valueA > valueB) ? vm.dateError = true: vm.dateError = false;
+
+
+        }
+
+        function openDashDatePicker(opened, value) {
+            var am = this;
+            if (value == 'to') {
+                am.to = !(am.opened);
+            }
+            if (value == 'from1') {
+                am.from1 = !(am.opened);
+            }
+        }
+
+        function createNotification(data) {
+
+            console.log(data);
+            var eventStartTime = utils.getinDateFormat(data.startTime, CONFIG.SYSTEM_DATE_FORMAT.TIME_FORMAT);
+            var eventEndTime = utils.getinDateFormat(data.endTime, CONFIG.SYSTEM_DATE_FORMAT.TIME_FORMAT);
+            var publishDate = utils.getinDateFormat(data.publishValidFrom, CONFIG.SYSTEM_DATE_FORMAT.DATE_YEAR_FORMAT);
+            var eventEndDate = utils.getinDateFormat(data.validTo, CONFIG.SYSTEM_DATE_FORMAT.DATE_YEAR_FORMAT);
+            var eventStartDate = utils.getinDateFormat(data.validFrom, CONFIG.SYSTEM_DATE_FORMAT.DATE_YEAR_FORMAT);
+            var obj = {
+                categoryId: data.category,
+                priorityId: data.priority,
+                notificationTxt: data.description,
+                expiryDt: eventEndDate,
+                eventEndTime: eventEndTime,
+                startDt: eventStartDate,
+                eventStartTime: eventStartTime,
+                publishDt: publishDate,
+                businessLocation: [
+                    "ASCI"
+                ]
+
+            }
+            var fileObj = {
+                "fileName": data.filename
+            }
+            var message = "The notification is created and will become active on the published date"
+          
+            ModalService.openAlert('confirm', 'Create Notification', message, $scope, 'reset');
+            $scope.$on('resetOk', function() {
+                return notificationService.createNotificationData(obj, fileObj).then(function(notificationData) {
+                    if (notificationData.result == "SUCCESS") {
+                        vm.apisAlert = {
+                            toggle: true,
+                            message: notificationData.message || 'Internal Server Error',
+                            type: "SUCCESS"
+                        };
+                        $timeout(function() {
+                            vm.apisAlert.toggle = false;
+                        }, 5000);
+                        return;
+                    } else {
+                        console.log("False");
+
+                    }
+                });
+                $scope.$on('resetCancel', function() {
+                    console.log("No");
+                });
+            });
+        }
+         function cancelNotification() {
+                var message = "Do you want to cancel creating this notification ?"
+                    //console.log("Request", obj);
+                ModalService.openAlert('confirm', 'Cancel Notification', message, $scope, 'reset');
+                $scope.$on('resetOk', function() {
+                    $location.path("/notifications");
+
+                });
+
+
+                $scope.$on('resetCancel', function() {
+                    console.log("No");
+                });
+            }
+
+    }
+
+
+})();
+
+// nottificationtable controller

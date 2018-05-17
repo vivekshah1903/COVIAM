@@ -1,0 +1,75 @@
+/*****************
+@Author:GuruPrasad
+******************/
+(function() {
+    'use strict';
+    //vendor Service
+    angular.module('app.login').factory('LoginService', loginService);
+
+    //Service injection
+    loginService.$inject = ['dataManagerService', '$log', '$http', 'APIS', 'sessionService'];
+
+    //Service implementation
+    function loginService(dataManagerService, $log, $http, APIS, sessionService) {
+        return {
+            LoginUser: LoginUser,
+            getTokenForAuthentication: getTokenForAuthentication
+        };
+
+
+        function LoginUser(data) {
+            var token = "";
+            APIS.LOGIN.data = data;
+            return dataManagerService.sendRequest(null, APIS.LOGIN, token).then(function(data) {
+
+                return data;
+            });
+
+
+        }
+
+        function getTokenForAuthentication(data) {
+            APIS.GET_TOKEN.data = data;
+            return dataManagerService.sendRequest(null, APIS.GET_TOKEN).then(function(data) {
+                if(data==undefined){
+                    return;
+                 } else if (sessionService.setRegisterDetails(data)) {
+                    return data;
+
+                }
+            });
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    } //EOF Service
+})();

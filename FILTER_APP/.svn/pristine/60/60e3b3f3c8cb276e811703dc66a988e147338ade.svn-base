@@ -1,0 +1,19 @@
+/* This File only contain color, Font and Font Family */
+.primary-color{background: #eaab00}
+.secondary-color{background: #ccd8da;}
+.text-color{
+    color: #003946;
+}
+.footBound{
+	padding: 10px;
+	background-color: rgba(51, 122, 183, 0.35);
+}
+.rightFoot{
+	float: right;
+	padding-right: 15px;
+}
+.leftFoot{
+    
+	padding-left: 15px;	
+}
+

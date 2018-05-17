@@ -1,0 +1,37 @@
+angular.module('app.common',[]);
+angular.module('app.login',[]);
+angular.module('app.events',[]);
+angular.module('app',['ui.router','app.common','app.login','app.events','ui.bootstrap','ngFileUpload', 'ui.grid', 'ui.grid.pagination', 'ui.grid.selection', 'ui.grid.exporter', 'ui.grid.autoResize',
+     'ui.grid.expandable','ui.grid.pinning', 'ui.grid.resizeColumns', 'ui.grid.edit', 'ui.grid.rowEdit']).config(['$urlRouterProvider', '$stateProvider', function($urlRouterProvider, $stateProvider) {
+    $stateProvider.state('app', {
+        url: '/login'   
+    });
+     $urlRouterProvider.otherwise('/login');
+
+   
+}]).controller('MainController', ['$scope', '$rootScope', '$location' ,'$uibModal','sessionService','TransportDataService', function($scope,$rootScope,$location,$uibModal,sessionService,TransportDataService) {
+     
+        $rootScope.validateForm = function(forms) {
+        var flag = true;
+        angular.forEach(forms, function(form) {
+            if (form.$invalid) {
+                flag = false;
+                angular.forEach(form.$error, function(field) {
+                    angular.forEach(field, function(errorField) {
+                        errorField.$setTouched();
+                    })
+                });
+            }
+        })
+        return flag;
+    }
+         $scope.logoutUser=function(){
+        
+          sessionService.clearSession();
+           $scope.loginUser="";
+            $location.path("/login");
+         }
+		 
+		  
+
+}]);

@@ -1,0 +1,64 @@
+(function () {
+    'use strict';
+    angular.module('app.album').config(function config($stateProvider) {
+        $stateProvider.state('album', {
+            url: '/album',
+            controller: 'AlbumCtrl as albums',
+            templateUrl: 'UX/app/album/partials/albumSummary.html',
+            params: {
+            obj: null
+             }
+
+
+        }).state('album.albumCreatePage', {
+            url: '/albumCreatePage',
+
+
+            views: {
+                "@": {
+                    controller: 'AlbumCtrl as albums',
+                    templateUrl: 'UX/app/album/partials/album.html',
+
+                },
+                "albumCreatePage@album.albumCreatePage": {
+                    controller: 'AlbumCtrl as albums',
+                    templateUrl: 'UX/app/album/partials/album.html',
+
+                }
+            }
+        }).state('album.eventDetails', {
+            url: '/eventDetails',
+
+
+            views: {
+                "@": {
+                    controller: 'ViewEventCtrl as editalbum',
+                    templateUrl: 'UX/app/album/partials/view_event.html',
+
+                },
+                "eventDetails@album.eventDetails": {
+                    controller: 'ViewEventCtrl as editalbum',
+                    templateUrl: 'UX/app/album/partials/view_event.html',
+
+                }
+            }
+        }).state('album.albumEditPage', {
+            url: '/albumEditPage',
+            
+
+            views: {
+                "@": {
+                    controller: 'EditAlbumCtrl as editalbum',
+                    templateUrl: 'UX/app/album/partials/edit_album.html',
+
+                },
+                "albumEditPage@album.albumEditPage": {
+                    controller: 'EditAlbumCtrl as editalbum',
+                    templateUrl: 'UX/app/album/partials/edit_album.html',
+
+                }
+            }
+
+        });
+    });
+})();

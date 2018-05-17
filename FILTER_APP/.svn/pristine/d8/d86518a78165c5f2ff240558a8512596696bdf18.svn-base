@@ -1,0 +1,36 @@
+angular.module('app.common').directive('menuBar', function() {
+  return {
+  	restrict: 'AE',
+  
+    templateUrl: "UX/app/common/partials/menubar.html"
+  };
+}).directive('footerPage', function() {
+  return {
+    restrict: 'AE',
+  
+    templateUrl: "UX/app/common/partials/footer.html"
+  };
+})
+.directive('header', function() {
+  return {
+    restrict: 'AE',
+  
+    templateUrl: "UX/app/common/partials/header.html"
+  };
+})
+.directive('loginPage', function() {
+  return {
+    restrict: 'AE',
+  
+    templateUrl: "UX/app/login/partials/login.html"
+  };
+}).directive('uibModalWindow', function() {
+        return {
+            restrict: 'EA',
+            link: function(scope, element) {
+                element.draggable({
+                    handle: '.modal-header, .modal-footer'
+                });
+            }
+        }
+    });

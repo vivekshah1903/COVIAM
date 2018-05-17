@@ -1,0 +1,116 @@
+<!-- <div>
+	 <a ng-click="transportData.Upload();">Upload Transport</a>
+</div> -->
+<div class="row">
+    <div class="col-md-12 top-heading">
+        <h1>Transport</h1></div>
+</div>
+<div id="exTab2" class="row">
+    <ul class="nav nav-tabs">
+        <li class="active">
+            <a data-target="#1" data-toggle="tab">Upload Roster</a>
+        </li>
+        <li><a data-target="#2" data-toggle="tab">Employee Roster Summary</a>
+        </li>
+        <li><a data-target="#3" data-toggle="tab">Confirmation Report</a>
+        </li>
+    </ul>
+    </div>
+    <div class="tab-content container" style=" width:100%;">
+        <div class="tab-pane active" id="1">
+            <div class="row" style="margin-top: 2%;">
+                <div class="alert" ng-class="{'alert-danger':transportData.apisAlert.type=='ERROR','alert-success':transportData.apisAlert.type=='SUCCESS'}" ng-show="transportData.apisAlert.toggle">
+                    <a href="javascript:void(0)" ng-click="transportData.apisAlert.toggle=false;" class="close" aria-label="close" title="close"><i class="fa fa-times-circle" aria-hidden="true"></i></a>
+                    <strong>{{transportData.apisAlert.message}}</strong>
+                </div>
+                <div ng-hide="filename" class="col-md-3">
+                    <form name="upload">
+                        <div class="file-upload">
+                            <label for="upload" class="file-upload__label">+ Browse Roster</label>
+                            <input id="upload" class="file-upload__input" type="file" ngf-select ng-model="filename" name="file" ngf-pattern="'.xls,.xlsx'" accept=".xls,.xlsx" required="">
+                        </div>
+                        <div ng-if="upload.file.$invalid" class="has-error">
+                            <!-- <span class="help-block" ng-show="!upload.file.$error.pattern &&upload.file.$touched && upload.file.$error.required">File Required</span> -->
+                            <span class="help-block" ng-show="upload.file.$error.pattern">Valid file format are xls, xlsx</span>
+                        </div>
+                    </form>
+                </div>
+                <div ng-if="filename" class="col-md-5 in-block">Selected File:<span class="bold-txt m-l-10">{{filename.name}}</span>
+                    <div class="m-l-10 in-block">
+                        <button type="submit" class="btn btn-default mdlBtndark" ng-click="transportData.uploadFile(filename)">Validate</button>
+                        <button type="button" class="btn btn-default mdlLightbtn" ng-click="transportData.canceluploadedFile()">Cancel</button>
+                    </div>
+                    <span class="help-block red-text" ng-show="transportData.checkName">Incorrect File Name</span>
+                </div>
+            </div>
+            <div class="row"><h4 class="pageLine">Previous uploaded roster <span class="m-l-10 in-block small-fnt"> last updated {{transportData.lastuploadeddate}}</span></h4>
+            </div>
+            <div>
+                <button class="btn btn-link" ng-click="transportData.deleteRow()">
+                    <i class="glyphicon glyphicon-trash"></i> Delete Selected
+                </button>
+            </div>
+            <table id="table" class="credit-table upload-table" bs-table-control="transportData.currentDashboard"></table>
+        </div>
+        <div class="tab-pane" id="2">
+            <div class="row"><h4 class="pageLine m-t-25">Current roster for employees <span class="m-l-10 in-block small-fnt"> last updated {{transportData.lastUpdate}}</span></h4>
+            </div>
+            <table id="table" class="credit-table head-fix" bs-table-control="transportData.employeeRosterSummary"></table>
+        </div>
+        <div class="tab-pane" id="3">
+            <div class="row">
+                <form name="dashForm" class="m-t-15">
+                    <div class="col-md-2">
+                        <label>Report Type</label>
+                        <select class="form-element" disabled="">
+                            <option value="transport" selected="selected">Transport</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4" ng-class="{'has-error':dashForm.validFrom.$touched && dashForm.validFrom.$invalid}">
+                      <!--   <label style="clear:both;display:block">Report Date</label> -->
+                        <div class="Billing pst-rel date-pick-box pull-left">
+                        <label>Start Date</label>
+                            <input type="text" class="date-input m-t-15" onkeydown="return false" required ng-model="transportData.validFrom" name="validFrom" is-open="transportData.from" uib-datepicker-popup="dd-MM-yyyy" datepicker-options="transportData.options" onkeydown="return false" ng-model-options="{timezone: 'UTC'}" ng-change="transportData.validFromCheckGrid(transportData.validFrom,transportData.validTo)"><span class="input-group-btn">
+
+                                                        <button type="button" class="btn btn-default calendr-btn" ng-click="transportData.dashDatePicker(transportData.from,'from')">
+                                                            <i class="glyphicon glyphicon-calendar"></i>
+                                                        </button>
+                                                        </span>
+                            <div ng-show="dashForm.validFrom.$touched" class="has-error"> <span class="help-block" ng-show="dashForm.validFrom.$error.required"> Date is required.</span>
+                            </div>
+                        </div>
+                        <div class="pull-left">
+                        <label class="pad-30 m-t-5"> to </label>
+                    </div>
+                     <div class="pull-left" ng-class="{'has-error':dashForm.validTo.$touched && dashForm.validTo.$invalid}">
+                        <div class="Billing pst-rel date-pick-box">
+                         <label>End Date</label>
+                            <input type="text" required class="date-input m-t-15" ng-model="transportData.validTo" name="validTo" is-open="transportData.to" uib-datepicker-popup="dd-MM-yyyy" onkeydown="return false" datepicker-options="transportData.options" ng-model-options="{timezone: 'UTC'}" ng-change="transportData.validFromCheckGrid(transportData.validFrom,transportData.validTo)"><span class="input-group-btn">
+                                                        <button type="button" class="btn btn-default calendr-btn" ng-click="transportData.dashDatePicker(transportData.to,'to')">
+                                                            <i class="glyphicon glyphicon-calendar"></i>
+                                                        </button>
+                                                    </span>
+                            <div class="has-error"><span class="help-block" ng-show="transportData.dateError">To date cannot be older than From date</span>
+                                <span class="help-block" ng-show="transportData.dateErrorDays">Difference between From and To date should be less than 30 days</span>
+                            </div>
+                            <div ng-show="dashForm.validTo.$touched" class="has-error"> <span class="help-block" ng-show="dashForm.validTo.$error.required"> Date is required.</span>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                    
+                   
+                    <div class="col-md-3">
+                        <div class="Billing m-t-25">
+                            <button type="button" class="btn btn-default mdlBtndark" ng-click="validateForm([dashForm]) && !transportData.dateError && !transportData.dateErrorDays && transportData.reportData(transportData.validFrom, transportData.validTo)">View Report
+                            </button>
+                            <!-- <button type="button" class="btn btn-default mdlLightbtn" ng-click="transportData.downloadExcel()">Download</button> -->
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="row m-t-15"><span class="pageLine">Confirmation Report For {{transportData.datefrom | date: 'dd-MM-yyyy'}} to {{transportData.dateTo | date: 'dd-MM-yyyy'}}</span></div>
+            <table id="reportTable" class="credit-table report-table" bs-table-control="transportData.reportDashboard"></table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,21 @@
+(function() {
+    'use strict';
+
+    angular.module('app.common').controller('HomeCtrl', homeCtrl);
+
+    homeCtrl.$inject = ['$scope', '$stateParams', '$uibModal','sessionService','$location'];
+
+    //Controller implementation
+    function homeCtrl($scope, $stateParams, $uibModal,sessionService,$location) {
+
+        var vm = this;
+
+       
+
+        //vm.loginDetails=$stateParams.obj;
+        /*Create user*/
+       
+        
+
+    }
+})();

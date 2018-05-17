@@ -1,0 +1,239 @@
+(function () {
+    'use strict';
+
+    angular.module('app.album').controller('EditAlbumCtrl', editAlbumCtrl);
+
+    editAlbumCtrl.$inject = ['$scope', 'AlbumService', 'utils', 'CONFIG', 'ModalService', '$location','sessionService','$timeout'];
+
+    //Controller implementation
+    function editAlbumCtrl($scope, AlbumService, utils, CONFIG, ModalService, $location,sessionService,$timeout) {
+        var vm = this;
+        vm.data = sessionService.getEditAlbumList();
+       // console.log(vm.data);
+        vm.dashDatePicker = dashDatePicker;
+        vm.validFromCheckGrid = validFromCheckGrid;
+        vm.validFromCheck = validFromCheck;
+        vm.editAlbumDetail = editAlbumDetail;
+        vm.cancelCreate = cancelCreate;
+        vm.thumbImage = thumbImage;
+        vm.countChecked = countChecked;
+        vm.deleteImage = deleteImage;
+        vm.getLocation=getLocation;
+        vm.previousdeleteImage =previousdeleteImage;
+        vm.userdata = sessionService.getUserDetails('USER');
+        vm.getAssociatedEvent =getAssociatedEvent;
+        vm.imageURL = CONFIG.BASE_URL[CONFIG.BASE_URL_MODE] +'files//'
+
+        
+          
+          vm.apisAlert = {
+            toggle: false,
+            message: "",
+            type: "ERROR"
+        }
+       
+        vm.checked=checked;
+         var deleteArray=[];
+
+        function checked(data){
+         if(data.isChecked==true){
+            deleteArray.push(data.photoId);
+           
+        }
+     else{
+         var index = deleteArray.indexOf(data.photoId);
+             deleteArray.splice(index);
+     }
+             //console.log(deleteArray);
+        }
+
+      getLocation();
+      getAssociatedEvent();
+      function getLocation(){
+           return AlbumService.getLocationData().then(function (locationData) {
+               vm.locationList = locationData.businessLocationList;
+           });
+       }
+
+        function getAssociatedEvent() {
+                    return AlbumService.getAssociatedEventData().then(function(associatedEventData) {
+                        vm.associatedEventList = associatedEventData.eventList;
+                    });
+                }
+
+
+        function deleteImage() {
+
+            vm.data.filename = vm.data.filename.filter(function (obj) {
+                if (vm.thumbnail == obj.$ngfName && obj.isChecked == true) {
+                        vm.message="This image is selected as Thumbnail. Please select another Thumbnail then delete it.";
+                         vm.apisAlert = {
+                                    toggle: true,
+                                    message: vm.message,
+                                    type: "ERROR"
+                                };
+                                 $timeout(function() {
+                                    vm.apisAlert.toggle = false;
+                                }, 5000);
+                        return obj;
+                    } else {
+                return obj.isChecked !== true;
+            }
+            });
+        }
+         function previousdeleteImage() {
+             var message="Images selected will be Deleted when You will Save changes.";
+              ModalService.openAlert('alert', 'Error', "Images selected will be Deleted when You will Save changes.", 'alert');
+             
+        }
+        
+           
+       
+          function thumbImage() {
+
+                vm.data.filename = vm.data.filename.filter(function(obj) {
+                    if (obj.isChecked == true) {
+                        vm.thumbnail = obj.$ngfName;
+                        //console.log(vm.thumbnail);
+                    }
+                    return obj;
+                });
+            }
+
+            function countChecked() {
+                if (!vm.data) {   
+                    return;
+                } else {
+                     var count = 0;
+                    angular.forEach(vm.data.filename, function(obj) {
+                        if (obj.isChecked) count++;
+                    });
+                    return count;
+
+                }}
+       
+         function cancelCreate() {
+            var message = "Do you want to cancel these changes ?"
+
+            ModalService.openAlert('confirm', 'Cancel Album', message, $scope, 'reset');
+            $scope.$on('resetOk', function () {
+                $location.path("/album");
+
+            });
+
+
+            $scope.$on('resetCancel', function () {
+
+            });
+        }
+
+
+
+
+
+
+        function editAlbumDetail(data) {
+            var deletedIds=[];
+            var validDate = utils.getinDateFormat(data.albumPublishDate, CONFIG.SYSTEM_DATE_FORMAT.DATE_YEAR_FORMAT);
+            var obj = {
+                acf2Id:vm.userdata.acf2Id,
+                albumName: data.name,
+                thumbnail:vm.thumbnail,
+                albumDesc: data.desc,
+                publishDate: validDate,
+                locationId: Number(data.locationId),
+                eventId: Number(data.eventId),
+                albumId:vm.data.albumId,
+                deletedId:deleteArray
+            }
+            var fileObj = {
+                file: data.filename
+            }
+         
+            //console.log("deletedIds",obj);
+            var message = "The album is created and will become active on the published date"
+            ModalService.openAlert('confirm', 'Edit Album', message, $scope, 'reset');
+            $scope.$on('resetOk', function () {
+                return AlbumService.saveEditAlbumDetail(obj, fileObj).then(function (albumData) {
+                    if (albumData.data.customCode == 200) {
+                        vm.apisAlert = {
+                            toggle: true,
+                            message: albumData.data.message || 'Internal Server Error',
+                            type: "SUCCESS"
+                        };
+                        $timeout(function () {
+                            vm.apisAlert.toggle = false;
+                            $location.path("/album");
+                        }, 5000);
+                        return;
+                    } else {
+
+
+                    }
+                });
+                $scope.$on('resetCancel', function () {
+
+                });
+            });
+        }
+
+
+
+
+
+
+
+
+
+
+        function dashDatePicker(opened, value) {
+            var am = this;
+            if (value == 'to') {
+                am.to = !(am.opened);
+            }
+            if (value == 'from') {
+                am.from = !(am.opened);
+            }
+        }
+
+        function validFromCheckGrid(valueA, valueB) {
+            var days = (valueB - valueA) / (1000 * 60 * 60 * 24);
+            vm.dateError = false;
+            vm.dateErrorDays = false;
+            if (!valueA || !valueB) {
+                vm.dateError = false;
+                return;
+            }
+            if (valueA > valueB) { vm.dateError = true; } else if (days > 30) {
+                vm.dateErrorDays = true;
+            } else {
+                vm.dateError = false;
+                vm.dateErrorDays = false;
+            }
+        }
+
+        function validFromCheck(valueA, valueB) {
+            vm.dateError = false;
+            if (!valueA || !valueB) {
+                vm.dateError = false;
+                return;
+            }
+            (valueA >= valueB) ? vm.dateError = true : vm.dateError = false;
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+    }
+
+})();

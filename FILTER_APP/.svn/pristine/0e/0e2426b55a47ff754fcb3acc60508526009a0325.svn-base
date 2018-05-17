@@ -1,0 +1,93 @@
+/*****************
+@Author:GuruPrasad
+******************/
+(function() {
+    'use strict';
+    //category Service
+    angular.module('app.notify').factory('notificationService', notificationService); //Apis constan file
+
+    //Service injection
+    notificationService.$inject = ['dataManagerService', '$log', 'APIS'];
+
+    //Service implementation
+    function notificationService(dataManagerService, $log, APIS) {
+        //Binding   
+        return {
+            getNotificationSummaryData: getNotificationSummaryData,
+            getDefaultNotificationSummaryData: getDefaultNotificationSummaryData,
+            createNotificationData: createNotificationData,
+            deleteNotifications: deleteNotifications,
+            getCategoryList: getCategoryList,
+            getPriorityList: getPriorityList,
+            getLocationList: getLocationList
+
+        };
+
+        /*category function*/
+        function getNotificationSummaryData(obj) {
+            APIS.GET_NOTIFICATION_LIST.data = obj;
+            var token = "";
+            return dataManagerService.sendRequest(null, APIS.GET_NOTIFICATION_LIST, token).then(function(data) {
+                return data;
+            });
+        }
+
+        function getDefaultNotificationSummaryData(obj) {
+            APIS.GET_DEFAULT_NOTIFICATION_LIST.data = obj;
+            var token = "";
+            return dataManagerService.sendRequest(null, APIS.GET_DEFAULT_NOTIFICATION_LIST, token).then(function(data) {
+                return data;
+            });
+        }
+
+        function getCategoryList() {
+           
+
+            return dataManagerService.sendRequest(null, APIS.GET_CATEGORY_LIST).then(function(data) {
+                return data;
+            });
+        }
+
+        function getPriorityList() {
+         
+            return dataManagerService.sendRequest(null, APIS.GET_PRIORITY_LIST).then(function(data) {
+                return data;
+            });
+        }
+
+        
+
+         function getLocationList() {
+         
+            return dataManagerService.sendRequest(null, APIS.GET_LOCATION).then(function(data) {
+                return data;
+            });
+        }
+        function deleteNotifications(obj) {
+            APIS.DELETE_NOTIFICATION.data = obj;
+            return dataManagerService.sendRequest(null, APIS.DELETE_NOTIFICATION).then(function(data) {
+                return data;
+            });
+        }
+
+        function createNotificationData(notificationObject,fileObj) {
+
+            var requestObj = {
+                "obj": null,
+                "file": null
+            };
+
+            requestObj.file = fileObj['file'];
+            requestObj.obj = notificationObject;
+
+            //Send Request Data
+            APIS.CREATE_NOTIFICATION.data = requestObj;
+            return dataManagerService.sendRequestWithImage('', APIS.CREATE_NOTIFICATION).then(function(data) {
+                return data;
+            });
+        }
+
+
+        //EOF Service
+    }
+})();

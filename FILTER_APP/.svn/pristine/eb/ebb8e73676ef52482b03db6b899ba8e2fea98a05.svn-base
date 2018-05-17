@@ -1,0 +1,55 @@
+<div ui-view></div>
+<!--  <div ng-show="event.showTable"> -->
+    <div class="row">
+        <div class="col-md-12 top-heading">
+            <h2>Events</h2></div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 class="loginHead">Showing 10 Events(s)
+            <span>
+            <button  type="submit" class="btnCreate pull-right" ui-sref=".eventCreatePage">+Create new event</button>
+            </span></h3>
+            <!-- ng-click="event.createEvent()" -->
+        </div>
+    </div>
+    <div class=" m-t-15">
+        <div class="row">
+            <div>
+                <label class="drk-green col-lg-1 m-t-15">Filter Events</label>
+            </div>
+            <div class="col-md-3" ng-class="{'has-error':dashForm.validFrom.$touched && dashForm.validFrom.$invalid}">
+                      <!--   <label style="clear:both;display:block">Report Date</label> -->
+                        <div class="pst-rel date-pick-box pull-left">
+                    
+                            <input type="text" class="date-input m-t-15" onkeydown="return false" required ng-model="event.data.validFrom" name="validFrom" is-open="event.from" uib-datepicker-popup="dd-MM-yyyy" datepicker-options="event.options" onkeydown="return false" ng-model-options="{timezone: 'UTC'}" ng-change="event.validFromCheckGrid(event.validFrom,event.validTo)" placeholder="Start Date"><span class="input-group-btn">
+
+                                                        <button type="button" class="btn btn-default calendr-btn" ng-click="event.dashDatePicker(event.from,'from')">
+                                                            <i class="glyphicon glyphicon-calendar"></i>
+                                                        </button>
+                                                        </span>
+                        
+                        </div>
+                   
+                    <div>
+                		<label class="col-lg-1 m-t-15"> to </label>
+            		</div>
+                     <div class="pull-left" ng-class="{'has-error':dashForm.validTo.$touched && dashForm.validTo.$invalid}">
+                        <div class=" pst-rel date-pick-box">
+                      
+                            <input type="text" required class="date-input m-t-15" ng-model="event.data.validTo" name="validTo" is-open="event.to" uib-datepicker-popup="dd-MM-yyyy" onkeydown="return false" datepicker-options="event.options" ng-model-options="{timezone: 'UTC'}" ng-change="event.validFromCheckGrid(event.validFrom,event.validTo)" placeholder="End Date"><span class="input-group-btn">
+                                                        <button type="button" class="btn btn-default calendr-btn" ng-click="event.dashDatePicker(event.to,'to')">
+                                                            <i class="glyphicon glyphicon-calendar"></i>
+                                                        </button>
+                                                    </span>
+                        
+                        </div>
+                    </div>
+                    </div>
+            
+            <button type="button" class="btn btn-default mdlBtndark m-t-8"><span>Go</span></button>
+        </div>
+    </div>
+    <h3 class="GreyLine"></h3>
+    <table id="table" class="credit-table" bs-table-control="event.eventSummary"></table>
+

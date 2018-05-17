@@ -1,0 +1,192 @@
+(function() {
+    'use strict';
+
+    angular.module('app.events').controller('EventCtrl', eventCtrl);
+
+    eventCtrl.$inject = ['eventService', '$scope', 'uiGridConstants', 'CONFIG','sessionService'];
+
+    //Controller implementation
+    function eventCtrl(eventService, $scope, uiGridConstants, CONFIG,sessionService) {
+        var vm = this;     
+         vm.reportData = reportData;  
+         vm.onNumPerPageChange = onNumPerPageChange;
+        vm.pageChangeHandler = pageChangeHandler;
+        vm.startTableRowCount = CONFIG.PAGINATION.START_ROW_COUNT;
+        vm.numPerPageOpt = CONFIG.PAGINATION.SHOW_NO_OF_ROWS;
+        vm.perPage = CONFIG.PAGINATION.DEFAULT_NO_ROWS;
+        vm.dashDatePicker = dashDatePicker;
+        vm.validFromCheckGrid=validFromCheckGrid;
+        vm.validFromCheck=validFromCheck;
+        vm.openDatePicker=openDatePicker;
+       
+      
+      var d = new Date(); // today!
+        var x = 1095; // go back 5 days!
+        var c= d.setDate(d.getDate() - x);
+        vm.options = {
+            minDate: c
+        }
+        function dashDatePicker(opened, value) {
+            var am = this;
+            if (value == 'to') {
+                am.to = !(am.opened);
+            }
+            if (value == 'from') {
+                am.from = !(am.opened);
+            }
+        }
+        function openDatePicker(opened, value) {
+            var am = this;
+            if (value == 'to') {
+                am.to = !(am.opened);
+            }
+            if (value == 'from1') {
+                am.from1 = !(am.opened);
+            }
+        }
+        function validFromCheckGrid(valueA, valueB) {
+            var days = (valueB - valueA) / (1000 * 60 * 60 * 24);
+            vm.dateError = false;
+            vm.dateErrorDays = false;
+            if (!valueA || !valueB) {
+                vm.dateError = false;
+                return;
+            }
+            if(valueA > valueB) { vm.dateError = true;}
+            else if(days>180){
+               vm.dateErrorDays = true;
+            }
+            else{vm.dateError = false;
+            vm.dateErrorDays = false;}
+        }
+        function validFromCheck(valueA, valueB) {
+            vm.dateError = false;
+            if (!valueA || !valueB) {
+                vm.dateError = false;
+                return;
+            }
+            (valueA >= valueB) ? vm.dateError = true: vm.dateError = false;
+
+
+        }
+     
+    
+     //reportData();
+     /*Get all category List*/
+     /*To get table data */
+       
+        function reportData(data) {
+            vm.loading = true;
+           console.log(data);
+            var data = data || {};
+            var obj = {
+                "parentCategory": null,
+                "subCategory": null       
+            };
+
+
+            return eventService.searchCategroy(obj).then(function(categoryData) {
+                vm.loading = false;
+                if (data.message == "No records found") {
+                     vm.filteredItems =[];
+                     $scope.gridOptions.data=[];
+                    return;
+                } 
+                else{
+                //Append serial numbers
+                categoryData.forEach(function(row, index) {
+                    row['sNo'] = index + 1;
+                });
+
+                vm.gridOptions.data = categoryData;
+             }
+            }).finally(function() {
+                vm.loading = false;
+            });
+        } //EOF-CategoryData
+         function pageChangeHandler(newPageNumber) {
+            var PaginationVale = this;
+            vm.startTableRowCount = (PaginationVale.perPage * newPageNumber) - (PaginationVale.perPage - 1);
+        }
+
+        function onNumPerPageChange(number) {
+            vm.perPage = number;
+        }
+      vm.gridOptions = {
+           paginationPageSizes: CONFIG.PAGINATION.SHOW_NO_OF_ROWS,
+            paginationPageSize: CONFIG.PAGINATION.DEFAULT_NO_ROWS,
+            
+            enableGridMenu: true,
+            gridMenuShowHideColumns: false,
+            enableFiltering: true,
+
+            enableHiding: false,
+            enableAutoResizing: true,
+            enableColumnResizing: true,
+            enableColumnMenus: false,
+            autoResize: true,
+            exporterSuppressColumns: ['Actions'],
+            exporterCsvFilename: 'Category_List.csv',
+            exporterPdfFilename: 'Category_List.pdf',
+           
+            columnDefs: [{
+                name: 'sNo',
+                enableSorting: true,
+                enableFiltering: false,
+                displayName: 'No',
+                type: 'number',
+                width: 60
+            }, {
+                name: 'categoryName',
+                displayName: 'Category Name',
+
+                enableSorting: true,
+                minWidth: 160
+            }, {
+                name: 'categoryDescription',
+                displayName: 'Category Description',
+
+                enableSorting: true,
+                minWidth: 160
+            }, {
+                name: 'parentName',
+                displayName: 'Parent Category Name',
+
+                enableSorting: true,
+                minWidth: 160
+            }, {
+                name: 'categoryStatus.lookupName',
+                displayName: 'Status',
+
+                enableSorting: true,
+                minWidth: 160,
+                filter: {
+                    selectOptions: [{
+                        value: 'Active',
+                        label: 'Active'
+                    }, {
+                        value: 'Inactive',
+                        label: 'Inactive'
+                    }],
+                    type: uiGridConstants.filter.SELECT,
+                    condition: uiGridConstants.filter.EXACT
+                }
+            }, {
+                name: 'Actions',
+
+
+                minWidth: 100,
+                enableSorting: false,
+                enableFiltering: false,
+                cellTemplate: '<div class="ui-grid-cell-contents"><a class="editBtn" lgtitle="edit" style="cursor:pointer;" ng-click="grid.appScope.onGridEditButtonClick(row.entity)"><i class=" editButton glyphicon glyphicon-edit " ></i></a></div>'
+            }]
+        };
+
+        //Onclick on edit button
+        $scope.onGridEditButtonClick = function(data) {
+            //editCategory(data);
+        }
+
+    } //EOF CategoryCtrl
+})();
+

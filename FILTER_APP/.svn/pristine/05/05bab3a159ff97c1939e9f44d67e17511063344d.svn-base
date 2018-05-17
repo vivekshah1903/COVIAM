@@ -1,0 +1,33 @@
+/*****************
+@Author:GuruPrasad
+******************/
+(function() {
+    'use strict';
+    //vendor Service
+    angular.module('app.common').factory('TransportDataService', transportDataService);
+
+    //Service injection
+    transportDataService.$inject = ['$http', 'APIS', 'dataManagerService'];
+
+    //Service implementation
+    function transportDataService($http, APIS, dataManagerService) {
+        return {
+         //transportData:transportData,
+         getReportData:getReportData
+        };
+
+        /*function transportData(data) {
+                
+            return data;
+        }*/
+
+        function getReportData(data){
+         var token="";
+            APIS.GENERATE_REPORT_DATA.data = data;
+            return dataManagerService.sendRequest(null, APIS.GENERATE_REPORT_DATA,token).then(function(data){               
+                return data.dataBean;
+            })
+        }
+    }
+
+})();

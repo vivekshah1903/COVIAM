@@ -1,0 +1,42 @@
+(function () {
+    'use strict';
+
+    angular.module('app.album').controller('ViewEventCtrl', viewEventCtrl);
+
+    viewEventCtrl.$inject = ['$scope', 'AlbumService', 'utils', 'CONFIG', 'ModalService', '$location','sessionService','$timeout'];
+
+    //Controller implementation
+    function viewEventCtrl($scope, AlbumService, utils, CONFIG, ModalService, $location,sessionService,$timeout) {
+        var vm = this;
+        vm.data = sessionService.getEditAlbumList();
+       // console.log(vm.data);
+        //vm.dashDatePicker = dashDatePicker;
+        //vm.validFromCheckGrid = validFromCheckGrid;
+        //vm.validFromCheck = validFromCheck;
+        //vm.editAlbumDetail = editAlbumDetail;
+       // vm.cancelCreate = cancelCreate;
+       // vm.thumbImage = thumbImage;
+       // vm.countChecked = countChecked;
+       // vm.deleteImage = deleteImage;
+       // vm.getLocation=getLocation;
+       vm.viewevent = sessionService.getViewEventList();
+        vm.userdata = sessionService.getUserDetails('USER');
+        
+        //vm.getAssociatedEvent =getAssociatedEvent;
+       // vm.imageURL = CONFIG.BASE_URL[CONFIG.BASE_URL_MODE] +'files//'
+
+        
+          
+          vm.apisAlert = {
+            toggle: false,
+            message: "",
+            type: "ERROR"
+        }
+       
+        //vm.checked=checked;
+         //var deleteArray=[];
+
+ 
+    }
+
+})();

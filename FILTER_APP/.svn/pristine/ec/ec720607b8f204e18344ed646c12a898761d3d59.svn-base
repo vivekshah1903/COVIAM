@@ -1,0 +1,66 @@
+(function() {
+    'use strict';
+
+    angular.module('app.login').controller('LoginCtrl', loginCtrl);
+
+    loginCtrl.$inject = ['$scope', 'LoginService', '$location', '$state', '$uibModal', 'sessionService'];
+
+    //Controller implementation
+    function loginCtrl($scope, LoginService, $location, $state, $uibModal, sessionService) {
+        var vm = this;
+        vm.addUser = addUser;
+        //  vm.getToken = getToken;
+        sessionService.clearSession();
+
+        // vm.loginUser=sessionService.getUserDetails('USER');
+
+
+        function addUser() {
+            var name = vm.userName;
+            var password = vm.password;
+            var obj = {
+                username: name,
+                password: password
+            }
+
+            LoginService.LoginUser(obj).then(function(data) {
+
+                if (data.result == 'SUCCESS') {
+
+                    //getToken(data.acf2Id);
+                    if (sessionService.setUserDetails(data)) {
+                        var obj = {
+                            "acf2Id": data.acf2Id,
+                            "deviceId": "web",
+                            "passcode": 1234,
+                            "timezone": "IND"
+                        }
+
+                        LoginService.getTokenForAuthentication(obj).then(function(data) {
+                            if (data) {
+                                $location.path('/transportdata');
+                            }
+
+
+
+                        });
+
+
+
+                    }
+                }
+            });
+
+
+
+        }
+
+        /*function getToken(data) {
+
+        }*/
+
+
+
+
+    }
+})();

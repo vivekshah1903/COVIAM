@@ -1,0 +1,49 @@
+
+<div class="modal-header cusMdlbott">
+    <!--<button type="button" class="close" data-dismiss="modal">&times;</button>-->
+    <h4 class="modal-title udrTit">Publish To Employee App</h4>
+    <p>Please Confirm below validation summary</p>
+    <p>File Name:{{uploadData.fileName}}</p>
+</div>
+<div class="modal-body">
+    <table class="table table-bordered">
+        <thead style="background: lightblue;">
+            <tr>
+                <th></th>
+                <th>Total</th>
+                <th>Success</th>
+                <th>Failed</th>
+                <th>New</th>
+                <th>Update</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="x in uploadData.ExcelData ">
+                <td>Roster Count</td>
+                <td>{{x.rosterCount.total}}</td>
+                <td>{{x.rosterCount.success}}</td>
+                <td ng-class="{'red-text':x.rosterCount.failed > 0}">{{x.rosterCount.failed}}</td>
+                <td>{{x.rosterCount.newRecord}}</td>
+                <td>{{x.rosterCount.updateRecord}}</td>
+                <td>{{x.rosterCount.deleteRecord}}</td>
+            </tr>
+            <tr ng-repeat="x in uploadData.ExcelData ">
+                <td>Employee Count</td>
+                <td>{{x.employeeCount.total}}</td>
+                <td>{{x.employeeCount.success}}</td>
+                <td ng-class="{'red-text':x.employeeCount.failed > 0}">{{x.employeeCount.failed}}</td>
+                <td>{{x.employeeCount.newRecord}}</td>
+                <td>{{x.employeeCount.updateRecord}}</td>
+                <td>{{x.employeeCount.deleteRecord}}</td>
+            </tr>
+         
+        </tbody>
+    </table>
+</div>
+<div class="modal-footer cusMdltop">
+    <div class="pull-left" ng-repeat="x in uploadData.ExcelData ">
+        <button type="button" ng-disabled="x.employeeCount.failed !== 0 || x.rosterCount.failed !== 0" ng-click="uploadData.uploadFile()" class="btn btn-default mdlBtndark"><span class="btnText">Publish<span></button>
+          <button type="button" class="btn btn-default mdlLightbtn" ng-click="uploadData.closePopup()"><span class="btnText">Cancel</span></button>
+    </div>
+</div>

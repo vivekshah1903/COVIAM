@@ -1,0 +1,178 @@
+(function() {
+    'use strict';
+
+    angular.module('app.events').controller('CreateEventCtrl', createEventCtrl);
+
+    createEventCtrl.$inject = ['eventService', '$scope', 'dataManagerService', 'AlbumService', '$location', '$timeout', 'APIS', 'sessionService', 'utils', 'CONFIG', 'ModalService', '$state', '$stateParams'];
+
+    //Controller implementation
+    function createEventCtrl(eventService, $scope, dataManagerService, AlbumService, $location, $timeout, APIS, sessionService, utils, CONFIG, ModalService, $state, $stateParams) {
+        var vm = this;
+        vm.dashDatePicker = dashDatePicker;
+        vm.validFromCheck = validFromCheck;
+        /*vm.getEventDetails = getEventDetails;*/
+        vm.openDatePicker = openDatePicker;
+        vm.publishDateValidate = publishDateValidate;
+        vm.createEvent = createEvent;
+        vm.cancelCreate = cancelCreate;
+        vm.apisAlert = {
+            toggle: false,
+            message: "",
+            type: "ERROR"
+        }
+
+        vm.userdata = sessionService.getUserDetails('USER');
+        var d = new Date(); // today!
+        var defaultTime = "2017-06-01T18:30:37.172Z"
+
+        vm.options = {
+            minDate: d
+        }
+        vm.data = {
+            startDate: d,
+            endDate: d,
+            publishDate: d,
+            event_audience: "All Staff",
+            startTime:defaultTime,
+             endTime:defaultTime
+
+
+        }
+        preloadComboValues();
+        getAlbumDetails();
+        publishDateValidate();
+
+        function preloadComboValues() {
+            var token = "";
+            dataManagerService.sendRequest(null, APIS.GET_EVENT_TYPE, token).then(function(data) {
+                vm.eventDrp = data.eventTypeList;
+
+            });
+            dataManagerService.sendRequest(null, APIS.GET_ORGANIZED_BY, token).then(function(data) {
+                vm.organizedDrp = data.groupList;
+
+            });
+
+        }
+
+        function getAlbumDetails() {
+
+
+            return AlbumService.getAlbumSummaryData().then(function(albumData) {
+                if (albumData.message == "No Record Found") {
+                    return;
+                } else {
+                    vm.albumSummary = albumData.dataBean.rows;
+                }
+
+            });
+        }
+
+        function publishDateValidate() {
+            vm.publishoptions = {
+                maxDate: vm.data.endDate,
+                minDate: d
+            }
+        }
+
+        function dashDatePicker(opened, value) {
+            var am = this;
+            if (value == 'to') {
+                am.to = !(am.opened);
+            }
+            if (value == 'from') {
+                am.from = !(am.opened);
+            }
+        }
+
+        function openDatePicker(opened, value) {
+            var am = this;
+            if (value == 'to') {
+                am.to = !(am.opened);
+            }
+            if (value == 'from1') {
+                am.from1 = !(am.opened);
+            }
+        }
+
+
+
+        function validFromCheck(valueA, valueB) {
+            vm.dateError = false;
+            if (!valueA || !valueB) {
+                vm.dateError = false;
+                return;
+            }
+            (valueA > valueB) ? vm.dateError = true: vm.dateError = false;
+
+
+        }
+
+        function createEvent(data) {
+
+            var eventStartTime = utils.getinDateFormat(data.startTime, CONFIG.SYSTEM_DATE_FORMAT.TIME_FORMAT);
+            var eventEndTime = utils.getinDateFormat(data.endTime, CONFIG.SYSTEM_DATE_FORMAT.TIME_FORMAT);
+            var publishDate = utils.getinDateFormat(data.publishDate, CONFIG.SYSTEM_DATE_FORMAT.DATE_YEAR_FORMAT);
+            var eventEndDate = utils.getinDateFormat(data.endDate, CONFIG.SYSTEM_DATE_FORMAT.DATE_YEAR_FORMAT);
+            var eventStartDate = utils.getinDateFormat(data.startDate, CONFIG.SYSTEM_DATE_FORMAT.DATE_YEAR_FORMAT);
+            var obj = {
+                acf2Id: vm.userdata.acf2Id,
+                audience: data.event_audience,
+                businessLocation: data.businessLocation,
+                eventDesc: data.event_description,
+                eventEndDate: eventEndDate,
+                eventEndTime: eventEndTime,
+                eventImgUrl: data.albumSummary,
+                eventExternalLocation: data.venue_name,
+                eventName: data.event_name,
+                eventStartDate: eventStartDate,
+                eventStartTime: eventStartTime,
+                eventType: data.eventType,
+                organizedBy: data.organizedBy,
+                publishDate: publishDate,
+                venue: data.venue
+            }
+            var message = "The Event is created and will become active on the published date"
+
+            ModalService.openAlert('confirm', 'Create Event', message, $scope, 'reset');
+            $scope.$on('resetOk', function() {
+                return eventService.createEventData(obj).then(function(eventData) {
+                    if (eventData.result == "SUCCESS") {
+                        vm.apisAlert = {
+                            toggle: true,
+                            message: eventData.message || 'Internal Server Error',
+                            type: "SUCCESS"
+                        };
+                        $timeout(function() {
+                            vm.apisAlert.toggle = false;
+                               $location.path("/event");
+                        }, 5000);
+                        return;
+                    } else {
+
+                    }
+                });
+                $scope.$on('resetCancel', function() {
+
+                });
+            });
+
+        }
+
+        function cancelCreate() {
+            var message = "Do you want to cancel creating this Event ?"
+
+            ModalService.openAlert('confirm', 'Cancel Event', message, $scope, 'reset');
+            $scope.$on('resetOk', function() {
+                $location.path("/event");
+
+            });
+
+
+            $scope.$on('resetCancel', function() {
+
+            });
+        }
+
+    } //EOF CategoryCtrl
+})();

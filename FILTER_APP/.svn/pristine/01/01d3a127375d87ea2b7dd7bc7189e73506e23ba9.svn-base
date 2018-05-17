@@ -1,0 +1,23 @@
+<app-header></app-header>
+<div class="row">
+    <div class="col-md-12 top-heading">
+        <h1>Album</h1>
+    </div>
+</div>
+
+<div class=" col-md-12 m-t-15">
+    <div class="pageLine row">
+        <h3 class="">Showing {{}} albums(s) <small>Last updated 12-04-2017</small></h3>
+        <button type="button" class="btn btn-default pull-right mdlBtndark btm-space" ui-sref=".albumCreatePage">+Create new album</button>
+    </div>
+
+
+</div>
+ <div>
+        <button class="btn btn-link" ng-click="albums.deleteAlbumRow()">
+            <i class="glyphicon glyphicon-trash"></i> Delete Selected
+        </button>
+    </div>
+<div class="col-md-12 ">
+    <table id="table1" class="credit-table" bs-table-control="albums.albumSummary"></table>
+</div>

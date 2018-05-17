@@ -1,0 +1,189 @@
+(function() {
+    'use strict';
+
+    angular.module('app.transportData').controller('TransportDataCtrl', transportDataCtrl);
+
+    transportDataCtrl.$inject = ['$scope', '$uibModal', 'TransportDataService'];
+
+    //Controller implementation
+    function transportDataCtrl($scope, $uibModal, TransportDataService) {
+        var vm = this;
+        //  vm.Upload = Upload;
+        vm.uploadFile = uploadFile;
+
+        function uploadFile(fileData) {
+            console.log(fileData);
+            var UserCreateModalInstance = $uibModal.open({
+                animation: true,
+                templateUrl: 'UX/app/transportData/partials/uploadData.html',
+                controller: 'UploadDataCtrl as uploadData',
+                backdrop: 'static',
+                resolve: {
+                    items: function() {
+                        return;
+                    }
+                }
+            });
+
+            UserCreateModalInstance.result.then(function(fileObject) {
+                console.log("fileObject", fileObject);
+                TransportDataService.transportData(fileObject);
+
+            }, function() {
+
+            });
+
+        }
+        //Upload();
+        /*function Upload() {
+
+            var UserCreateModalInstance = $uibModal.open({
+                animation: true,
+                templateUrl: 'UX/app/transportData/partials/uploadData.html',
+                controller: 'UploadDataCtrl as uploadData',
+                backdrop: 'static',
+                resolve: {
+                    items: function() {
+                        return;
+                    }
+                }
+            });
+
+            UserCreateModalInstance.result.then(function(fileObject) {
+                console.log("fileObject", fileObject);
+                TransportDataService.transportData(fileObject);
+
+            }, function() {
+
+            });
+        }*/
+        vm.currentDashboard = {
+            options: {
+                data: [{
+                    "Product": "Product_Promo_0",
+                    "Quantity": "10",
+                    "City": "Jakarta",
+                    "POS": "POS1",
+                    "Notes": "cbg"
+
+                }, {
+                    "Product": "Product_Promo_1",
+                    "Quantity": "10",
+                    "City": "Madiun",
+                    "POS": "POS2",
+                    "Notes": "fdg"
+
+                }],
+                cache: false,
+                height: 600,
+                striped: true,
+                pagination: true,
+                pageSize: 5,
+                pageList: [5, 10, 25, 50, 100, 200],
+                search: true,
+                showColumns: false,
+                showRefresh: false,
+                showExport: false,
+                minimumCountColumns: 2,
+                clickToSelect: false,
+                showToggle: false,
+                toolbar: "#toolbar",
+                maintainSelected: true,
+                columns: [{
+                    "field": "state",
+                    "checkbox": true
+
+
+
+                    // "formatter": "stateFormatter"
+                }, {
+                    "field": "Product",
+                    "title": "File name",
+                    "align": "center",
+                    "valign": "bottom",
+                    "sortable": true,
+                  
+
+
+                    "formatter": wrapFormatter1
+
+                }, {
+                    "field": "Quantity",
+                    "title": "Roaseter",
+                    "align": "center",
+                    "valign": "bottom",
+                    "sortable": true
+
+                }, {
+                    "field": "City",
+                    "title": "Employee",
+                    "align": "center",
+                    "valign": "middle",
+                    "sortable": true
+
+                }, {
+                    "field": "POS",
+                    "title": "uploadFile",
+                    "align": "center",
+                    "valign": "top",
+                    "sortable": true
+
+                }, {
+                    "field": "Notes",
+                    "title": "date",
+                    "align": "center",
+                    "valign": "middle",
+                    "sortable": true
+
+                }, {
+                    "field": 'operate',
+                    "title": 'status',
+                    "align": 'center',
+
+                    events: window.operateEvents = {
+                        'click .remove': function(e, value, row, index) {
+
+
+                        }
+                    },
+                    "formatter": operateFormatter
+                }]
+            }
+        };
+
+        function operateFormatter(value, row, index) {
+            return [
+                '<a class="like" href="javascript:void(0)" class="pst-rel">',
+                '<i   class="glyphicon glyphicon-list-alt" style="margin-right: 10px;border: 1px solid;border-radius: 85%;padding: 5px;width: 30px;height: 30px;color: #1a1a35; display: inline;"></i>',
+
+                '</a> ',
+                '<a class="remove" href="javascript:void(0)" class="pst-rel">',
+                '<i  class="glyphicon glyphicon-pencil" style="margin-right: 10px;border: 1px solid;border-radius: 85%;padding: 5px;width: 30px;height: 30px;color: #1a1a35; display: inline;"></i>',
+
+                '</a>'
+            ].join('');
+        }
+
+        window.operateEvents['click .remove'] = (function(e, value, row, index) {
+            //some edit stuff
+            console.log("hello", row);
+        });
+
+        vm.deleteRow = function() {
+            var $table = $('#table');
+            if ($table.bootstrapTable('getSelections').length > 0) {
+                var ids = $.map($table.bootstrapTable('getSelections'), function(row) {
+                    console.log(row);
+                });
+            }
+        }
+
+        function wrapFormatter1(value, row, index) {
+            return '<a class="pst-rel">' + value +
+
+                '<span class="tooltiptext">' + row.OrderStatus + '</span>' + '</a>';
+        }
+
+    }
+
+})();

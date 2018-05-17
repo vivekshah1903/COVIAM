@@ -1,0 +1,391 @@
+(function() {
+    'use strict';
+
+    angular.module('app.notify').controller('NotificationCtrl', notificationCtrl);
+
+    notificationCtrl.$inject = ['notificationService','$scope', 'ModalService','utils', '$timeout', 'CONFIG','sessionService', '$state','APIS'];
+
+    //Controller implementation
+    function notificationCtrl(notificationService, $scope, ModalService,utils,$timeout,CONFIG,sessionService, $state, APIS) {
+        var vm = this;
+        vm.dashDatePicker = dashDatePicker;
+        vm.validFromCheck = validFromCheck;
+        vm.deleteNotification =deleteNotification
+        vm.getNotificationDetails = getNotificationDetails;
+        vm.getDefaultNotificationDetails = getDefaultNotificationDetails;
+        vm.userdata = sessionService.getUserDetails('USER');
+        vm.apisAlert = {
+            toggle: false,
+            message: "",
+            type: "ERROR"
+        }
+
+        getDefaultNotificationDetails();
+
+        function dashDatePicker(opened, value) {
+            var am = this;
+            if (value == 'to') {
+                am.to = !(am.opened);
+            }
+            if (value == 'from') {
+                am.from = !(am.opened);
+            }
+        }
+
+        function validFromCheck(valueA, valueB) {
+            vm.dateError = false;
+            if (!valueA || !valueB) {
+                vm.dateError = false;
+                return;
+            }
+            (valueA > valueB) ? vm.dateError = true: vm.dateError = false;
+
+
+        }
+         function getNotificationDetails() {
+         
+            vm.validfromdate = utils.getinDateFormat(vm.data.validFrom, CONFIG.SYSTEM_DATE_FORMAT.DATE_YEAR_FORMAT);
+            vm.validtodate = utils.getinDateFormat(vm.data.validTo, CONFIG.SYSTEM_DATE_FORMAT.DATE_YEAR_FORMAT);
+            var obj = {
+                 acf2Id: vm.userdata.acf2Id,
+                "notificationDateType": vm.data.datetype,
+                "fromDate": vm.validfromdate,
+                //"pageno": 0,
+                "toDate": vm.validtodate
+            }            
+
+            return notificationService.getNotificationSummaryData(obj).then(function(notificationData) {
+                if (notificationData.message == "No Record Found") {
+                     vm.notificationSummary.options.data =[];
+                } else {
+                    
+                     vm.lastupdated = utils.getinDateFormat(notificationData.updatedDate, CONFIG.SYSTEM_DATE_FORMAT.DATE_FORMAT);
+                    vm.notificationSummary.options.data = notificationData.notificationList;
+                  
+                }
+
+            });
+
+         
+        }
+
+         function getDefaultNotificationDetails() {         
+
+            return notificationService.getDefaultNotificationSummaryData().then(function(notificationData) {
+                if (notificationData.message == "No Record Found") {
+                     vm.notificationSummary.options.data =[];
+                } else {
+                    
+                    vm.lastupdated = utils.getinDateFormat(notificationData.updatedDate, CONFIG.SYSTEM_DATE_FORMAT.DATE_FORMAT);
+                    vm.notificationSummary.options.data = notificationData.notificationList;
+                    
+                }
+
+            });
+
+         
+        }
+
+        vm.notificationSummary = {
+            options: {
+                cache: false,
+                striped: true,
+                pagination: true,
+                pageSize: 10,
+                pageList: [5, 10, 25, 50, 100, 200],
+                paginationPreText:"Previous",
+                paginationNextText:"Next", 
+                filterControl: true, 
+                search: true,
+                showColumns: false,
+                showRefresh: false,
+                showExport: false,
+                minimumCountColumns: 2,
+                clickToSelect: false,
+                showToggle: false,
+                toolbar: "#toolbar",
+                maintainSelected: true,
+                columns: [{
+                        field: 'state',
+                        checkbox: true,
+                        align: 'center',
+                        valign: 'middle'
+                    }, {
+                        title: 'Category',
+                        field: 'notificationCategory.notificationCategoryName',
+                        width: '150',
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true
+
+
+                    }, {
+                        title: 'Priority',
+                        field: 'notificationPriority.notificationPriorityName',
+                        width: '150',
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true,
+                        "formatter": priorityFormatter
+
+                    }, {
+                        title: 'Notification',
+                        field: 'notificationTxt',
+                        width: '300',
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true,
+                        "formatter": notificationDetailsFormatter
+
+                    }, {
+                        title: 'Start Date',
+                        field: 'notificationStartDt',
+                        width: '150',
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true,
+                        "formatter": startDateFormatter
+
+                    }, {
+                        title: 'Expiry Date',
+                        field: 'notificationExpiryDt',
+                        width: '150',
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true,
+                        "formatter": endDateFormatter
+
+                    }, {
+                        title: 'Publish Date',
+                        field: 'notificationPublishDt',
+                        width: '200',
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true,
+                        "formatter": publishDateFormatter
+
+                    }, {
+                        title: 'Created by',
+                        field: 'createdBy',
+                        width: '200',
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true
+
+                    }, {
+                        title: 'Created date',
+                        field: 'createdDate',
+                        width: '200',
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true,
+                        "formatter": createDateFormatter
+
+                    }, {
+                        title: 'Status',
+                        field: 'notificationStatus',
+
+                        align: 'center',
+                        valign: 'middle',
+                        "formatter": statusFormatter
+
+
+                    }, {
+                        title: 'Action',
+                        //field: 'cretedDate',
+                        width: '100',
+                        "formatter": actionFormatter,
+                        align: 'center',
+                        valign: 'middle',
+                        events: window.operateNotify = {
+                            'click .notifyEdit': function(e, value, row, index) {}
+                        },
+                        sortable: true
+
+                    }
+
+
+                ]
+
+            }
+        };
+
+        function statusFormatter(value, row, index) {
+
+
+                   if (row.notificationStatus == CONFIG.NOTIFICATION_STATUS.EXPIRED) {
+                return [
+                    '<a class="like pst-rel" href="javascript:void(0)">',
+                    '<i   class="glyphicon glyphicon-remove"></i>',
+                    '<span class="tooltiptext">Expired</span>',
+                    '</a> '
+
+                ].join('');
+            } else if (row.notificationStatus == CONFIG.NOTIFICATION_STATUS.ACTIVE) {
+                return [
+                    '<a class="like pst-rel" href="javascript:void(0)" class="pst-rel">',
+                    '<i   class="glyphicon glyphicon-ok"></i>',
+                    '<span class="tooltiptext">Active</span>',
+                    '</a> '
+
+                ].join('');
+            } else if (row.notificationStatus == CONFIG.NOTIFICATION_STATUS.UPCOMING) {
+                return [
+                    '<a class="like pst-rel" href="javascript:void(0)" class="pst-rel">',
+                    '<i   class="glyphicon glyphicon-hourglass"></i>',
+                    '<span class="tooltiptext">UPCOMING</span>',
+                    '</a> '
+
+                ].join('');
+            }
+        }
+
+        function notificationDetailsFormatter(value, row, index) {
+                   
+                    return '<div><a class=" fileUpload pst-rel">' + row.notificationTxt + '<span class="tooltiptext">'+row.notificationTxt+'</span></a></div>';
+                }
+
+       
+
+         function deleteNotification(){
+            
+            var $notifyDelete= $('#table3');
+
+            if ($notifyDelete.bootstrapTable('getSelections').length > 0) {
+                vm.apisAlert.toggle = false;
+                var ids = $notifyDelete.bootstrapTable('getAllSelections')
+                var notificationIdValue = [];
+                angular.forEach(ids, function(value, key) {
+                    var obj = {
+                        acf2Id:vm.userdata.acf2Id,
+                        "notificationId": value.notificationId
+                    }
+                    notificationIdValue.push(obj);
+
+
+                });
+
+                var message = "Are you sure you want to delete the selected notification ?"
+
+                ModalService.openAlert('confirm', 'Delete Notification', message, $scope, 'reset');
+                $scope.$on('resetOk', function() {
+                    var noyifyObj = {
+                        "listId": notificationIdValue
+                    }
+                    return notificationService.deleteNotifications(noyifyObj).then(function(eventData) {
+                        if (eventData.result == "SUCCESS") {
+                         vm.apisAlert = {
+                            toggle: true,
+                            message: eventData.message || 'Internal Server Error',
+                            type: "SUCCESS"
+                        };
+                        $timeout(function() {
+                            vm.apisAlert.toggle = false;
+                        }, 5000);
+                        if(!vm.data){
+                        getDefaultNotificationDetails();
+                          }
+                        else {
+                         getNotificationDetails();
+                        }
+                    } else{
+
+                    }
+                       
+                    });
+
+                });
+
+
+                $scope.$on('resetCancel', function() {
+
+                });
+
+            }
+
+                else if($notifyDelete.bootstrapTable('getSelections').length <= 0){
+                        vm.message = "Please select atleast one notification";
+                        vm.apisAlert = {
+                                toggle: true,
+                                message: vm.message,
+                                type: "ERROR"
+                        };
+                        $timeout(function() {
+                            vm.apisAlert.toggle = false;
+                        }, 5000);
+
+                 }
+        }
+
+         window.operateNotify['click .notifyEdit'] = (function(e, value, row, index) {
+            //alert();
+            sessionService.setEditNotificationList(row);
+            $state.go('.notificationEditPage');
+        });
+         function actionFormatter(value, row, index) {
+            return [
+                '<a class="notifyEdit" href="javascript:void(0)">',
+                '<i class="glyphicon glyphicon-pencil"></i>',
+                '</a>'
+            ].join('');
+        }
+        function endDateFormatter(value, row, index) {
+
+            vm.date = utils.getinDateFormat(row.notificationExpiryDt, CONFIG.SYSTEM_DATE_FORMAT.DATE_FORMAT);
+            return vm.date;
+        }
+        function startDateFormatter(value, row, index) {
+
+            vm.date = utils.getinDateFormat(row.notificationStartDt, CONFIG.SYSTEM_DATE_FORMAT.DATE_FORMAT);
+            return vm.date;
+        }
+        function createDateFormatter(value, row, index) {
+
+            vm.date = utils.getinDateFormat(row.createdDate, CONFIG.SYSTEM_DATE_FORMAT.DATE_FORMAT);
+            return vm.date;
+        }
+         function publishDateFormatter(value, row, index) {
+
+            vm.date = utils.getinDateFormat(row.notificationPublishDt, CONFIG.SYSTEM_DATE_FORMAT.DATE_FORMAT);
+            return vm.date;
+        }
+
+
+         function priorityFormatter(value, row, index) {
+                if (row.notificationPriority.notificationPriorityName == CONFIG.NOTIFICATION_PRIORITY.High) {
+                    return [
+                       /* '<span class="priority priority-high">',
+                        '</span>'*/
+                         '<a class="like pst-rel" href="javascript:void(0)">',
+                        '<i class="priority priority-high"></i>',
+                        '<span class="tooltiptext">High</span>',
+                        '</a> '
+
+                    ].join('');
+                } else if (row.notificationPriority.notificationPriorityName == CONFIG.NOTIFICATION_PRIORITY.Medium) {
+                    return [
+                         '<a class="like pst-rel" href="javascript:void(0)">',
+                        '<i class="priority priority-medium"></i>',
+                        '<span class="tooltiptext">Medium</span>',
+                        '</a> '
+
+                    ].join('');
+                } else if (row.notificationPriority.notificationPriorityName == CONFIG.NOTIFICATION_PRIORITY.Low) {
+                    return [
+                         '<a class="like pst-rel" href="javascript:void(0)">',
+                        '<i class="priority priority-low"></i>',
+                        '<span class="tooltiptext">Low</span>',
+                        '</a> '
+
+
+                    ].join('');
+                }
+            }
+
+
+    }
+
+
+})();
+
+// nottificationtable controller

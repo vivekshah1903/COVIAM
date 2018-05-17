@@ -1,0 +1,527 @@
+(function () {
+    'use strict';
+
+    angular.module('app.album').controller('AlbumCtrl', albumCtrl);
+
+    albumCtrl.$inject = ['$scope', 'AlbumService', 'utils', 'CONFIG', 'ModalService', '$location', '$timeout', '$state', 'sessionService', '$stateParams'];
+
+    //Controller implementation
+    function albumCtrl($scope, AlbumService, utils, CONFIG, ModalService, $location, $timeout, $state, sessionService, $stateParams) {
+        var vm = this;
+        vm.dashDatePicker = dashDatePicker;
+        vm.validFromCheckGrid = validFromCheckGrid;
+        vm.validFromCheck = validFromCheck;
+        vm.createAlbum = createAlbum;
+        vm.cancelCreate = cancelCreate;
+        vm.deleteImage = deleteImage;
+        vm.thumbImage = thumbImage;
+        vm.getAlbumDetails = getAlbumDetails;
+        vm.countChecked = countChecked;
+        vm.getLocation = getLocation;
+        vm.getAssociatedEvent = getAssociatedEvent;
+        vm.viewAlbumDetails = viewAlbumDetails;
+        //console.log($stateParams.obj.dataBean);
+        
+        vm.userdata = sessionService.getUserDetails('USER');
+        vm.apisAlert = {
+            toggle: false,
+            message: "",
+            type: "ERROR"
+        }
+
+
+
+
+        getAlbumDetails();
+        getLocation();
+        getAssociatedEvent();
+
+        function deleteImage() {
+
+            vm.data.filename = vm.data.filename.filter(function (obj) {
+                if (vm.thumbnail == obj.$ngfName && obj.isChecked == true) {
+                    vm.message = "This image is selected as Thumbnail. Please select another Thumbnail then delete it.";
+                    vm.apisAlert = {
+                        toggle: true,
+                        message: vm.message,
+                        type: "ERROR"
+                    };
+                    $timeout(function () {
+                        vm.apisAlert.toggle = false;
+                    }, 5000);
+                    return obj;
+                } else {
+                    return obj.isChecked !== true;
+                }
+            });
+        }
+
+        function thumbImage() {
+
+            vm.data.filename = vm.data.filename.filter(function (obj) {
+                if (obj.isChecked == true) {
+                    vm.thumbnail = obj.$ngfName;
+                    //console.log(vm.thumbnail);
+                }
+                return obj;
+            });
+        }
+
+        function countChecked() {
+
+            //vm.data = null;
+            if (!vm.data) {
+                //variable exists, do what you want
+                return;
+            } else {
+                var count = 0;
+                angular.forEach(vm.data.filename, function (obj) {
+                    if (obj.isChecked) count++;
+                });
+                return count;
+
+            }
+        }
+
+
+        function getLocation() {
+            return AlbumService.getLocationData().then(function (locationData) {
+                vm.locationList = locationData.businessLocationList;
+            });
+        }
+
+        function getAssociatedEvent() {
+            return AlbumService.getAssociatedEventData().then(function (associatedEventData) {
+                vm.associatedEventList = associatedEventData.eventList;
+               // console.log("Associated ", vm.associatedEventList);
+            });
+        }
+
+
+
+
+        function createAlbum(data) {
+
+            if (vm.thumbnail == undefined) {
+
+                // alert("Please select thuumb image");
+                vm.thumbmessage= "Please Select One Image as a thumbail.";
+                vm.apisAlert = {
+                    toggle: true,
+                    message: vm.thumbmessage,
+                    type: "ERROR"
+                };
+                $timeout(function () {
+                    vm.apisAlert.toggle = false;
+                }, 5000)
+
+            } else {
+
+
+
+                var validDate = utils.getinDateFormat(data.startDate, CONFIG.SYSTEM_DATE_FORMAT.DATE_YEAR_FORMAT);
+                var obj = {
+                    acf2Id: vm.userdata.acf2Id,
+                    albumName: data.album_name,
+                    thumbnail: vm.thumbnail,
+                    albumDesc: data.album_description,
+                    publishDate: validDate,
+                    locationId: data.location,
+                    eventId: Number(data.event)
+                }
+                var fileObj = {
+                    file: data.filename
+                }
+                var message = "The album is created and will become active on the published date"
+                ModalService.openAlert('confirm', 'Create Album', message, $scope, 'reset');
+                $scope.$on('resetOk', function () {
+                    return AlbumService.createAlbum(obj, fileObj).then(function (albumData) {
+                       // console.log(albumData);
+                        if (albumData.data.customCode == 201) {
+                            vm.apisAlert = {
+                                toggle: true,
+                                message: albumData.data.message || 'Internal Server Error',
+                                type: "SUCCESS"
+                            };
+                            $timeout(function () {
+                                vm.apisAlert.toggle = false;
+                                $location.path("/album");
+                            }, 5000);
+                            return;
+                        } else {
+
+
+                        }
+                    });
+                    $scope.$on('resetCancel', function () {
+
+                    });
+                });
+
+
+
+            }
+
+
+
+
+
+
+
+
+
+
+
+        }
+
+        function getAlbumDetails() {
+
+
+            return AlbumService.getAlbumSummaryData().then(function (albumData) {
+                if (albumData.message == "No Record Found") {
+                    return;
+                } else {
+                    vm.lastupdated = utils.getinDateFormat(albumData.dataBean.lastUpdatedDt, CONFIG.SYSTEM_DATE_FORMAT.DATE_FORMAT);
+                    if($stateParams.obj == null){
+                        vm.albumSummary.options.data = albumData.dataBean.rows;
+                    }else{
+                    vm.albumSummary.options.data = $stateParams.obj.data.dataBean;
+                    } 
+                   
+
+                }
+
+            });
+        }
+         function viewAlbumDetails() {
+            //console.log($stateParams.obj);
+         return AlbumService.viewAlbums($stateParams.obj.eventId).then(function (albumData) {
+              
+                 vm.albumSummary.options.data = albumData.dataBean;
+               
+            });
+         }
+
+
+
+
+
+
+        function dashDatePicker(opened, value) {
+            var am = this;
+            if (value == 'to') {
+                am.to = !(am.opened);
+            }
+            if (value == 'from') {
+                am.from = !(am.opened);
+            }
+        }
+
+        function validFromCheckGrid(valueA, valueB) {
+            var days = (valueB - valueA) / (1000 * 60 * 60 * 24);
+            vm.dateError = false;
+            vm.dateErrorDays = false;
+            if (!valueA || !valueB) {
+                vm.dateError = false;
+                return;
+            }
+            if (valueA > valueB) { vm.dateError = true; } else if (days > 30) {
+                vm.dateErrorDays = true;
+            } else {
+                vm.dateError = false;
+                vm.dateErrorDays = false;
+            }
+        }
+
+        function validFromCheck(valueA, valueB) {
+            vm.dateError = false;
+            if (!valueA || !valueB) {
+                vm.dateError = false;
+                return;
+            }
+            (valueA >= valueB) ? vm.dateError = true : vm.dateError = false;
+
+
+        }
+
+        vm.albumSummary = {
+            options: {
+                cache: false,
+                //height: 600,
+                striped: true,
+                pagination: true,
+                pageSize: 10,
+                pageList: [5, 10, 25, 50, 100, 200],
+                paginationPreText: "Previous",
+                paginationNextText: "Next",
+                search: true,
+                showColumns: false,
+                showRefresh: false,
+                showExport: false,
+                filterControl: true,
+                minimumCountColumns: 2,
+                clickToSelect: false,
+                showToggle: false,
+                toolbar: "#toolbar",
+                maintainSelected: true,
+                columns: [{
+                    field: 'state',
+                    checkbox: true,
+                    align: 'center',
+                    valign: 'middle'
+                }, {
+                    title: 'Thumbnail',
+                    field: 'thumbnailUrl',
+
+                    align: 'center',
+                    valign: 'middle',
+                    sortable: true,
+                    "formatter": thumbnailFormatter
+
+
+
+                }, {
+                    title: 'Album Details',
+                    field: 'albumDetails',
+                    // filterControl: 'select',
+                    align: 'center',
+                    valign: 'middle',
+                    sortable: true,
+                    "formatter": albumDetailsFormatter
+
+                }, {
+                    title: 'Published Date',
+                    field: 'publishedDT',
+
+                    align: 'center',
+                    valign: 'middle',
+                    sortable: true,
+                    "formatter": publishDateFormatter
+
+
+                }, {
+                    title: 'Location',
+                    field: 'location',
+
+                    align: 'center',
+                    valign: 'middle',
+                    sortable: true
+
+
+                }, {
+                    title: 'Associated Event',
+                    field: 'associatedEvent',
+                    align: 'center',
+                    valign: 'middle',
+                    sortable: true,
+                    events: window.operateEvents = {
+                        'click .goToEvent': function (e, value, row, index) { }
+                    },
+                    "formatter": eventNameFormatter
+
+
+                }, {
+                    title: 'Status',
+                    field: 'status',
+
+                    align: 'center',
+                    valign: 'middle',
+                    "formatter": statusFormatter
+
+
+                }, {
+                    title: 'Action',
+                    field: 'action',
+                    align: 'center',
+                    valign: 'middle',
+                    "formatter": albumactionFormatter,
+                    events: window.operateAlbum = {
+                        'click .editAlbum': function (e, value, row, index) { }
+                    }
+
+
+                }
+
+
+                ]
+
+            }
+        };
+
+        window.operateEvents['click .goToEvent'] = (function (e, value, row, index) {
+           
+            var eventId = row.event.albumId;
+            return AlbumService.getDataForEvent(eventId).then(function (eventData) {
+                sessionService.setViewEventList(eventData.eventsT);
+                $state.go('.eventDetails');
+            });
+
+        });
+
+        window.operateAlbum['click .editAlbum'] = (function (e, value, row, index) {
+
+            var albumId = row.id;
+            return AlbumService.getDataForAlbum(albumId).then(function (albumData) {
+                sessionService.setEditAlbumList(albumData.dataBean);
+                $state.go('.albumEditPage');
+            });
+        });
+
+        function eventNameFormatter(value, row, index) {
+            if (row.event) {
+                return '<a class=" fileUpload pst-rel goToEvent">' + row.event.eventName + '</a>';
+            } else {
+                return;
+            }
+        }
+
+        function albumactionFormatter(value, row, index) {
+            return [
+                '<a class="editAlbum" href="javascript:void(0)">',
+                '<i class="glyphicon glyphicon-pencil"></i>',
+                '</a>'
+            ].join('');
+        }
+
+        function thumbnailFormatter(value, row, index) {
+            var serverUrl = CONFIG.BASE_URL[CONFIG.BASE_URL_MODE];
+            // var a=serverUrl+'files/'
+            var imageUrl = row.thumbnailUrl;
+            return '<div class="promo"><img class="thumb-image" src=" ' + imageUrl + ' "><div class="hilight"><p> +' + row.noOfImages + '</p></div></div>';
+        }
+
+
+        //albumDetailsFormatter
+        function albumDetailsFormatter(value, row, index) {
+            vm.date = utils.getinDateFormat(row.createdDT, CONFIG.SYSTEM_DATE_FORMAT.DATE_FORMAT);
+            return '<div><a class=" fileUpload pst-rel">' + row.albumName + '<span class="tooltiptext">' + row.albumDesc + '</span></a></div><div>Created By:' + row.createdBy + '</div><div>Created Date:' + vm.date + '</div></div>';
+        }
+
+        function publishDateFormatter(value, row, index) {
+            vm.date = utils.getinDateFormat(row.publishedDT, CONFIG.SYSTEM_DATE_FORMAT.DATE_FORMAT);
+            return vm.date;
+        }
+
+        function statusFormatter(value, row, index) {
+
+
+            if (row.status == CONFIG.ALBUM_STATUS.PUBLISHED) {
+                return [
+                    '<a class="like pst-rel" href="javascript:void(0)" >',
+                    '<i   class="glyphicon glyphicon-ok"></i>',
+                    '<span class="tooltiptext">Published</span>',
+                    '</a> '
+
+                ].join('');
+            } else if (row.status == CONFIG.ALBUM_STATUS.TO_BE_PUBLISHED) {
+                return [
+                    '<a class="like pst-rel" href="javascript:void(0)">',
+                    '<i   class="glyphicon glyphicon-hourglass"></i>',
+                    '<span class="tooltiptext">To be published</span>',
+                    '</a> '
+
+                ].join('');
+            }
+        }
+
+        function cancelCreate() {
+            var message = "Do you want to cancel creating this album ?"
+
+            ModalService.openAlert('confirm', 'Cancel Album', message, $scope, 'reset');
+            $scope.$on('resetOk', function () {
+                $location.path("/album");
+
+            });
+
+
+            $scope.$on('resetCancel', function () {
+
+            });
+        }
+        vm.deleteAlbumRow = function () {
+
+            var $tableAlbum = $('#table1');
+
+            if ($tableAlbum.bootstrapTable('getSelections').length > 0) {
+                vm.apisAlert.toggle = false;
+                var ids = $tableAlbum.bootstrapTable('getAllSelections')
+                var albumIdValue = [];
+                angular.forEach(ids, function (value, key) {
+                    var obj = {
+                        "id": value.id
+                    }
+                    albumIdValue.push(obj);
+
+
+                });
+
+
+                var message = "Are you sure you want to delete the selected album ?"
+
+                ModalService.openAlert('confirm', 'Delete Album', message, $scope, 'reset');
+                $scope.$on('resetOk', function () {
+                    var albumObj = {
+                        "listId": albumIdValue
+                    }
+                    return AlbumService.deleteAlbums(albumObj).then(function (albumData) {
+                        if (albumData.customCode == 200) {
+                            vm.apisAlert = {
+                                toggle: true,
+                                message: albumData.message || 'Internal Server Error',
+                                type: "SUCCESS"
+                            };
+                            $timeout(function () {
+                                vm.apisAlert.toggle = false;
+                            }, 5000);
+
+                             if($stateParams.obj == null){
+                                 getAlbumDetails();
+  
+                            }
+                            else {
+                                     viewAlbumDetails();
+
+                            }
+
+
+                          
+                        } else if (albumData.customCode == 400) {
+                            vm.apisAlert = {
+                                toggle: true,
+                                message: albumData.message || 'Internal Server Error',
+                                type: "ERROR"
+                            };
+                            $timeout(function () {
+                                vm.apisAlert.toggle = false;
+                            }, 5000);
+                        }
+                        else {
+
+                        }
+
+                    });
+
+                });
+
+
+                $scope.$on('resetCancel', function () {
+
+                });
+            } else if ($tableAlbum.bootstrapTable('getSelections').length <= 0) {
+                vm.message = "Please select atleast one album";
+                vm.apisAlert = {
+                    toggle: true,
+                    message: vm.message,
+                    type: "ERROR"
+                };
+                $timeout(function () {
+                    vm.apisAlert.toggle = false;
+                }, 5000);
+
+            }
+
+
+        }
+    }
+
+})();

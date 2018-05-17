@@ -1,0 +1,62 @@
+/*****************
+@Author:GuruPrasad
+******************/
+(function() {
+    'use strict';
+    //vendor Service
+    angular.module('app.login').factory('LoginService', loginService);
+
+    //Service injection
+    loginService.$inject = ['dataManagerService','$log','$http','APIS'];
+
+    //Service implementation
+    function loginService(dataManagerService,$log, $http,APIS) {
+        return {
+         LoginUser:LoginUser
+        };
+        
+        // function to split order
+        function LoginUser(data) {
+              var token="";
+            APIS.LOGIN.data = data;
+            return dataManagerService.sendRequest(null, APIS.LOGIN,token).then(function(data){
+            console.log("login",data);                
+                return data;
+            });
+
+           // return data;
+        }
+        
+       
+      
+       
+       
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    } //EOF Service
+})();

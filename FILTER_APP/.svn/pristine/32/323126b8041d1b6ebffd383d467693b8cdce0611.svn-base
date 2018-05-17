@@ -1,0 +1,73 @@
+<!-- <div>
+  <form name="upload" enctype="multipart/form-data" novalidate> 
+     <div class="modal-header">
+       <h4 class="modal-title">Upload Roster </h4>
+     </div>
+     <div class="modal-body">
+			<div class="form-group" ng-class="{true: 'has-error'}[upload.file.$invalid && upload.file.$touched]">
+		    	<div class="input-group">
+					<div>
+					     <input id="uploadBtn" type="file" ngf-select ng-model="filename" name="file" ngf-pattern="'.xls,.xlsx'" accept=".xls,.xlsx" required="" />
+                       
+					</div>
+					 <div ng-if="upload.file.$invalid" class="has-error">
+					 <span class="help-block" ng-show="!upload.file.$error.pattern &&upload.file.$touched && upload.file.$error.required">File Required</span>
+                            <span class="help-block" ng-show="upload.file.$error.pattern">Valid file format are xls, xlsx</span>
+                    </div>
+		    	</div>
+		   	</div>	
+     </div>
+      
+	<div class="modal-footer">
+		   <button  type="submit" class="uploadButton" ng-click="validateForm([upload]) && uploadData.uploadFile(filename)">Upload</button>
+		   <button type="button" class="cancel" ng-click="uploadData.cancel()">Cancel</button>
+	 </div>
+   </form>
+ </div> -->
+<div class="modal-header cusMdlbott">
+    <!--<button type="button" class="close" data-dismiss="modal">&times;</button>-->
+    <h4 class="modal-title udrTit">Publish To Employee App</h4>
+    <p>Please Confirm below validation summary</p>
+    <p>File Name:</p>
+</div>
+<div class="modal-body">
+    <table class="table table-bordered">
+        <thead style="background: lightblue;">
+            <tr>
+                <th></th>
+                <th>Total</th>
+                <th>Success</th>
+                <th>Failed</th>
+                <th>New</th>
+                <th>Update</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Roster Count</td>
+                <td>10</td>
+                <td>10</td>
+                <td>10</td>
+                <td>10</td>
+                <td>10</td>
+                <td>10</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td>10</td>
+                <td>10</td>
+                <td>10</td>
+                <td>10</td>
+                <td>10</td>
+                <td>10</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="modal-footer cusMdltop">
+    <div style="float:left;">
+        <button type="button" class="btn btn-default mdlBtndark"><span class="btnText">Publish<span></button>
+          <button type="button" class="btn btn-default mdlLightbtn" ng-click="uploadData.closePopup()"><span class="btnText">Cancel</span></button>
+    </div>
+</div>

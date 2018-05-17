@@ -1,0 +1,40 @@
+/*****************
+@Author:GuruPrasad
+******************/
+(function(){
+	'use strict';
+	//category Service
+	angular.module('app.events').factory('eventService', eventService); //Apis constan file
+	
+	//Service injection
+	eventService.$inject = ['dataManagerService','$log','APIS'];
+
+	//Service implementation
+	function eventService(dataManagerService, $log, APIS){
+		//Binding 	
+ 		return {
+        			getAllcategories: getAllcategories,
+        			
+	        		searchCategroy:searchCategroy
+    			};
+
+        /*category function*/			
+	    function getAllcategories() {
+	    	var token="";	   	
+			return dataManagerService.sendRequest(null, APIS.GET_ALL_CATEGORIES_LIST,token).then(function(data){				
+				return data.dataBean;
+			});
+	    }//EOF Category
+
+	    /* Creates category*/
+	 
+	    function searchCategroy(data){
+	    	var token="";
+	    	APIS.SERACH_CATEGARIES.data = data;
+			return dataManagerService.sendRequest(null, APIS.SERACH_CATEGARIES,token).then(function(data){
+				return data.dataBean;
+			})
+	    }
+
+	}//EOF Service
+})();

@@ -1,0 +1,56 @@
+(function() {
+    'use strict';
+
+    angular.module('app.album').controller('AlbumCtrl', albumCtrl);
+
+    albumCtrl.$inject = ['$scope'];
+
+    //Controller implementation
+    function albumCtrl($scope) {
+        var vm = this;
+        console.log("hello");
+        vm.dashDatePicker = dashDatePicker;
+        vm.validFromCheckGrid = validFromCheckGrid;
+        vm.validFromCheck = validFromCheck;
+
+
+        function dashDatePicker(opened, value) {
+            var am = this;
+            if (value == 'to') {
+                am.to = !(am.opened);
+            }
+            if (value == 'from') {
+                am.from = !(am.opened);
+            }
+        }
+
+        function validFromCheckGrid(valueA, valueB) {
+            var days = (valueB - valueA) / (1000 * 60 * 60 * 24);
+            vm.dateError = false;
+            vm.dateErrorDays = false;
+            if (!valueA || !valueB) {
+                vm.dateError = false;
+                return;
+            }
+            if (valueA > valueB) { vm.dateError = true; } else if (days > 30) {
+                vm.dateErrorDays = true;
+            } else {
+                vm.dateError = false;
+                vm.dateErrorDays = false;
+            }
+        }
+
+        function validFromCheck(valueA, valueB) {
+            vm.dateError = false;
+            if (!valueA || !valueB) {
+                vm.dateError = false;
+                return;
+            }
+            (valueA >= valueB) ? vm.dateError = true: vm.dateError = false;
+
+
+        }
+
+    }
+    
+})();

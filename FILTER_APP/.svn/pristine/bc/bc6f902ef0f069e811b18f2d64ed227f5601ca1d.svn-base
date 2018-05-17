@@ -1,0 +1,58 @@
+angular.module('app.common', []);
+angular.module('app.login', []);
+angular.module('app.events', []);
+angular.module('app.transportData', []);
+angular.module('app.album', []);
+angular.module('app.notify', []);
+angular.module('app.employees', []);
+angular.module('app', ['ui.router', 'app.common', 'app.login', 'app.events', 'app.transportData', 'app.album', 'app.notify', 'app.employees', 'ui.bootstrap', 'bsTable', 'ngFileUpload']).config(['$urlRouterProvider', '$stateProvider', function($urlRouterProvider, $stateProvider) {
+    $stateProvider.state('app', {
+        url: '/login'
+    });
+    $urlRouterProvider.otherwise('/login');
+
+
+}]).controller('MainController', ['$scope', '$rootScope', '$location', 'sessionService', function($scope, $rootScope, $location, sessionService) {
+
+
+
+
+
+}]).run(function($rootScope, $state, $interval, $location, sessionService, $timeout, dataManagerService, APIS) {
+
+    var registerData = sessionService.getRegisterDetails('REGISTER');
+    console.log("registerData", registerData);
+    // var expiresTime=registerData.expires_in ;
+    if (registerData) {
+        $timeout(function() {
+            /* var data={"token":registerData.refresh_token}
+             APIS.GET_REFRESH_TOKEN.data = data;*/
+            // return dataManagerService.sendRequest(null, APIS.GET_REFRESH_TOKEN).then(function(data) {
+            alert("Navneet");
+            /*  return data;
+            });*/
+        }, registerData.expires_in);
+    }
+    $rootScope.validateForm = function(forms) {
+        var flag = true;
+        angular.forEach(forms, function(form) {
+            if (form.$invalid) {
+                flag = false;
+                angular.forEach(form.$error, function(field) {
+                    angular.forEach(field, function(errorField) {
+                        errorField.$setTouched();
+                    })
+                });
+            }
+        })
+        return flag;
+    }
+
+
+
+
+
+
+
+
+});

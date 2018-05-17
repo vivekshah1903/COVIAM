@@ -1,0 +1,63 @@
+(function() {
+    'use strict';
+
+    angular.module('app.login').controller('LoginCtrl', loginCtrl);
+
+    loginCtrl.$inject = ['$scope', 'LoginService', '$location', '$state','$uibModalInstance','$uibModal','sessionService'];
+
+    //Controller implementation
+    function loginCtrl($scope, LoginService, $location, $state, $uibModalInstance, $uibModal,sessionService) {
+        var vm = this;
+        vm.addUser = addUser;
+        vm.cancelUser=cancelUser;
+        vm.forgetPassword=forgetPassword;
+        vm.toggleShowPassword=toggleShowPassword;
+        vm.loginUser=sessionService.getUserDetails('USER');
+        
+
+        function addUser() {
+            var name = vm.username;
+            var password = vm.password;
+            var obj = {
+                name: name,
+                password: password
+            }
+            if(vm.loginUser){
+                vm.snack=true;
+                return false;
+            }
+            vm.receive = LoginService.LoginUser(obj);
+
+            //$state.go('home', { obj: vm.receive });
+           $uibModalInstance.close(vm.receive);
+
+
+        }
+
+        function forgetPassword(){
+           var UserCreateModalInstance = $uibModal.open({
+                animation: true,
+                templateUrl: 'UX/app/login/Partials/login.html',
+                controller: 'LoginCtrl as login',
+
+                backdrop: 'static',
+                resolve: {
+                    items: function() {
+                        return;
+                    }
+                }
+            });
+        }
+
+        function cancelUser(){
+            $uibModalInstance.dismiss();
+        }
+          vm.showPassword = false;
+        function toggleShowPassword(){
+            vm.showPassword = !vm.showPassword;
+        }
+       
+
+
+    }
+})();

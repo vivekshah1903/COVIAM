@@ -1,0 +1,42 @@
+(function() {
+    'use strict';
+
+    angular.module('app.common').controller('HomeCtrl', homeCtrl);
+
+    homeCtrl.$inject = ['$scope', '$stateParams', '$uibModal','sessionService','$location'];
+
+    //Controller implementation
+    function homeCtrl($scope, $stateParams, $uibModal,sessionService,$location) {
+
+        var vm = this;
+
+       $scope.Upload=function() {
+
+            var UserCreateModalInstance = $uibModal.open({
+                animation: true,
+                templateUrl: 'UX/app/transportData/partials/transportData.html',
+                controller: 'TransportDataCtrl as transportData',
+                backdrop: 'static',
+                resolve: {
+                    items: function() {
+                        return;
+                    }
+                }
+            });
+
+            UserCreateModalInstance.result.then(function(fileObject) {
+                  console.log("fileObject",fileObject);
+                 TransportDataService.transportData(fileObject);
+                  
+            }, function() {
+
+            });        
+        }
+
+        //vm.loginDetails=$stateParams.obj;
+        /*Create user*/
+       
+        
+
+    }
+})();

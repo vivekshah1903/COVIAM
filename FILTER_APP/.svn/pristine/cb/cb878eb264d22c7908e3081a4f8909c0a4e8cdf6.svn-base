@@ -1,0 +1,105 @@
+/*****************
+@Author:GuruPrasad
+******************/
+(function() {
+    'use strict';
+    //session Service
+    angular.module('app.common').factory('sessionService', sessionService); //Apis constan file
+
+    //Service injection
+    sessionService.$inject = ['$window'];
+
+    //Service implementation
+    function sessionService($window) {
+
+        return {
+            setUserDetails: setUserDetails,
+            getUserDetails: getUserDetails,
+            setEditEventList: setEditEventList,
+            getEditEventList: getEditEventList,
+            clearSession: clearSession,
+            setRegisterDetails: setRegisterDetails,
+            getRegisterDetails:getRegisterDetails
+
+        };
+
+        //Sets users details   	  
+        function setUserDetails(sessionObj) {
+            console.log("sessionObj", sessionObj);
+
+            $window.sessionStorage.setItem('userData', JSON.stringify(sessionObj));
+            console.log(JSON.stringify(sessionObj));
+
+            return true;
+        }
+
+        //Gives User Details
+        function getUserDetails(returnData) {
+
+            var sessionObj = {
+                "userdata": JSON.parse($window.sessionStorage.getItem('userData'))
+
+            };
+
+            if (returnData == "USER") {
+                return sessionObj.userdata;
+            } else {
+                return sessionObj;
+            }
+
+        }
+
+        function setRegisterDetails(registerObj) {
+            $window.sessionStorage.setItem('registerData', JSON.stringify(registerObj));
+            console.log("nav", JSON.stringify(registerObj));
+
+            return true;
+        }
+
+        function getRegisterDetails(returnData) {
+            var regObj = {
+                "registerdata": JSON.parse($window.sessionStorage.getItem('registerData'))
+
+            };
+
+            if (returnData == "REGISTER") {
+                return regObj.registerdata;
+            } else {
+                return regObj;
+            }
+        }
+
+        function setEditEventList(data) {
+
+            $window.sessionStorage.setItem('EditEventList', angular.toJson(data));
+            console.log("hello", angular.toJson(data));
+        }
+
+        function getEditEventList() {
+            var returnobj;
+
+            if (!$window.sessionStorage.getItem('EditEventList')) {
+                returnobj = {};
+            } else {
+                returnobj = angular.fromJson($window.sessionStorage.getItem('EditEventList'));
+            }
+
+            return returnobj;
+        }
+
+        function clearSession() {
+            $window.sessionStorage.clear();
+            return;
+        }
+
+
+
+
+
+
+
+
+
+    } //EOF Service
+
+})();

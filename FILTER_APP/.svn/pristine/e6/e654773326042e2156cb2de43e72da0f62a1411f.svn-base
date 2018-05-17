@@ -1,0 +1,54 @@
+(function() {
+    'use strict';
+
+    angular.module('app.transportData').controller('UploadDataCtrl', uploadDataCtrl);
+
+    uploadDataCtrl.$inject = ['$uibModalInstance','tableData','dataFile'];
+
+    //Controller implementation
+    function uploadDataCtrl($uibModalInstance,tableData,dataFile) {
+        var vm = this;
+        console.log("tableData",dataFile);
+        vm.uploadFile = uploadFile;
+        vm.closePopup = closePopup;
+       // vm.checkRowData = checkRowData;
+        vm.ExcelData = tableData
+        vm.fileName=tableData[0].fileName
+        /*[
+            { "rosterCount": "Roster Count", "total": "1", "success": "1", "fail": "0", "new": "1", "update": "1", "del": "1" },
+            { "rosterCount": "Employee Count", "total": "1", "success": "1", "fail": "10", "new": "1", "update": "1", "del": "1" }
+
+
+        ]*/
+
+       /* function checkRowData() {
+            var a=angular.copy(vm.ExcelData[0].fail)
+            var b=angular.copy(vm.ExcelData[1].fail)
+           
+            var isValid = false;
+            
+               
+               if(a==="0" && b==="0"){
+                    isValid = false;
+               }else{
+                isValid = true; 
+               }
+         
+            return isValid;
+
+            var a=angular.copy(vm.ExcelData[1].fail)
+            angular.copy(vm.ExcelData[1].fail)=0
+            return true;
+        }*/
+
+        function uploadFile() {
+            console.log(dataFile);
+            $uibModalInstance.close(dataFile);
+        }
+
+        function closePopup() {
+            $uibModalInstance.dismiss();
+        }
+    }
+
+})();

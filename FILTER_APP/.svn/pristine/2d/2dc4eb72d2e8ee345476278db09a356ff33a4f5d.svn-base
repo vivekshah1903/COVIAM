@@ -1,0 +1,30 @@
+<footer class="footer">
+
+    <div class="row footBound">
+
+        <div class="col-lg-6 col-md-6 col-sm-6 text-color">
+            <span class="leftFoot"> Life's brighter under the Sun</span>
+
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 text-color">
+            <span class="rightFoot">
+                  <a class="text-color">Legal </a>
+                  <span class="text-color">|</span>
+            <a class="text-color">Privacy </a>
+            <span class="text-color">|</span>
+            <a class="text-color">Security</a>
+            </span>
+        </div>
+
+
+    </div>
+    <div class="row copyRtTxt ">
+
+        <div class="col-md-12 col-sm-12 col-xs-12 text-center copyRtTxt">© Sun Life Assurance Company of Canada. All rights reserved.</div>
+
+    </div>
+</footer>
+
+
+
+

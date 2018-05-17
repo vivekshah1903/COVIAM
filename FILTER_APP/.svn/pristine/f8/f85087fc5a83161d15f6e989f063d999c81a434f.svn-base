@@ -1,0 +1,425 @@
+(function() {
+    'use strict';
+
+    angular.module('app.transportData').controller('TransportDataCtrl', transportDataCtrl);
+
+    transportDataCtrl.$inject = ['$scope', '$uibModal', 'TransportDataService'];
+
+    //Controller implementation
+    function transportDataCtrl($scope, $uibModal, TransportDataService) {
+        var vm = this;
+        //  vm.Upload = Upload;
+        vm.uploadFile = uploadFile;
+        vm.canceluploadedFile = canceluploadedFile;
+        vm.dashDatePicker = dashDatePicker;
+        vm.validFromCheckGrid = validFromCheckGrid;
+        vm.validFromCheck = validFromCheck;
+        vm.reportData = reportData;
+        var d = new Date(); // today!
+        var x = 1095; // go back 3 years!
+        var c = d.setDate(d.getDate() - x);
+        vm.options = {
+            minDate: c
+
+
+        }
+
+        vm.validFrom = new Date();
+        vm.validTo = new Date();
+
+        function uploadFile(fileData) {
+            console.log(fileData);
+            var UserCreateModalInstance = $uibModal.open({
+                animation: true,
+                templateUrl: 'UX/app/transportData/partials/uploadData.html',
+                controller: 'UploadDataCtrl as uploadData',
+                backdrop: 'static',
+                resolve: {
+                    items: function() {
+                        return;
+                    }
+                }
+            });
+
+            UserCreateModalInstance.result.then(function(fileObject) {
+                console.log("fileObject", fileObject);
+                TransportDataService.transportData(fileObject);
+
+            }, function() {
+
+            });
+
+        }
+
+
+
+        function canceluploadedFile() {
+            $scope.filename = false;
+        }
+        reportData();
+        function reportData(dateFrom,dateTo) {
+
+            console.log(dateFrom);
+            console.log(dateTo);
+           
+            var obj = {
+                "fromDate": (dateFrom)?dateFrom:null,
+
+                "toDate": (dateTo)?dateTo:null
+            };
+
+
+            return TransportDataService.getReportData(obj).then(function(reprtdata) {
+               
+                 if (reprtdata.message == "No records found") {
+                    /* vm.filteredItems = [];
+                     $scope.gridOptions.data = [];*/
+                     return;
+                 } else {
+                     //Append serial numbers
+                    /* categoryData.forEach(function(row, index) {
+                         row['sNo'] = index + 1;
+                     });*/
+
+                     vm.reportDashboard.options.data = reprtdata;
+                     console.log("Data", reprtdata);
+                 }
+             }).finally(function() {
+                 vm.loading = false;
+             });
+        } //EOF-ReportData
+
+        function dashDatePicker(opened, value) {
+            var am = this;
+            if (value == 'to') {
+                am.to = !(am.opened);
+            }
+            if (value == 'from') {
+                am.from = !(am.opened);
+            }
+        }
+
+        function validFromCheckGrid(valueA, valueB) {
+            var days = (valueB - valueA) / (1000 * 60 * 60 * 24);
+            vm.dateError = false;
+            vm.dateErrorDays = false;
+            if (!valueA || !valueB) {
+                vm.dateError = false;
+                return;
+            }
+            if (valueA > valueB) { vm.dateError = true; } else if (days > 30) {
+                vm.dateErrorDays = true;
+            } else {
+                vm.dateError = false;
+                vm.dateErrorDays = false;
+            }
+        }
+
+        function validFromCheck(valueA, valueB) {
+            vm.dateError = false;
+            if (!valueA || !valueB) {
+                vm.dateError = false;
+                return;
+            }
+            (valueA >= valueB) ? vm.dateError = true: vm.dateError = false;
+
+
+        }
+        //Upload();
+        /*function Upload() {
+
+            var UserCreateModalInstance = $uibModal.open({
+                animation: true,
+                templateUrl: 'UX/app/transportData/partials/uploadData.html',
+                controller: 'UploadDataCtrl as uploadData',
+                backdrop: 'static',
+                resolve: {
+                    items: function() {
+                        return;
+                    }
+                }
+            });
+
+            UserCreateModalInstance.result.then(function(fileObject) {
+                console.log("fileObject", fileObject);
+                TransportDataService.transportData(fileObject);
+
+            }, function() {
+
+            });
+        }*/
+        vm.currentDashboard = {
+            options: {
+                data: vm.table,
+                cache: false,
+                height: 400,
+                striped: true,
+                pagination: true,
+                pageSize: 5,
+                pageList: [5, 10, 25, 50, 100, 200],
+                search: true,
+                showColumns: false,
+                showRefresh: false,
+                showExport: false,
+                minimumCountColumns: 2,
+                clickToSelect: false,
+                showToggle: false,
+                toolbar: "#toolbar",
+                maintainSelected: true,
+                columns: [
+                    [{
+                        field: 'state',
+                        checkbox: true,
+                        rowspan: 2,
+                        align: 'center',
+                        valign: 'middle'
+                    }, {
+                        title: 'File Name',
+                        field: 'Product',
+                        rowspan: 2,
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true,
+                        "formatter": wrapFormatter1
+
+                    }, {
+                        title: 'Roster Count Summary',
+                        colspan: 6,
+                        align: 'center'
+                    }, {
+                        title: 'Employee Count Summary',
+                        colspan: 6,
+                        align: 'center'
+                    }, {
+                        title: 'Uploaded by',
+                        field: 'uploadby',
+                        rowspan: 2,
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true,
+
+                    }, {
+                        title: 'Date',
+                        field: 'date',
+                        rowspan: 2,
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true,
+
+                    }, {
+                        title: 'Status',
+                        field: 'id',
+                        rowspan: 2,
+                        align: 'center',
+                        valign: 'middle',
+                        events: window.operateEvents = {
+                            'click .remove': function(e, value, row, index) {
+
+
+                            }
+                        },
+                        "formatter": operateFormatter
+
+                    }],
+                    [{
+                        field: 'total',
+                        title: 'Total',
+                        align: 'center'
+                    }, {
+                        field: 'total',
+                        title: 'Success',
+                        align: 'center'
+                    }, {
+                        field: 'total',
+                        title: 'Failed',
+                        align: 'center'
+
+                    }, {
+                        field: 'total',
+                        title: 'New',
+                        align: 'center'
+                    }, {
+                        field: 'total',
+                        title: 'Update',
+                        align: 'center',
+
+                    }, {
+                        field: 'total',
+                        title: 'Delete',
+                        align: 'center'
+
+                    }, {
+                        field: 'total',
+                        title: 'Total',
+                        align: 'center'
+                    }, {
+                        field: 'total',
+                        title: 'Success',
+                        align: 'center',
+                    }, {
+                        field: 'total',
+                        title: 'Failed',
+                        align: 'center'
+
+                    }, {
+                        field: 'total',
+                        title: 'New',
+                        align: 'center'
+                    }, {
+                        field: 'total',
+                        title: 'Update',
+                        align: 'center',
+                    }, {
+                        field: 'total',
+                        title: 'Delete',
+                        align: 'center'
+
+                    }]
+
+                ]
+
+            }
+        };
+
+        function operateFormatter(value, row, index) {
+            return [
+                '<a class="like" href="javascript:void(0)" class="pst-rel">',
+                '<i   class="glyphicon glyphicon-list-alt" style="margin-right: 10px;border: 1px solid;border-radius: 85%;padding: 5px;width: 30px;height: 30px;color: #1a1a35; display: inline;"></i>',
+
+                '</a> ',
+                '<a class="remove" href="javascript:void(0)" class="pst-rel">',
+                '<i  class="glyphicon glyphicon-pencil" style="margin-right: 10px;border: 1px solid;border-radius: 85%;padding: 5px;width: 30px;height: 30px;color: #1a1a35; display: inline;"></i>',
+
+                '</a>'
+            ].join('');
+        }
+        /*  
+
+          window.operateEvents['click .remove'] = (function(e, value, row, index) {
+              //some edit stuff
+              console.log("hello", row);
+          });
+
+          vm.deleteRow = function() {
+              var $table = $('#table');
+              if ($table.bootstrapTable('getSelections').length > 0) {
+                  var ids = $.map($table.bootstrapTable('getSelections'), function(row) {
+                      console.log(row);
+                  });
+              }
+          }
+
+          */
+        function wrapFormatter1(value, row, index) {
+            return '<a class="pst-rel">' + value +
+
+                '<span class="tooltiptext">' + row.OrderStatus + '</span>' + '</a>';
+        }
+
+        /*Report*/
+        vm.reportDashboard = {
+            options: {
+               // data: vm.table,
+                cache: false,
+                height: 400,
+                striped: true,
+                pagination: true,
+                pageSize: 5,
+                pageList: [5, 10, 25, 50, 100, 200],
+                search: true,
+                showColumns: false,
+                showRefresh: false,
+                showExport: false,
+                minimumCountColumns: 2,
+                clickToSelect: false,
+                showToggle: false,
+                toolbar: "#toolbar",
+                maintainSelected: true,
+                columns: [
+                    [{
+                        title: 'Travel Date',
+                        field: 'travelDate',
+                        rowspan: 2,
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true,
+                        "formatter": wrapFormatter1
+
+                    }, {
+                        title: 'Roster ID',
+                        field: 'rosterID',
+                        rowspan: 2,
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true,
+
+                    }, {
+                        title: 'Emp ID',
+                        field: 'empID',
+                        rowspan: 2,
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true,
+
+                    }, {
+                        title: 'Name',
+                        field: 'name',
+                        rowspan: 2,
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true,
+
+                    }, {
+                        title: 'Shift Time',
+                        field: 'shiftTime',
+                        rowspan: 2,
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true,
+
+                    }, {
+                        title: 'Confirmation',
+                        colspan: 2,
+                        align: 'center'
+                    }, {
+                        title: 'Cancellation',
+                        colspan: 4,
+                        align: 'center'
+                    }],
+                    [{
+                        field: 'confirmPickupTime',
+                        title: 'pickup Time',
+                        align: 'center'
+                    }, {
+                        field: 'confirmDropTime',
+                        title: 'Drop Time',
+                        align: 'center'
+                    }, {
+                        field: 'cancelPickupTime',
+                        title: 'Pick Time',
+                        align: 'center'
+
+                    }, {
+                        field: 'cancelPickupReason',
+                        title: 'Reason',
+                        align: 'center'
+                    }, {
+                        field: 'cancelDropTime',
+                        title: 'Drop Time',
+                        align: 'center',
+
+
+                    }, {
+                        field: 'cancelDropReason',
+                        title: 'Reason',
+                        align: 'center'
+
+                    }]
+
+                ]
+
+            }
+        };
+    }
+
+})();

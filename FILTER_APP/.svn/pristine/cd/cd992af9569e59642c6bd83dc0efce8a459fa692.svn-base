@@ -1,0 +1,686 @@
+(function() {
+    'use strict';
+
+    angular.module('app.transportData').controller('TransportDataCtrl', transportDataCtrl);
+
+    transportDataCtrl.$inject = ['$scope', '$uibModal', 'TransportDataService', '$timeout', 'utils', 'CONFIG'];
+
+    //Controller implementation
+    function transportDataCtrl($scope, $uibModal, TransportDataService, $timeout, utils, CONFIG) {
+        var vm = this;
+        //  vm.Upload = Upload;
+        vm.uploadFile = uploadFile;
+        vm.canceluploadedFile = canceluploadedFile;
+        vm.dashDatePicker = dashDatePicker;
+        vm.validFromCheckGrid = validFromCheckGrid;
+        vm.validFromCheck = validFromCheck;
+        vm.reportData = reportData;
+        vm.getRoasterSummary = getRoasterSummary;
+        vm.downloadExcel = downloadExcel;
+        vm.getEmployeeSummary= getEmployeeSummary;
+        vm.reportData = reportData;
+
+        var d = new Date();
+        var e = new Date(); // today!
+        var x = 1095; // go back 3 years!
+        var c = d.setDate(d.getDate() - x);
+        vm.options = {
+            minDate: c,
+            maxDate: e
+        }
+
+        vm.apisAlert = {
+                toggle: false,
+                message: "",
+                type: "ERROR"
+            }
+            //Precalling Function
+        getRoasterSummary();
+        //getEmployeeSummary();
+       // reportData();
+        // To Set By Default today's date
+        vm.validFrom = new Date();
+        vm.validTo = new Date();
+        //Function to validate the file to be uploaded
+        function uploadFile(fileData) {
+
+            var filename = (fileData.name).slice(0, -5);
+
+            var regEx = /[0-9]{4}(0[1-9]|1[0-2])(0[1-9]|[1-2][0-9]|3[0-1])/;
+            if (regEx.test(filename) == false) {
+
+                vm.checkName = true;
+            } else {
+
+                var fileObj = {
+                    "fileName": fileData
+                }
+                return TransportDataService.sendFileForValidate(fileObj).then(function(reprtdata) {
+
+                    if (reprtdata.data.result == "FAILURE") {
+                        vm.apisAlert = {
+                            toggle: true,
+                            message: reprtdata.data.message || 'Internal Server Error',
+                            type: "ERROR"
+                        };
+                        $timeout(function() {
+                            vm.apisAlert.toggle = false;
+                        }, 5000);
+
+                    } else if (reprtdata.data.result == "SUCCESS") {
+                        canceluploadedFile();
+                        var orderViewData = [];
+                        orderViewData.push(reprtdata.data);
+
+
+                        var UserCreateModalInstance = $uibModal.open({
+                            animation: true,
+                            templateUrl: 'UX/app/transportData/partials/uploadData.html',
+                            controller: 'UploadDataCtrl as uploadData',
+                            backdrop: 'static',
+                            resolve: {
+                                tableData: function() {
+                                    return orderViewData;
+                                },
+                                dataFile: function() {
+                                    return fileObj;
+                                }
+                            }
+                        });
+
+                        UserCreateModalInstance.result.then(function(fileObject) {
+
+                            var obj = {
+                                "fileName": fileObject.fileName
+                            }
+                            return TransportDataService.uploadDataFile(obj).then(function(data) {
+
+                                if (data.data.result == "SUCCESS") {
+                                    getRoasterSummary();
+                                    vm.apisAlert = {
+                                        toggle: true,
+                                        message: data.data.message || 'Internal Server Error',
+                                        type: "SUCCESS"
+                                    };
+                                    $timeout(function() {
+                                        vm.apisAlert.toggle = false;
+                                    }, 5000);
+                                }
+                            });
+
+                        }, function() {
+
+                        });
+                    }
+                });
+            }
+
+
+
+            /* */
+
+        }
+
+        //function to get roster table data
+        function getRoasterSummary() {
+            return TransportDataService.getRosterSummaryData().then(function(summarydata) {
+                //vm.lastUpdate = summarydata.previousUploadedRosterDate;
+                vm.lastuploadeddate = summarydata.lastUpdatedDate;
+                vm.lastuploadeddate = utils.getinDateFormat(vm.lastuploadeddate, CONFIG.SYSTEM_DATE_FORMAT.DATE_FORMAT);
+                vm.currentDashboard.options.data = summarydata.transportRosterSummary;
+            }).finally(function() {
+
+            });
+        }
+        //function to download excel
+        function downloadExcel(tableId) {
+            var exportHref = TransportDataService.tableToExcel(tableId, 'sheet name');
+            $timeout(function() { location.href = exportHref; }, 100);
+        }
+        //function to get employee summary data
+        function getEmployeeSummary() {
+            return TransportDataService.getEmployeeSummaryData().then(function(employeeSummarydata) {
+
+                vm.employeeRosterSummary.options.data = employeeSummarydata.empTransportRosters
+
+
+            }).finally(function() {
+
+            });
+        }
+
+
+
+        function canceluploadedFile() {
+            $scope.filename = false;
+            vm.checkName = false;
+        }
+
+        //function to get report data for table
+        function reportData(dateFrom, dateTo) {
+
+            vm.datefrom = (dateFrom) ? dateFrom : new Date();
+            vm.dateTo = (dateTo) ? dateTo : new Date();
+            var obj = {
+                "fromDate": (dateFrom) ? dateFrom : null,
+
+                "toDate": (dateTo) ? dateTo : null
+            };
+
+
+            return TransportDataService.getReportData(obj).then(function(reprtdata) {
+
+                if (reprtdata.message == "No records found") {
+
+                    return;
+                } else {
+
+
+                    vm.reportDashboard.options.data = reprtdata.empTransportTxnDto;
+
+
+
+
+                }
+            }).finally(function() {
+
+            });
+        } //EOF-ReportData
+
+        function dashDatePicker(opened, value) {
+            var am = this;
+            if (value == 'to') {
+                am.to = !(am.opened);
+            }
+            if (value == 'from') {
+                am.from = !(am.opened);
+            }
+        }
+
+        function validFromCheckGrid(valueA, valueB) {
+            var days = (valueB - valueA) / (1000 * 60 * 60 * 24);
+            vm.dateError = false;
+            vm.dateErrorDays = false;
+            if (!valueA || !valueB) {
+                vm.dateError = false;
+                return;
+            }
+            if (valueA > valueB) { vm.dateError = true; } else if (days > 30) {
+                vm.dateErrorDays = true;
+            } else {
+                vm.dateError = false;
+                vm.dateErrorDays = false;
+            }
+        }
+
+        function validFromCheck(valueA, valueB) {
+            vm.dateError = false;
+            if (!valueA || !valueB) {
+                vm.dateError = false;
+                return;
+            }
+            (valueA >= valueB) ? vm.dateError = true: vm.dateError = false;
+        }
+
+
+        vm.currentDashboard = {
+            options: {
+                cache: false,
+                //height: 600,
+                striped: true,
+                pagination: true,
+                // sidePagination: 'server',
+                pageSize: 10,
+                pageList: [5, 10, 25, 50, 100, 200],
+                search: true,
+                showColumns: false,
+                showRefresh: false,
+                showExport: false,
+
+                minimumCountColumns: 2,
+                clickToSelect: false,
+                showToggle: false,
+                toolbar: "#toolbar",
+                maintainSelected: true,
+                columns: [
+                    [{
+                        field: 'state',
+                        checkbox: true,
+                        rowspan: 2,
+                        align: 'center',
+                        valign: 'middle'
+                    }, {
+                        title: 'File Name',
+                        field: 'fileName',
+                        rowspan: 2,
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true,
+                        events: window.operateEvents = {
+                            'click .fileUpload': function(e, value, row, index) {}
+                        },
+                        formatter: uploadRosterFormatter
+
+                    }, {
+                        title: 'Roster Count Summary',
+                        colspan: 6,
+                        valign: 'middle',
+                        align: 'center'
+                    }, {
+                        title: 'Employee Count Summary',
+                        colspan: 6,
+                        valign: 'middle',
+                        align: 'center'
+                    }, {
+                        title: 'Uploaded by',
+                        field: 'uploadedBy',
+                        rowspan: 2,
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true,
+
+                    }, {
+                        title: 'Date',
+                        field: 'uploadedDateTime',
+                        rowspan: 2,
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true,
+
+                    }, {
+                        title: 'Status',
+                        field: 'status',
+                        align: 'center',
+                        rowspan: 2,
+                        valign: 'middle',
+                        formatter: operateFormatter
+
+                    }],
+                    [{
+                        field: 'rosterCount.total',
+                        title: 'Total',
+                        valign: 'middle',
+                        align: 'center'
+                    }, {
+                        field: 'rosterCount.success',
+                        title: 'Success',
+                        valign: 'middle',
+                        align: 'center'
+                    }, {
+                        field: 'rosterCount.failed',
+                        title: 'Failed',
+                        valign: 'middle',
+                        align: 'center',
+                        formatter:failedRosterFormatter
+
+                    }, {
+                        field: 'rosterCount.newRecord',
+                        title: 'New',
+                        valign: 'middle',
+                        align: 'center'
+                    }, {
+                        field: 'rosterCount.updateRecord',
+                        title: 'Update',
+                        valign: 'middle',
+                        align: 'center',
+
+                    }, {
+                        field: 'rosterCount.deleteRecord',
+                        title: 'Delete',
+                        valign: 'middle',
+                        align: 'center'
+
+                    }, {
+                        field: 'employeeCount.total',
+                        title: 'Total',
+                        valign: 'middle',
+                        align: 'center'
+                    }, {
+                        field: 'employeeCount.success',
+                        title: 'Success',
+                        valign: 'middle',
+                        align: 'center',
+                    }, {
+                        field: 'employeeCount.failed',
+                        title: 'Failed',
+                        valign: 'middle',
+                        align: 'center',
+                        formatter:failedEmployeeFormatter
+
+                    }, {
+                        field: 'employeeCount.newRecord',
+                        title: 'New',
+                        valign: 'middle',
+                        align: 'center'
+                    }, {
+                        field: 'employeeCount.updateRecord',
+                        title: 'Update',
+                        valign: 'middle',
+                        align: 'center',
+                    }, {
+                        field: 'employeeCount.deleteRecord',
+                        title: 'Delete',
+                        valign: 'middle',
+                        align: 'center'
+
+                    }]
+
+                ]
+
+            }
+        };
+
+        function operateFormatter(value, row, index) {
+
+            if (row.status == "FAIL") {
+                return [
+                    '<a class="like pst-rel" href="javascript:void(0)">',
+                    '<i   class="glyphicon glyphicon-remove"></i>',
+                    '<span class="tooltiptext">Failed</span>',
+                    '</a> '
+
+                ].join('');
+            } else if (row.status == "SUCCESS") {
+                return [
+                    '<a class="like pst-rel" href="javascript:void(0)" >',
+                    '<i   class="glyphicon glyphicon-ok"></i>',
+                    '<span class="tooltiptext">Succes</span>',
+                    '</a> '
+
+                ].join('');
+            } else if (row.status == "IN_PROGRESS") {
+                return [
+                    '<a class="like pst-rel" href="javascript:void(0)">',
+                    '<i   class="glyphicon glyphicon-hourglass"></i>',
+                    '<span class="tooltiptext">In progress</span>',
+                    '</a> '
+
+                ].join('');
+            }
+        }
+
+
+        window.operateEvents['click .fileUpload'] = (function(e, value, row, index) {
+            //some edit stuff
+
+            var fileDownloadId = row.fileId;
+            var fileDownloadName = row.fileName;
+            var name="navneet.pdf";
+            return TransportDataService.downLoadFile(fileDownloadId, fileDownloadName).then(function(data) {
+                console.log(data.length);
+                var blob = new Blob([data], { type: 'application/octet-stream' });
+                saveAs(blob, name);
+            }).finally(function() {
+
+            });
+        });
+
+      
+
+
+        vm.deleteRow = function() {
+            var $table = $('#table');
+            if ($table.bootstrapTable('getSelections').length > 0) {
+                var ids = $.map($table.bootstrapTable('getSelections'), function(row) {
+
+                });
+            }
+        }
+
+        function uploadRosterFormatter(value, row, index) {
+            return '<a class=" fileUpload pst-rel">' + value + '</a>';
+        }
+         function failedRosterFormatter(value, row, index) {
+          
+           if (row.rosterCount.failed > 0) {
+                return '<a class="red-text">' + value + '</a>';
+            } else {
+                return value ;
+            }
+        }
+        function failedEmployeeFormatter(value, row, index) {
+          
+           if (row.employeeCount.failed > 0) {
+                return '<a class="red-text">' + value + '</a>';
+            } else {
+                return value ;
+            }
+        }
+
+        /*Employee Roster Summary*/
+        vm.employeeRosterSummary = {
+            options: {
+
+                cache: false,
+                // height: 600,
+                striped: true,
+                pagination: true,
+                pageSize: 10,
+                pageList: [5, 10, 25, 50, 100, 200],
+                search: true,
+                filterControl: true,
+                minimumCountColumns: 2,
+                toolbar: "#toolbar",
+                maintainSelected: true,
+                columns: [{
+                        title: 'Emp ID',
+                        field: 'employeeId',
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true
+                    }, {
+                        title: 'Name',
+                        field: 'employeeName',
+                        filterControl: 'select',
+                        align: 'center',
+                        valign: 'middle'
+
+
+                    }, {
+                        title: 'Roster ID',
+                        field: 'transportRosterDto.rosterId',
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true,
+                        "formatter": empWrapFormatter
+
+                    }, {
+                        title: 'Pickup Time',
+                        field: 'pickupTime',
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true
+
+                    }, {
+                        title: 'Contact No',
+                        field: 'empContactNumPri',
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true
+
+                    }, {
+                        title: 'Office Location',
+                        field: 'officeLocation',
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true
+
+                    }, {
+                        title: 'Pickup Location',
+                        field: 'pickupPoint',
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true
+
+                    }, {
+                        title: 'Shift Time',
+                        field: 'shifTime',
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true
+
+                    }
+
+
+                ]
+
+            }
+        };
+
+        function empWrapFormatter(value, row, index) {
+
+            var rosterId = ( row.transportRosterDto.rosterId)?row.transportRosterDto.rosterId:'';
+            var shiftName = (row.transportRosterDto.shiftName)?row.transportRosterDto.shiftName: '';
+            var numOfEmployees = (row.transportRosterDto.numOfEmployees)?row.transportRosterDto.numOfEmployees: '';
+            var vendorName = (row.transportRosterDto.vendorName)?row.transportRosterDto.vendorName: '';
+            var cabType = (row.transportRosterDto.cabType)?row.transportRosterDto.cabType:'';
+            var transHelplineNumPri = (row.transportRosterDto.transHelplineNumPri)?row.transportRosterDto.transHelplineNumPri :'';
+            return '<a class="pst-rel roastdes">' + value +
+
+                '<span class="tooltiptext">' + '<h5>' + '<span class="tooltip-txt loginHead">' + 'Roaster Details For:' + '</span>' + rosterId + '</h5>' + '<div class="half-part">' + '<span class="tooltip-txt">' + 'shift:' + '</span>' + shiftName + '</div>' + '<div class="half-part">' + '<span class="tooltip-txt">' + 'No of Employees:' + '</span>' + numOfEmployees + '</div>' + '<div class="half-part">' + '<span class="tooltip-txt">' + 'Vendor:' + '</span>' + vendorName + '</div>' + '<div class="half-part">' + '<span class="tooltip-txt">' + 'Cab Type:' + '</span>' + cabType + '</div>' + '<div class="full-part">' + '<span class="tooltip-txt">' + 'Phone Number:' + '</span>' + row.transportRosterDto.transHelplineNumPri + '</div>' + '</span>' + '</a>';
+        }
+        /*Report*/
+        vm.reportDashboard = {
+            options: {
+
+                cache: false,
+                //height: 600,
+                striped: true,
+                pagination: true,
+                pageSize: 5,
+                pageList: [5, 10, 25, 50, 100, 200],
+                search: true,
+                showColumns: false,
+                showRefresh: true,
+                showExport: true,
+                minimumCountColumns: 2,
+                clickToSelect: true,
+                showToggle: false,
+                toolbar: "#toolbar1",
+                exportDataType:'all',
+                exportTypes:['excel'],
+                
+                exportOptions:{"fileName": "confirmation" },
+                //maintainSelected: true,
+                columns: [
+                    [{
+                        title: 'Travel Date',
+                        field: 'travelDate',
+                        rowspan: 2,
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true,
+                        formatter: travelDateFormatter
+
+
+                    }, {
+                        title: 'Roster ID',
+                        field: 'rosterId',
+                        rowspan: 2,
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true,
+                        "formatter": rosterWrapFormatter
+
+                    }, {
+                        title: 'Emp ID',
+                        field: 'employeeId',
+                        rowspan: 2,
+                        titleTooltip: "employeeId",
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true,
+
+                    }, {
+                        title: 'Name',
+                        field: 'employeeName',
+                        rowspan: 2,
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true,
+
+                    }, {
+                        title: 'Shift Time',
+                        field: 'shifTime',
+                        rowspan: 2,
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true,
+
+                    }, {
+                        title: 'Confirmation',
+                        colspan: 2,
+                        align: 'center'
+                    }, {
+                        title: 'Cancellation Reason',
+                        field: 'cancelReason',
+                        rowspan: 2,
+                        align: 'center',
+                        valign: 'middle',
+
+                    }],
+                    [{
+                        field: 'pickupConfirmRecdDt',
+                        title: 'Pickup Time',
+                        align: 'center',
+                        formatter: confirmPickoperateFormatter
+                    }, {
+                        field: 'dropConfirmRecdDt',
+                        title: 'Drop Time',
+                        align: 'center',
+                        formatter: confirmDropoperateFormatter
+                    }]
+
+                ]
+
+            }
+        };
+
+        function confirmPickoperateFormatter(value, row, index) {
+
+            if (row.pickCancelReason !== null) {
+                return [
+                    '<a class="like pst-rel" href="javascript:void(0)">',
+                    '<i   class="glyphicon glyphicon-remove"></i>',
+                    '<span class="tooltiptext">Failed</span>',
+                    '</a> '
+
+                ].join('');
+            } else if (row.pickCancelReason == null) {
+                vm.time = row.pickupConfirmRecdDt;
+                vm.time = utils.getinDateFormat(vm.time, CONFIG.SYSTEM_DATE_FORMAT.TIME_FORMAT);
+                return vm.time;
+                //return row.pickupConfirmRecdDt;
+            }
+        }
+
+        function confirmDropoperateFormatter(value, row, index) {
+            if (row.dropCancelReason !== null) {
+                return [
+                    '<a class="like pst-rel" href="javascript:void(0)">',
+                    '<i   class="glyphicon glyphicon-remove"></i>',
+                    '<span class="tooltiptext">Failed</span>',
+                    '</a> '
+
+                ].join('');
+            } else if (row.pickCancelReason == null) {
+                vm.time = row.dropConfirmRecdDt;
+                vm.time = utils.getinDateFormat(vm.time, CONFIG.SYSTEM_DATE_FORMAT.TIME_FORMAT);
+                return vm.time;
+                //return row.dropConfirmRecdDt;
+            }
+        }
+
+        function travelDateFormatter(value, row, index) {
+            vm.date = row.travelDate;
+            vm.date = utils.getinDateFormat(vm.date, CONFIG.SYSTEM_DATE_FORMAT.DATE_FORMAT);
+            return vm.date;
+        }
+
+        function rosterWrapFormatter(value, row, index) {
+            return '<a class="pst-rel">' + value + '</a>';
+        }
+        /*'<span class="tooltiptext">' + row.rosterId + '</span>' +*/
+    }
+
+})();

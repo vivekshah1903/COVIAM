@@ -1,0 +1,184 @@
+
+<div class="row" >
+    <div class="col-md-12 top-heading"><h2>Events</h2></div>
+</div>
+
+ <div class="row">
+        
+        <div class=" col-lg-offset-1 col-lg-10">
+            <h3 class="loginHead">Create Event
+            <a class="btn pull-right in-block"  ui-sref="eventPage"> < Back </a>
+            </h3>      
+        </div>
+ </div>
+<div class="event">
+<div>
+ <form name="dashForm">
+ <div class="col-lg-offset-1 col-lg-10">
+ <div class="m-t-15">
+            <input class="bottomLine air-input" type="text" ng-model="event.data.event_name" placeholder="Enter event name">
+           </div>
+           <div class="m-t-15">
+                <textarea rows="4" cols="50" placeholder="Enter event description" ng-model="event.data.event_description"></textarea>
+            </div>
+            <div class="m-t-15">
+            <div>
+                <label class="drk-green"> Event date and time</label>
+            </div>
+             <div class="row">
+                   <div  class="col-lg-2" ng-class="{'has-error':dashForm.validFrom.$touched && dashForm.validFrom.$invalid}">
+                     <div class="space-20 pst-rel date-pick-box">
+                        <input type="text" class="date-input m-t-15" onkeydown="return false" required ng-model="event.data.validFrom" name="validFrom" is-open="event.from" uib-datepicker-popup="dd-MM-yyyy" datepicker-options="event.options" onkeydown="return false" ng-model-options="{timezone: 'UTC'}" ng-change="event.validFromCheckGrid(event.validFrom,event.validTo)"><span class="input-group-btn">
+
+                                                        <button type="button" class="btn btn-default calendr-btn" ng-click="event.dashDatePicker(event.from,'from')">
+                                                            <i class="glyphicon glyphicon-calendar"></i>
+                                                        </button>
+                                                        </span>
+                      
+                    </div>
+                </div>
+                 <div class="col-lg-2" uib-timepicker ng-model="event.data.timeFrom"></div>
+                 <div>
+                 <label class="col-lg-1 m-t-25"> to </label>
+                    </div>
+                <div  class="col-lg-2" ng-class="{'has-error':dashForm.validFrom.$touched && dashForm.validFrom.$invalid}">
+
+                    <div class="space-20 pst-rel date-pick-box">
+                        <input type="text" required class="date-input m-t-15" ng-model="event.data.validTo" name="validTo" is-open="event.to" uib-datepicker-popup="dd-MM-yyyy" onkeydown="return false" datepicker-options="event.options" ng-model-options="{timezone: 'UTC'}" ng-change="event.validFromCheckGrid(event.validFrom,event.validTo)"><span class="input-group-btn">
+                        <button type="button" class="btn btn-default calendr-btn" ng-click="event.dashDatePicker(event.to,'to')">
+                        <i class="glyphicon glyphicon-calendar"></i>
+                        </button>
+                         </span>
+                    </div>
+                </div>
+
+                 <div class="col-lg-2" uib-timepicker ng-model="event.data.timeTo"></div>
+
+                 </div>
+            </div>
+            
+
+
+<div class="row">
+            <div class="col-lg-4 m-t-15">
+                    <label class="drk-green small-heading"> Business location</label>                   
+            <div class="col-lg-6 location pad-0">
+            <div class="selectionBoxe">
+                <!-- <div class="location">
+                      <label class="chkLblClr col-lg-12"> All <input class="locaCheck pull-right" type="checkbox"/></label>
+                      <label class="chkLblClr col-lg-12"> ASCI <input class="locaCheck pull-right" type="checkbox" /></label>
+                      <label class="chkLblClr col-lg-12"> ASCP <input class="locaCheck pull-right" type="checkbox" /></label>
+                      <label class="chkLblClr col-lg-12"> Indore <input class="locaCheck pull-right" type="checkbox" /></label>
+                </div> -->
+                 <span ng-repeat="category in categories">
+                     <!--  <label class="checkbox chkLblClr col-lg-12"  for="{{category.name}}">
+                        <input type="checkbox" class="locaCheck pull-right" ng-model="event.data.selection.names[category.name]" name="group" id="{{category.name}}" />
+                        {{category.name}} 
+                      </label> -->
+                       <label class="chkLblClr col-lg-12" for="{{category.name}}">
+                       <input class="locaCheck pull-right" type="checkbox" ng-model="event.data.selection.names[category.name]" name="group" id="{{category.name}}"/>
+                        {{category.name}} 
+                        </label>
+                </span>
+          </div>
+          </div>
+          </div>
+         
+            <div class="col-lg-4 m-t-15">
+                    <label class="drk-green small-heading"> Venue</label>
+                   <!-- 
+                     <div class="radio-primary m-r-50">
+                          <input type="radio" name="optradio" ng-model="event.data.internal">
+                          <span>Internal</span>
+                     </div>
+                    <div class="radio-primary">
+                          <input type="radio" name="optradio" ng-model="event.data.external"><span>External</span>
+                    </div> -->
+                    <div class="radio-primary m-r-50">
+                    <label data-ng-repeat="choice in question.choices">
+                      <input type="radio" name="response" ng-model="event.data.choice.text"  data-ng-value="true" />
+                      {{choice.text}}
+                    </label>
+                    </div>
+            </div>
+            <div class="col-lg-4 m-t-15">
+                    <input class="bottomLine air-input" type="text" ng-model="event.data.venue_name" placeholder="Enter venue name">
+            </div>
+</div>
+
+
+<div class="row">
+    
+        <div class="col-lg-2">
+                    <label class="drk-green" for="sel1"> Organized by</label>
+                     <select class="form-control" id="sel1" ng-model="event.data.organizedBy">
+                        <option>Select Organizer</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                      </select>
+
+        </div>
+         <div class="col-lg-2">
+
+         </div>
+
+            <div class="col-lg-2">
+                    <label class="drk-green" for="sel1"> Associated Album</label>
+                    <select class="form-control" id="sel1" ng-model="event.data.associated">
+                        <option>Select Album</option>
+                        <option>India</option>
+                        <option>Canada</option>
+                      </select>
+            </div>
+</div>
+    <div class="m-t-15">
+            <div>
+                <label class="drk-green"> Publish date</label>
+             </div>
+             <div ng-class="{'has-error':dashForm.validFrom.$touched && dashForm.validFrom.$invalid}">
+                     <div class="pst-rel date-pick-box">
+                        <input type="text" class="date-input m-t-15" onkeydown="return false" required ng-model="event.data.validFrom1" name="validFrom" is-open="event.from1" uib-datepicker-popup="dd-MM-yyyy" datepicker-options="event.options" onkeydown="return false" ng-model-options="{timezone: 'UTC'}" ng-change="event.validFromCheckGrid(event.validFrom,event.validTo)"><span class="input-group-btn">
+
+                    <button type="button" class="btn btn-default calendr-btn" ng-click="event.openDatePicker(event.from1,'from1')">
+                    <i class="glyphicon glyphicon-calendar"></i>
+                                                        </button>
+                                                        </span>
+                      
+                    </div> 
+                </div>
+    </div>
+<br>
+<br>
+<div class="row pad-5 m-t-15">
+          <button type="button" class="btn btn-default mdlBtndark pad-all-85 m-r-20" data-toggle="modal" data-target="#myModal"><span>Create event</span></button>
+          <button type="button" class="btn btn-default mdlLightbtn pad-all-100"><span>Cancel</span></button>    
+</div>
+
+    </div>
+</form>
+
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content mdText">
+        <div class="modal-header cusMdlbott">
+          <!--<button type="button" class="close" data-dismiss="modal">&times;</button>-->
+          <h4 class="modal-title udrTit">Create Event</h4>  
+        </div>
+        <div class="modal-body">
+          <p>The event is created and will become active on the published date.</p>
+        </div>
+        <div class="modal-footer cusMdltop">
+          <div class="pull-left">
+          <button type="button" class="btn btn-default mdlBtndark" ng-click="event.modalOk(event.data)"><span>Ok</span></button>
+          <button type="button" class="btn btn-default mdlLightbtn" data-dismiss="modal"><span>Cancel</span></button>
+          </div>
+        </div>
+      </div>    
+      
+    </div>
+  </div>
+</div>
+</div>

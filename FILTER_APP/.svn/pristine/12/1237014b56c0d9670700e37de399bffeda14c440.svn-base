@@ -1,0 +1,220 @@
+body{
+    background-color:white;
+}
+.wrapper {	
+	margin-top: 80px;
+  margin-bottom: 80px;
+}
+.m-t-100{margin-top:100px;}
+.m-t-15{margin-top:15px;}
+.login-name{color: white; overflow:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis; width:100px;display: inline-block;}
+div.bar {
+        margin-right: 2px;
+        margin-top: 10%;
+        display: inline-block;
+        width: 30px;
+        height: 88px;
+        background-color: #14e8e8;
+    }
+    /* Login Page */
+    
+.form-signin {
+  max-width: 380px;
+  padding: 15px 35px 45px;
+  margin: 0 auto;
+  background-color: #fff;
+  border: 1px solid rgba(0,0,0,0.1);  
+}
+  .form-signin-heading,
+	.checkbox {
+	  margin-bottom: 30px;
+	}
+.form-body{
+    background:#fff;
+    padding:20px;
+}
+.login-form{
+    background:rgba(255,255,255,0.8);
+	padding:20px;
+	border-top:3px solid#3e4043;
+}
+.innter-form{
+	padding-top:20px;
+}
+.final-login li{
+	width:50%;
+}
+
+.nav-tabs {
+    border-bottom: none !important;
+}
+
+.nav-tabs>li{
+	color:#222 !important;
+}
+.navbar-inverse .navbar-nav>li>a{cursor:pointer;}
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus {
+    color: #fff;
+    background-color: #284897;
+        cursor: pointer;
+    border: none !important;
+    border-bottom-color: transparent;
+	border-radius:none !important;
+}
+.nav-tabs>li>a {
+    margin-right: 2px;
+    line-height: 1.4;
+    border: none !important;
+    border-radius:none !important;
+	text-transform:uppercase;
+	font-size:16px;
+    cursor:pointer;
+}
+
+
+.sa-innate-form input[type=text], input[type=password], input[type=file], textarea, select, email{
+    font-size:13px;
+	padding:10px;
+	border:1px solid#ccc;
+	outline:none;
+	width:100%;
+	margin:8px 0;
+	
+}
+.sa-innate-form input[type=submit]{
+    border:1px solid#284897;
+	background:#284897;
+	color:#fff;
+	padding:10px 25px;
+	font-size:14px;
+	margin-top:5px;
+	}
+	.sa-innate-form input[type=submit]:hover{
+	border:1px solid#284897;
+	background:#284897;
+	color:#fff;
+	}
+	
+	.sa-innate-form button{
+	border:1px solid#284897;
+	background:#284897;
+	color:#fff;
+	padding:10px 25px;
+	font-size:14px;
+	margin-top:5px;
+	}
+	.sa-innate-form button:hover{
+	border:1px solid#284897;
+	background:#284897;
+	color:#fff;
+	}
+    .sa-innate-form p{
+        font-size:13px;
+        padding-top:10px;
+    }
+
+.calendr-btn {
+       left: 22%;
+    padding: 4px 14px;
+    margin-top: -29px;
+    font-size: 13px;
+    background: #6b7787;
+    color: #fff;
+}
+/*header css*/
+  .sunLogo{
+     width:180px;
+    }
+
+
+    /*navbar css*/
+    .navbar-fixed-top {
+    top: 75px;
+    border-width: 0 0 1px;
+}
+.uploadButton{
+
+            background-color: #003946;
+            color: #fff;
+            height: 30px;
+            width: 80px;
+
+}
+.cancel{
+        background-color: darkgrey;
+        color: #fff;
+        height: 30px;
+        width: 80px;
+
+}
+/*Tab css*/
+#exTab1 .tab-content {
+  color : white;
+  background-color: #428bca;
+  padding : 5px 15px;
+}
+
+#exTab2 h3 {
+  color : white;
+  background-color: #428bca;
+  padding : 5px 15px;
+}
+
+/* remove border radius for the tab */
+
+#exTab1 .nav-pills > li > a {
+  border-radius: 0;
+}
+
+/* change border radius for the tab , apply corners on top*/
+
+#exTab3 .nav-pills > li > a {
+  border-radius: 4px 4px 0 0 ;
+}
+
+#exTab3 .tab-content {
+  color : white;
+  background-color: #428bca;
+  padding : 5px 15px;
+}
+.nodatatxt {
+    position: absolute;
+    top: 80px;
+    opacity: 0.25;
+    font-size: 1.5em;
+    width: 100%;
+    text-align: center;
+    z-index: 999;
+
+}
+    .lwDiv{
+padding-top:60px;
+
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #003946;
+    border-color: #003946;
+}
+a{
+color:#003946;
+}
+.meddiv{
+padding:50px;
+}
+.lgbtn {
+
+width:100%;
+}
+.loginHead {
+	border-bottom: 2px solid #ffb100;
+	padding-bottom: 10px;
+}
+
+.loignCre {
+	background-color: rgba(201, 212, 222, 0.35);
+
+}

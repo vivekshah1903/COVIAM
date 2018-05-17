@@ -1,0 +1,50 @@
+angular.module('app').constant('APIS', {
+    LOGIN: {
+        URL: 'api/login',
+        METHOD: "POST"
+    },
+    LOGOUT: {
+        URL: 'logout',
+        METHOD: "GET"
+    },
+    GENERATE_REPORT_DATA: {
+        URL: 'api/transport/report/confirmation',
+        METHOD: "POST"
+    },
+    FILE_VALIDATE_API: {
+        URL: 'api/transport/rostervalidation',
+        METHOD: "POST"
+    },
+    GET_ROSTER_SUMMARY_DATA: {
+        URL: 'api/transport/rostersummary',
+        METHOD: "GET",
+        TEMPURL: 'api/transport/rostersummary'
+    },
+    UPLOAD_VALIDATED_FILE: {
+        URL: 'api/transport/publishroster',
+        METHOD: "POST"
+    },
+    GET_EMPLOYEE_SUMMARY_DATA: {
+        URL: 'api/transport/currentrosterdetails',
+        METHOD: "GET",
+        TEMPURL: 'api/transport/currentrosterdetails'
+    },
+
+    GET_EMPLOYEE_DETAILS_DATA: {
+        URL: 'api/employee/search/all',
+        METHOD: "POST",
+        //TEMPURL: 'api/employee/search/all'
+    },
+    UPLOAD_EMPLOYEEDATA_FILE: {
+        /*URL: 'api/transport/publishroster',
+        METHOD: "POST"*/
+    },
+
+
+
+
+
+
+
+
+});

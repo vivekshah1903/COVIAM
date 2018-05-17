@@ -1,0 +1,36 @@
+(function() {
+'use strict';
+
+angular
+    .module('app.common')
+    .factory(
+        "ModalService",
+        function($uibModal) {
+            return {
+                openModal: function(templateUrl, controller, config) {
+                    return $uibModal
+                        .open({
+                            template: "<div class=\"modal-header\" style=\"padding:9px 15px;border-bottom:1px solid #eee;background-color: #f3f1f2;color:#fff\">" +
+                             "   <div class=\"table-header\">" + 
+                             "   <button aria-hidden=\"true\" data-dismiss=\"modal\"  style=\"color:#fff; opacity: 1;\" class=\"close\"  type=\"button\"  ng-click=\"cancel()\">" + 
+                             "   <span title=\"close\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></span>\n" + 
+                             "   </button>" + "<strong>" + (config.modalTitle || "Modal Title") + "</strong>" + 
+                             " </div>" + "</div>" + "<div class=\"modal-body\" style=\"padding:9px 15px;\"ng-include=\"'" + templateUrl + "'\"></div>",
+
+                            controller: controller,
+                            size: config.size,
+
+                            resolve: {
+                                data: function() {
+                                    return config.data;
+                                }
+                            },
+                            backdrop: 'static'
+                               
+                        });
+                }
+            }
+        });
+})();
+
+               

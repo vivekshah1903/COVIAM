@@ -1,0 +1,89 @@
+/*****************
+@Author:GuruPrasad
+******************/
+(function() {
+    'use strict';
+    //Data Manager Service: Do Rest call
+    angular.module('app.common').factory('utils', utils);
+    //Service injection
+    utils.$inject = ['$filter','CONFIG'];
+    //Controller implementation
+    function utils($filter, CONFIG) {
+        
+            //Binding 	
+        return {
+            getinDateFormat: getinDateFormat,
+            upperCaseFirstLetter: upperCaseFirstLetter,
+            detectIEBrowser: detectIEBrowser,
+            generatePdf: generatePdf,
+            addSpaces: addSpaces,
+            getExporterPdfHeader: getExporterPdfHeader
+        };
+
+
+        /**
+         * [getinDateFormat description: Filter function used to covert date]
+         * @param  {[Date]} convertDate [description: The date that need to change]
+         * @param  {[String]} type [description: The resultant format type of the given date]
+         * @return {[String]}           [description: Converted date string]
+         */
+        function getinDateFormat(convertDate, type) {
+            if ((type === undefined) || (type === null)) {
+                type = "dd-MM-yyyy";
+            }
+            convertDate = $filter('date')(convertDate, type);
+            return convertDate;
+        } //EOF 
+
+        function upperCaseFirstLetter(input) {
+            return input.charAt(0).toUpperCase() + input.slice(1);
+        } //EOF
+
+        function detectIEBrowser() {
+            var ua = window.navigator.userAgent;
+            var msie = ua.indexOf("MSIE ");
+            if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)) // If Internet Explorer, return version number
+            {
+                return true;
+            } else // If another browser, return 0
+            {
+                return false;
+            }
+        }
+
+        function generatePdf(docDefinition, fileName) {
+            if (detectIEBrowser()) {
+                pdfMake.createPdf(docDefinition).download(fileName);
+            } else {
+                pdfMake.createPdf(docDefinition).open()
+            }
+        } //EOF
+
+        function addSpaces(str) {
+            if (!str) return str;
+            return str.replace(/([^ ]{10})/g, "$1 ") || str;
+        }
+
+        function getExporterPdfHeader(title) {
+            return function(){
+                return {
+                        columns: [
+                                    {                                       
+                                        image: CONFIG.HCID_LOGO.img,
+                                        width: 50,
+                                        margin:[10,5],
+                                        alignment: 'left',
+                                    },
+                                    {
+                                        margin: [10, 10, 10, -70],
+                                        text: title,
+                                        alignment: 'center',
+                                        fontSize: 15
+                                    }
+                                ]         
+                    }
+            }
+        }
+        
+    } //EOF DMS
+})();

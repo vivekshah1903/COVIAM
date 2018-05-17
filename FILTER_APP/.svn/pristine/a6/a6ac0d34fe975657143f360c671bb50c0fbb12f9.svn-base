@@ -1,0 +1,73 @@
+/*****************
+@Author:GuruPrasad
+******************/
+(function() {
+        'use strict';
+        //category Service
+        angular.module('app.events').factory('eventService', eventService); //Apis constan file
+
+        //Service injection
+        eventService.$inject = ['dataManagerService', '$log', 'APIS'];
+
+        //Service implementation
+        function eventService(dataManagerService, $log, APIS) {
+            //Binding   
+            return {
+                getEventSummaryData: getEventSummaryData,
+                getEventRecordlist:getEventRecordlist,
+                createEventData: createEventData,
+                deleteEvents: deleteEvents,
+                viewAlbums:viewAlbums
+                    //editEventData: editEventData
+
+            };
+
+            /*category function*/
+            function getEventSummaryData(obj) {
+                APIS.GET_EVENT_LIST.data = obj;
+                var token = "";
+                return dataManagerService.sendRequest(null, APIS.GET_EVENT_LIST, token).then(function(data) {
+                    return data;
+                });
+            }
+            
+            function getEventRecordlist() {
+               // APIS.GET_EVENT_REC.data = obj;
+                //var token = "";
+                return dataManagerService.sendRequest(null, APIS.GET_EVENT_REC).then(function(data) {
+                    return data;
+                });
+            }
+             //EOF Category
+             function viewAlbums(data) {
+            APIS.GET_VIEW_ALBUM.URL = APIS.GET_VIEW_ALBUM.TEMPURL;
+            APIS.GET_VIEW_ALBUM.URL = APIS.GET_VIEW_ALBUM.URL + "/" + data
+
+            return dataManagerService.sendRequest(null, APIS.GET_VIEW_ALBUM).then(function (data) {
+                console.log(data);
+                return data;
+            });
+        }
+
+            /* Creates category*/
+
+            function createEventData(obj) {
+                APIS.CREATE_EVENT.data = obj;
+
+                // APIS.SERACH_CATEGARIES.data = data;
+                return dataManagerService.sendRequest(null, APIS.CREATE_EVENT).then(function(data) {
+                    return data;
+                });
+            }
+
+            function deleteEvents(obj) {
+                APIS.DELETE_EVENT.data = obj;
+                return dataManagerService.sendRequest(null, APIS.DELETE_EVENT).then(function(data) {
+                    return data;
+                });
+            }
+
+
+         //EOF Service
+    }
+})();

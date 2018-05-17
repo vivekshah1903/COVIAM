@@ -1,0 +1,63 @@
+/*****************
+@Author:GuruPrasad
+******************/
+(function(){
+	'use strict';
+	//session Service
+	angular.module('app.common').factory('sessionService', sessionService); //Apis constan file
+	
+	//Service injection
+	sessionService.$inject = ['$window'];
+
+		//Service implementation
+		function sessionService($window){
+
+			return {
+						setUserDetails: setUserDetails,
+						getUserDetails: getUserDetails,
+						clearSession:clearSession
+						
+	      			};
+
+	 	//Sets users details   	  
+	  	function setUserDetails(sessionObj) {
+	  		console.log("sessionObj",sessionObj);
+
+		  	$window.sessionStorage.setItem('userData', JSON.stringify(sessionObj));
+		  	console.log(JSON.stringify(sessionObj));
+		  	
+	      	return true;
+	    }
+
+	    //Gives User Details
+	    function getUserDetails(returnData) {
+
+	    	var sessionObj = {
+	 				 			"userdata": JSON.parse($window.sessionStorage.getItem('userData'))
+	    			 			
+		    				};
+		    					    
+		    if(returnData == "USER"){
+		    	return  sessionObj.userdata; 
+		    }else{
+		    	return sessionObj;
+		    }	
+	        	 		
+	    }
+
+	    function clearSession(){
+	    	$window.sessionStorage.clear(); 
+	    	return;      	
+	    }
+
+	    
+  
+	   
+		
+
+	   
+		
+	
+	}//EOF Service
+
+})();

@@ -1,0 +1,46 @@
+(function () {
+    'use strict';
+    angular.module('app.album').config(function config($stateProvider) {
+        $stateProvider.state('album', {
+            url: '/album',
+            controller: 'AlbumCtrl as albums',
+            templateUrl: 'UX/app/album/partials/albumSummary.html'
+
+
+
+        }).state('album.albumCreatePage', {
+            url: '/albumCreatePage',
+
+
+            views: {
+                "@": {
+                    controller: 'AlbumCtrl as albums',
+                    templateUrl: 'UX/app/album/partials/album.html',
+
+                },
+                "albumCreatePage@album.albumCreatePage": {
+                    controller: 'AlbumCtrl as albums',
+                    templateUrl: 'UX/app/album/partials/album.html',
+
+                }
+            }
+        }).state('album.albumEditPage', {
+            url: '/albumEditPage',
+            
+
+            views: {
+                "@": {
+                    controller: 'EditAlbumCtrl as editalbum',
+                    templateUrl: 'UX/app/album/partials/edit_album.html',
+
+                },
+                "albumEditPage@album.albumEditPage": {
+                    controller: 'EditAlbumCtrl as editalbum',
+                    templateUrl: 'UX/app/album/partials/edit_album.html',
+
+                }
+            }
+
+        });
+    });
+})();

@@ -1,0 +1,16 @@
+(function() {
+    'use strict';
+    //vendor Service
+    angular.module('app.common').factory('AlbumService', albumService);
+
+    //Service injection
+    albumService.$inject = ['$http', 'APIS', 'dataManagerService'];
+
+    //Service implementation
+    function albumService($http, APIS, dataManagerService) {
+      
+
+      
+    }
+
+})();

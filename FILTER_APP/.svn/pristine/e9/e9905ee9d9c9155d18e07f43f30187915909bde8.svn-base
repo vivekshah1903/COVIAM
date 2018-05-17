@@ -1,0 +1,199 @@
+<div class="row" >
+    <div class="col-md-12 top-heading"><h2>Events</h2></div>
+</div>
+
+ <div class="row">
+        
+        <div class=" col-lg-offset-1 col-lg-10">
+            <h3 class="loginHead">Create Event
+            <a class="pull-right in-block" href=""> < Back </a>
+            </h3>      
+        </div>
+ </div>
+<div class="event">
+<div>
+ <form name="dashForm">
+ <div class="col-lg-offset-1 col-lg-10">
+ <div class="m-t-15">
+            <input class="bottomLine air-input" type="text" placeholder="Enter event name">
+           </div>
+           <div class="m-t-15">
+                <textarea rows="4" cols="50" placeholder="Enter event description"></textarea>
+            </div>
+            <div class="m-t-15">
+            <div>
+                <label class="drk-green"> Event date and time</label>
+            </div>
+             <div class="row">
+                   <div  class="col-lg-2" ng-class="{'has-error':dashForm.validFrom.$touched && dashForm.validFrom.$invalid}">
+
+                   <!--  <div class="Billing space-20 pst-rel date-pick-box">
+                        <input type="text" required class="date-input m-t-15" ng-model="event.validTo" name="validTo" is-open="event.to" uib-datepicker-popup="dd-MM-yyyy" onkeydown="return false" datepicker-options="event.options" ng-model-options="{timezone: 'UTC'}" ng-change="event.validFromCheckGrid(event.validFrom,event.validTo)"><span class="input-group-btn">
+                        <button type="button" class="btn btn-default calendr-btn" ng-click="event.dashDatePicker(event.to,'to')">
+                        <i class="glyphicon glyphicon-calendar"></i>
+                        </button>
+                         </span>
+                    </div> -->
+                     <div class="Billing space-20 pst-rel date-pick-box">
+                        <input type="text" class="date-input m-t-15" onkeydown="return false" required ng-model="event.validFrom" name="validFrom" is-open="event.from" uib-datepicker-popup="dd-MM-yyyy" datepicker-options="event.options" onkeydown="return false" ng-model-options="{timezone: 'UTC'}" ng-change="event.validFromCheckGrid(event.validFrom,event.validTo)"><span class="input-group-btn">
+
+                                                        <button type="button" class="btn btn-default calendr-btn" ng-click="event.dashDatePicker(event.from,'from')">
+                                                            <i class="glyphicon glyphicon-calendar"></i>
+                                                        </button>
+                                                        </span>
+                      
+                    </div>
+                </div>
+                 <div class="col-lg-2" uib-timepicker ng-model="time"></div>
+                 <div>
+                 <label class="col-lg-1 m-t-25"> to </label>
+                    </div>
+                <div  class="col-lg-2" ng-class="{'has-error':dashForm.validFrom.$touched && dashForm.validFrom.$invalid}">
+
+                    <div class="Billing space-20 pst-rel date-pick-box">
+                        <input type="text" required class="date-input m-t-15" ng-model="event.validTo" name="validTo" is-open="event.to" uib-datepicker-popup="dd-MM-yyyy" onkeydown="return false" datepicker-options="event.options" ng-model-options="{timezone: 'UTC'}" ng-change="event.validFromCheckGrid(event.validFrom,event.validTo)"><span class="input-group-btn">
+                        <button type="button" class="btn btn-default calendr-btn" ng-click="event.dashDatePicker(event.to,'to')">
+                        <i class="glyphicon glyphicon-calendar"></i>
+                        </button>
+                         </span>
+                    </div>
+                </div>
+
+                 <div class="col-lg-2" uib-timepicker ng-model="time"></div>
+
+                 </div>
+            </div>
+            
+
+
+<div class="row">
+            <div class="col-lg-4 m-t-15">
+                    <label class="drk-green small-heading"> Business location</label>                   
+            <div class="col-lg-6 location pad-0">
+            <div class="selectionBoxe">
+                <div class="location">
+                      <label class="chkLblClr col-lg-12"> All <input class="locaCheck pull-right" type="checkbox" /></label>
+                      <label class="chkLblClr col-lg-12"> ASCI <input class="locaCheck pull-right" type="checkbox" /></label>
+                      <label class="chkLblClr col-lg-12"> ASCP <input class="locaCheck pull-right" type="checkbox" /></label>
+                      <label class="chkLblClr col-lg-12"> Indore <input class="locaCheck pull-right" type="checkbox" /></label>
+                </div>
+          </div>
+          </div>
+          </div>
+         
+            <div class="col-lg-4 m-t-15">
+                    <label class="drk-green small-heading"> Venue</label>
+                   
+                     <div class="radio-primary m-r-50">
+                          <input type="radio" name="optradio">
+                          <span>Internal</span>
+                     </div>
+                    <div class="radio-primary">
+                          <input type="radio" name="optradio"><span>External</span>
+                    </div>
+
+            </div>
+            <div class="col-lg-4 m-t-15">
+                    <input class="bottomLine air-input" type="text" placeholder="Enter venue name">
+            </div>
+</div>
+
+
+<div class="row">
+    
+        <div class="col-lg-2">
+                    <label class="drk-green" for="sel1"> Organized by</label>
+                     <select class="form-control" id="sel1">
+                        <option>Select Organizer</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                      </select>
+
+        </div>
+         <div class="col-lg-2">
+
+         </div>
+
+            <div class="col-lg-2">
+                    <label class="drk-green" for="sel1"> Associated Album</label>
+                    <select class="form-control" id="sel1">
+                        <option>Select Album</option>
+                        <option>India</option>
+                        <option>Canada</option>
+                      </select>
+            </div>
+</div>
+            <div class="m-t-15">
+                <label class="drk-green"> Publish date</label>
+            
+            </div>
+
+<div class="row pad-15">
+          <button type="button" class="btn btn-default mdlBtndark pad-all-85 mar-rgt-20"><span>Create event</span></button>
+          <button type="button" class="btn btn-default mdlLightbtn pad-all-100"><span>Cancle</span></button>    
+</div>
+
+    </div>
+</form>
+</div>
+</div>
+<!-- 
+<menu-bar></menu-bar>
+ <div class="m-t-100">
+ <form name="dashForm">
+    <div class="col-md-4" ng-class="{'has-error':dashForm.validFrom.$touched && dashForm.validFrom.$invalid}">
+        <span>  <label> From Date</label><sup style="position: inherit;">*</sup></span>
+        <div class="Billing">
+            <input type="text" style="position: relative" class="air-input" onkeydown="return false" required ng-model="event.validFrom" name="validFrom" is-open="event.from" uib-datepicker-popup="dd-MM-yyyy" datepicker-options="event.options" onkeydown="return false" ng-model-options="{timezone: 'UTC'}" ng-change="event.validFromCheckGrid(event.validFrom,event.validTo)"><span class="input-group-btn">
+
+                                                        <button type="button" class="btn btn-default calendr-btn" ng-click="event.dashDatePicker(event.from,'from')">
+                                                            <i class="glyphicon glyphicon-calendar"></i>
+                                                        </button>
+                                                        </span>
+          
+            <div ng-show="dashForm.validFrom.$touched" class="has-error"> <span class="help-block" ng-show="dashForm.validFrom.$error.required"> Date is required.</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4" ng-class="{'has-error':dashForm.validTo.$touched && dashForm.validTo.$invalid}">
+        <span>  <label>To Date</label><sup style="position: inherit;">*</sup></span>
+        <div class="Billing">
+            <input type="text" required style="position: relative" class="air-input" ng-model="event.validTo" name="validTo" is-open="event.to" uib-datepicker-popup="dd-MM-yyyy" onkeydown="return false" datepicker-options="event.options" ng-model-options="{timezone: 'UTC'}" ng-change="event.validFromCheckGrid(event.validFrom,event.validTo)"><span class="input-group-btn">
+                                                        <button type="button" class="btn btn-default calendr-btn" ng-click="event.dashDatePicker(event.to,'to')">
+                                                            <i class="glyphicon glyphicon-calendar"></i>
+                                                        </button>
+                                                    </span>
+            <div class="has-error"><span class="help-block" ng-show="event.dateError">To date cannot be older than From date</span>
+             <span class="help-block" ng-show="event.dateErrorDays">Difference between From and To date should be less than 180 days</span>
+            </div>
+            <div ng-show="dashForm.validTo.$touched" class="has-error"> <span class="help-block" ng-show="dashForm.validTo.$error.required"> Date is required.</span>
+            </div>
+
+        </div>
+    </div>
+   <div class="col-md-4">
+        <div class="Billing">       
+            <button type="button" class="btn btn-info m-t-10" ng-click="validateForm([dashForm]) && !event.dateError && !event.dateErrorDays && event.reportData(event.date)">Submit
+            </button>
+        </div>
+    </div> 
+</form>
+  <div class="col-md-8">
+  <h5>Manage Events</h5>
+  </div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg">
+                        <div ui-grid="event.gridOptions" ui-grid-auto-resize ui-grid-pagination ui-grid-exporter class="grid">
+                            <div class="nodatatxt" ng-if="event.gridOptions.data.length==0">No Records Found</div>
+                            <div class="grid-msg-overlay" ng-hide="!event.loading">
+                                <div class="msg">
+                                    <span> Loading.. <i class="fa fa-spinner fa-spin"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+  </div>
+   -->

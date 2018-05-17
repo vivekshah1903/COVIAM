@@ -1,0 +1,26 @@
+<div>
+  <form name="upload" enctype="multipart/form-data" novalidate> 
+     <div class="modal-header">
+       <h4 class="modal-title">Upload Roster </h4>
+     </div>
+     <div class="modal-body">
+			<div class="form-group" ng-class="{true: 'has-error'}[upload.file.$invalid && upload.file.$touched]">
+		    	<div class="input-group">
+					<div>
+					     <input id="uploadBtn" type="file" ngf-select ng-model="filename" name="file" ngf-pattern="'.xls,.xlsx'" accept=".xls,.xlsx" required="" />
+                       
+					</div>
+					 <div ng-if="upload.file.$invalid" class="has-error">
+					 <span class="help-block" ng-show="!upload.file.$error.pattern &&upload.file.$touched && upload.file.$error.required">File Required</span>
+                            <span class="help-block" ng-show="upload.file.$error.pattern">Valid file format are xls, xlsx</span>
+                    </div>
+		    	</div>
+		   	</div>	
+     </div>
+      
+	<div class="modal-footer">
+		   <button  type="submit" class="uploadButton" ng-click="validateForm([upload]) && uploadData.uploadFile(filename)" >Upload</button>
+		   <button type="button" class="cancel" ng-click="uploadData.cancel()">Cancel</button>
+	 </div>
+   </form>
+ </div>
